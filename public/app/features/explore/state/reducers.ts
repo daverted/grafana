@@ -9,7 +9,8 @@ import {
   sortLogsResult,
 } from 'app/core/utils/explore';
 import { ExploreItemState, ExploreState, ExploreId, ExploreUpdateState, ExploreMode } from 'app/types/explore';
-import { DataQuery, LoadingState } from '@grafana/ui';
+import { LoadingState } from '@grafana/data';
+import { DataQuery } from '@grafana/ui';
 import {
   HigherOrderAction,
   ActionTypes,
@@ -264,7 +265,7 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
         loadingState: LoadingState.NotStarted,
         StartPage,
         showingStartPage: Boolean(StartPage),
-        queryKeys: getQueryKeys(state.queries, datasourceInstance),
+        queryKeys: [],
         supportedModes,
         mode,
       };
