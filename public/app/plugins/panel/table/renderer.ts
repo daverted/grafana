@@ -275,11 +275,13 @@ export class TableRenderer {
 
       cellClasses.push('table-panel-cell-link');
 
-      columnHtml += `
-        <a href="${cellLink}" target="${cellTarget}" data-link-tooltip data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}>
-          ${value}
-        </a>
-      `;
+      if (value !== '') {
+        columnHtml += `
+          <a href="${cellLink}" target="${cellTarget}" data-link-tooltip data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}>
+            ${value}
+          </a>
+        `;
+      }
     } else {
       columnHtml += value;
     }
