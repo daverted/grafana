@@ -43,6 +43,38 @@
       <gf-form-switch class="gf-form" label-class="width-10" ng-if="style.type === 'string'" label="Preserve Formatting" checked="style.preserveFormat"
           on-change="editor.render()"></gf-form-switch>
     </div>
+    <div class="gf-form" ng-if="style.type === 'string'">
+      <label class="gf-form-label width-11">
+        Font Awesome icon
+        <info-popover mode="right-normal">
+          <p>
+            See <a href="https://fontawesome.com/" target="_blank">https://fontawesome.com/icons</a>
+            for list of icons and advanced usage <i class="fas fa-smile fa-spin"></i>
+          </p>
+          <p>For example, </p>
+          <ul class="unstyled">
+            <li><i class="fas fa-smile"></i> <code>fas fa-smile</code></li>
+            <li><i class="far fa-smile"></i> <code>far fa-smile</code></li>
+            <li><i class="fal fa-smile"></i> <code>fal fa-smile</code></li>
+          </ul>
+          <p>To change colors, use:</p>
+          <ul class="unstyled">
+            <li><i class="fas fa-smile red"></i> <code>fas fa-smile red</code></li>
+            <li><i class="fas fa-smile orange"></i> <code>fas fa-smile orange</code></li>
+            <li><i class="fas fa-smile yellow"></i> <code>fas fa-smile yellow</code></li>
+            <li><i class="fas fa-smile green"></i> <code>fas fa-smile green</code></li>
+            <li><i class="fas fa-smile blue"></i> <code>fas fa-smile blue</code></li>
+            <li><i class="fas fa-smile purple"></i> <code>fas fa-smile purple</code></li>
+          </ul>
+          <p>
+            Use special variables to specify cell values:
+            <em>${__cell_1}</em> refers to second column's value.
+          </p>
+          <p><strong>blur/focus the input twice to preview</strong></p>
+        </info-popover>
+      </label>
+      <input type="text" class="gf-form-input width-13" ng-model="style.fontawesome" ng-blur="editor.render()" ng-model-onblur data-placement="right">
+    </div>
 
     <div ng-if="style.type === 'number'">
       <div class="gf-form">

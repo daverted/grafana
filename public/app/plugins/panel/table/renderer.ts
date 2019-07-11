@@ -309,6 +309,15 @@ export class TableRenderer {
       cellClasses.push('table-panel-cell-pre');
     }
 
+    if (column.style && column.style.fontawesome) {
+      const scopedVars = this.renderRowVariables(rowIndex);
+      const icon = this.templateSrv.replace(column.style.fontawesome, scopedVars);
+
+      value = `
+        <i class="${icon}" style="padding-right:.5rem"></i>${value}
+      `;
+    }
+
     if (column.style && column.style.link) {
       // Render cell as link
       const scopedVars = this.renderRowVariables(rowIndex);

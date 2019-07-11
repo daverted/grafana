@@ -67,6 +67,8 @@ export interface ColumnStyle {
   linkTargetBlank?: boolean;
 
   preserveFormat?: boolean;
+
+  fontawesome?: string;
 }
 
 // private mapper:ValueMapper,
