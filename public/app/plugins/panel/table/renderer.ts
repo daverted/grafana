@@ -195,7 +195,7 @@ export class TableRenderer {
 
     if (column.style.type === 'fontawesome') {
       return (value: any) => {
-        return `<i class="${value}"></i>`;
+        return `<i class="${this.sanitize(value)}"></i>`;
       };
     }
 
