@@ -50,13 +50,16 @@ export interface ColumnStyle {
   colors?: any[];
   decimals?: number;
   thresholds?: any[];
-  type?: 'date' | 'number' | 'string' | 'hidden';
+  type?: 'date' | 'number' | 'string' | 'hidden' | 'html' | 'fontawesome' | 'actions';
   unit?: string;
   dateFormat?: string;
   sanitize?: boolean; // not used in react
   mappingType?: any;
   valueMaps?: any;
   rangeMaps?: any;
+
+  noHeader?: boolean;
+  dropdownRight?: boolean;
 
   link?: any;
   linkUrl?: any;

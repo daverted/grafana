@@ -34,6 +34,9 @@ export class ColumnOptionsCtrl {
       { text: 'String', value: 'string' },
       { text: 'Date', value: 'date' },
       { text: 'Hidden', value: 'hidden' },
+      { text: 'FontAwesome', value: 'fontawesome' },
+      { text: 'HTML', value: 'html' },
+      { text: 'Actions', value: 'actions' },
     ];
     this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
     this.dateFormats = [

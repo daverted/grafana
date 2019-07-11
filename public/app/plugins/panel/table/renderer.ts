@@ -187,6 +187,48 @@ export class TableRenderer {
       };
     }
 
+    if (column.style.type === 'html') {
+      return (value: any) => {
+        return value;
+      };
+    }
+
+    if (column.style.type === 'fontawesome') {
+      return (value: any) => {
+        return `<i class="${value}"></i>`;
+      };
+    }
+
+    if (column.style.type === 'actions') {
+      return (value: any) => {
+        try {
+          const actions = JSON.parse(value);
+          let renderedActions = '';
+          if (actions.dropdown) {
+            renderedActions += `<div class="dropdown">
+              <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                <i class="fas fa-ellipsis-v"></i>
+              </a>`;
+            renderedActions +=
+              '<ul class="dropdown-menu ' +
+              (column.style && column.style.dropdownRight ? 'pull-right' : '') +
+              '" role="menu">';
+            actions.dropdown.forEach(el => {
+              renderedActions += `<li><a tabindex="-1" href="${el.href}" target="${el.target}"><i class="${
+                el.icon
+              }"></i> ${el.text}</a></li>`;
+            });
+            renderedActions += `</ul></div>`;
+          }
+          return renderedActions;
+        } catch (ex) {
+          console.error('Error parsing JSON: ', value);
+          console.error(ex);
+        }
+        return '';
+      };
+    }
+
     return (value: any) => {
       return this.defaultCellFormatter(value, column.style);
     };
@@ -246,7 +288,10 @@ export class TableRenderer {
     // this hack adds header content to cell (not visible)
     let columnHtml = '';
     if (addWidthHack) {
-      columnHtml = '<div class="table-panel-width-hack">' + this.table.columns[columnIndex].title + '</div>';
+      columnHtml =
+        '<div class="table-panel-width-hack">' +
+        (column.style && column.style.noHeader ? '' : this.table.columns[columnIndex].title) +
+        '</div>';
     }
 
     if (value === undefined) {
