@@ -90,9 +90,12 @@
 
     <gf-form-switch class="gf-form" ng-if="style.type === 'actions'" label-class="width-12"
       label="Open menu to the left" checked="style.dropdownRight" on-change="editor.render()"></gf-form-switch>
+
+    <gf-form-switch class="gf-form" ng-if="style.type === 'fontawesome'" label-class="width-12"
+      label="Value as tooltip" checked="style.valueAsTooltip" on-change="editor.render()"></gf-form-switch>
   </div>
 
-  <div class="section gf-form-group" ng-if="style.type === 'string'">
+  <div class="section gf-form-group" ng-if="style.type === 'string' || style.type === 'fontawesome'">
     <h5 class="section-heading">Value Mappings</h5>
     <div class="editor-row">
       <div class="gf-form-group">

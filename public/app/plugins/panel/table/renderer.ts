@@ -195,7 +195,35 @@ export class TableRenderer {
 
     if (column.style.type === 'fontawesome') {
       return (value: any) => {
-        return `<i class="${this.sanitize(value)}"></i>`;
+        const mappingType = column.style.mappingType || 0;
+
+        const template = (icon, v) => {
+          if (column.style.valueAsTooltip) {
+            return `<i class="${icon}" data-link-tooltip data-original-title="${v}" data-placement="right"></i>`;
+          }
+          return `<i class="${icon}"></i>`;
+        };
+
+        if (mappingType === 1 && column.style.valueMaps) {
+          for (let i = 0; i < column.style.valueMaps.length; i++) {
+            const map = column.style.valueMaps[i];
+            if (value === null) {
+              if (map.value === 'null') {
+                return template(map.text, map.value);
+              }
+              continue;
+            }
+
+            // Allow both numeric and string values to be mapped
+            if ((!_.isString(value) && Number(map.value) === Number(value)) || map.value === value) {
+              this.setColorState(value, column.style);
+              return template(this.defaultCellFormatter(map.text, column.style), map.value);
+            }
+          }
+        }
+
+        const sanitized = this.sanitize(value);
+        return template(sanitized, sanitized);
       };
     }
 

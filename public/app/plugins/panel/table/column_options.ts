@@ -34,7 +34,7 @@ export class ColumnOptionsCtrl {
       { text: 'String', value: 'string' },
       { text: 'Date', value: 'date' },
       { text: 'Hidden', value: 'hidden' },
-      { text: 'FontAwesome', value: 'fontawesome' },
+      { text: 'Font Awesome', value: 'fontawesome' },
       { text: 'HTML', value: 'html' },
       { text: 'Actions', value: 'actions' },
     ];

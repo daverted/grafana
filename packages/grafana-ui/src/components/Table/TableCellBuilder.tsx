@@ -69,6 +69,7 @@ export interface ColumnStyle {
   preserveFormat?: boolean;
 
   fontawesome?: string;
+  valueAsTooltip?: boolean;
 }
 
 // private mapper:ValueMapper,
