@@ -1,0 +1,34 @@
+.img {
+  display: block;
+  margin: 0 auto;
+}
+
+// svg fills for light and dark themes
+.theme-light {
+  .st0 {
+    fill: #1e1f1d;
+  }
+  .st1 {
+    fill: #e13217;
+  }
+  .st2 {
+    fill: #3fa9f5;
+  }
+  .st3 {
+    fill: #484848;
+  }
+}
+.theme-dark {
+  .st0 {
+    fill: #ffffff;
+  }
+  .st1 {
+    fill: #52b2e9;
+  }
+  .st2 {
+    fill: #3fa9f5;
+  }
+  .st3 {
+    fill: #ffffff;
+  }
+}

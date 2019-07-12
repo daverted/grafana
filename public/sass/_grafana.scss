@@ -1,7 +1,10 @@
-// DEPENDENCIES
-@import '../../node_modules/react-table/react-table.css';
+// CUSTOM
 @import '../fontawesome-pro-5.9.0/css/all.css';
 @import '../fontawesome-pro-5.9.0/css/brands.css';
+@import 'components/overops_custom';
+
+// DEPENDENCIES
+@import '../../node_modules/react-table/react-table.css';
 
 // VENDOR
 @import '../vendor/css/rc-cascader.scss';
