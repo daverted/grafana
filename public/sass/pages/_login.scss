@@ -19,8 +19,7 @@ $login-border: #8daac5;
   }
 
   & .btn-primary {
-    @include buttonBackground(#ff6600, #bc3e06);
-    height: 40px;
+    @include buttonBackground(#4816a0, #030110);
   }
 }
 
