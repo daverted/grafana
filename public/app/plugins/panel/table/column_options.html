@@ -49,7 +49,7 @@
         <info-popover mode="right-normal">
           <p>
             See <a href="https://fontawesome.com/" target="_blank">https://fontawesome.com/icons</a>
-            for list of icons and advanced usage <i class="fas fa-smile fa-spin"></i>
+            for list of icons and advanced usage.
           </p>
           <p>For example, </p>
           <ul class="unstyled">
@@ -67,10 +67,34 @@
             <li><i class="fas fa-smile purple"></i> <code>fas fa-smile purple</code></li>
           </ul>
           <p>
+            OverOps icons:
+          </p>
+          <ul class="unstyled">
+            <li><i class="oo-svg cex"></i> <code>oo-svg cex</code></li>
+            <li><i class="oo-svg swl"></i> <code>oo-svg swl</code></li>
+            <li><i class="oo-svg http"></i> <code>oo-svg http</code></li>
+            <li><i class="oo-svg wrn"></i> <code>oo-svg wrn</code></li>
+            <li><i class="oo-svg tmr"></i> <code>oo-svg tmr</code></li>
+            <li><i class="oo-svg unc"></i> <code>oo-svg unc</code></li>
+            <li><i class="oo-svg err"></i> <code>oo-svg err</code></li>
+          </ul>
+          <p>
+            OverOps icon sizes:<br>
+            <i class="oo-svg oo-lg swl"></i>
+            <i class="oo-svg oo-2x swl"></i>
+            <i class="oo-svg oo-3x swl"></i>
+            <i class="oo-svg oo-5x swl"></i>
+            <br>
+            <code>oo-lg</code>
+            <code>oo-2x</code>
+            <code>oo-3x</code>
+            <code>oo-5x</code>
+          </p>
+          <p>
             Use special variables to specify cell values:
             <em>${__cell_1}</em> refers to second column's value.
           </p>
-          <p><strong>blur/focus the input twice to preview</strong></p>
+          <p><em>→ blur/focus the input twice to preview</em></p>
         </info-popover>
       </label>
       <input type="text" class="gf-form-input width-13" ng-model="style.fontawesome" ng-blur="editor.render()" ng-model-onblur data-placement="right">

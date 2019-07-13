@@ -1,3 +1,4 @@
+// home dashboard svg icons
 .img {
   display: block;
   margin: 0 auto;
@@ -31,5 +32,103 @@
   }
   .st3 {
     fill: #ffffff;
+  }
+}
+
+// classic dashboard icons
+.oo-svg {
+  height: 1em;
+  width: 1em;
+  margin-right: 0.5em;
+  display: inline-block;
+  background-repeat: no-repeat;
+}
+
+.oo-xs {
+  height: 0.75em;
+  width: 0.75em;
+}
+.oo-sm {
+  height: 0.875em;
+  width: 0.875em;
+}
+.oo-lg {
+  height: 1.33333em;
+  width: 1.33333em;
+}
+.oo-2x {
+  height: 2em;
+  width: 2em;
+}
+.oo-3x {
+  height: 3em;
+  width: 3em;
+}
+.oo-5x {
+  height: 5em;
+  width: 5em;
+}
+.oo-7x {
+  height: 7em;
+  width: 7em;
+}
+.oo-10x {
+  height: 10em;
+  width: 10em;
+}
+
+.cex {
+  background-image: url('/public/img/grid/27_caught_grey.svg');
+
+  &:hover {
+    background-image: url('/public/img/grid/28_caught_white.svg');
+  }
+}
+
+.swl {
+  background-image: url('/public/img/grid/08_swallowed.svg');
+
+  &:hover {
+    background-image: url('/public/img/grid/26_swallowed_white.svg');
+  }
+}
+
+.http {
+  background-image: url('/public/img/grid/16_http_error_grey.svg');
+
+  &:hover {
+    background-image: url('/public/img/grid/24_http_error_white.svg');
+  }
+}
+
+.wrn {
+  background-image: url('/public/img/grid/14_log_warning_grey.svg');
+
+  &:hover {
+    background-image: url('/public/img/grid/23_log_warning_white.svg');
+  }
+}
+
+.tmr {
+  background-image: url('/public/img/grid/07_chronos.svg');
+
+  &:hover {
+    background-image: url('/public/img/grid/25_timer_white.svg');
+  }
+}
+
+.unc {
+  background-image: url('/public/img/grid/10_uncaught_grey.svg');
+
+  &:hover {
+    background-image: url('/public/img/grid/21_uncaught_white.svg');
+  }
+}
+
+.err {
+  background-image: url('/public/img/grid/12_log_error_grey.svg');
+
+  &:hover {
+    background-image: url('/public/img/grid/22_log_error_white.svg');
   }
 }
