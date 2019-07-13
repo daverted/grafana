@@ -381,7 +381,7 @@ export class TableRenderer {
         </a>`;
     }
 
-    if (column.style.type === 'fontawesome') {
+    if (column.style && column.style.type === 'fontawesome') {
       cellClasses.push('text-center');
     }
 
