@@ -381,6 +381,10 @@ export class TableRenderer {
         </a>`;
     }
 
+    if (column.style.type === 'fontawesome') {
+      cellClasses.push('text-center');
+    }
+
     if (cellClasses.length) {
       cellClass = ' class="' + cellClasses.join(' ') + '"';
     }
