@@ -37,8 +37,8 @@
 
 // classic dashboard icons
 .oo-svg {
-  height: 1em;
-  width: 1em;
+  height: 1.6em;
+  width: 1.6em;
   margin: -0.45em 0 -0.45em -0.5em;
   display: inline-block;
   background-repeat: no-repeat;
@@ -55,6 +55,10 @@
 .oo-lg {
   height: 1.33333em;
   width: 1.33333em;
+}
+.oo-1x {
+  width: 1em;
+  height: 1em;
 }
 .oo-2x {
   height: 2em;
