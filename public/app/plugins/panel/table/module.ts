@@ -246,6 +246,55 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       rootElem.css({ 'max-height': panel.scroll ? getTableHeight() : '' });
     }
 
+    function ooActionResolve(e: any) {
+      try {
+        const el = $(e.currentTarget);
+
+        // apiKey and apiUrl must exist as page variables
+        const apiKey = ctrl.renderer.templateSrv.index.apiKey.current.value;
+        const apiUrl = ctrl.renderer.templateSrv.index.apiUrl.current.value;
+        const apiVer = ctrl.renderer.templateSrv.index.apiVer.current.value;
+
+        const envId = el.data('envId');
+        const eventId = el
+          .data('eventId')
+          .toString()
+          .split(',')[0]; // TODO: apply to all events w/ forEach
+
+        const methodUrl = apiUrl + 'api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/resolve';
+        console.log('methodUrl: ', methodUrl);
+
+        // start spinner
+        el.removeClass('oo-svg resolve').addClass('fa fa-spinner fa-spin');
+
+        // POST https://api.overops.com/api/v1/services/env_id/events/event_id/resolve
+        $.ajax({
+          url: methodUrl,
+          headers: { 'x-api-key': apiKey },
+          method: 'POST',
+          error: err => {
+            // replace spinner with red x
+            el.removeClass('fa fa-spinner fa-spin')
+              .addClass('far fa-times-circle danger')
+              .prop('title', 'Error resolving event');
+          },
+          success: data => {
+            // replace spinner with green check
+            el.removeClass('fa fa-spinner fa-spin')
+              .addClass('far fa-check-circle success')
+              .prop('title', 'Resolved');
+
+            // TODO updates aren't instant, need to delay this
+            // refresh table
+            // ctrl.events.emit('refresh');
+          },
+        });
+      } catch (e) {
+        console.error('Caught Exception in ooActionResolve');
+        console.error(e);
+      }
+    }
+
     // hook up link tooltips
     elem.tooltip({
       selector: '[data-link-tooltip]',
@@ -265,6 +314,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
     elem.on('click', '.table-panel-page-link', switchPage);
     elem.on('click', '.table-panel-filter-link', addFilterClicked);
+    elem.on('click', '.oo-action-resolve', ooActionResolve);
 
     const unbindDestroy = scope.$on('$destroy', () => {
       elem.off('click', '.table-panel-page-link');

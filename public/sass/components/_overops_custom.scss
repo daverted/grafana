@@ -42,6 +42,7 @@
   margin: -0.45em 0 -0.6em -0.5em;
   display: inline-block;
   background-repeat: no-repeat;
+  background-position: center;
 }
 
 .oo-xs {
@@ -136,3 +137,134 @@
     background-image: url('/public/img/grid/22_log_error_white.svg');
   }
 }
+
+.graph {
+  background-image: url('/public/img/grid/01_graph.svg');
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.timer {
+  background-image: url('/public/img/grid/02_timer.svg');
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.resolve {
+  background-image: url('/public/img/grid/03_resolve.svg');
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.archive {
+  background-image: url('/public/img/grid/10_autoHideTrash.svg');
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.more {
+  background-image: url('/public/img/grid/06_more_dots.svg');
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.snapshot {
+  background-image: url('/public/img/grid/13_reset_snapshot_blue.svg');
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.oo-actions {
+  // visibility: hidden;
+  display: inline-block;
+  vertical-align: middle;
+
+  .oo-svg {
+    margin: 0 0.3em;
+    vertical-align: middle;
+    height: 1.385em;
+    width: 1.385em;
+    cursor: pointer;
+  }
+
+  .fa,
+  .fas,
+  .far,
+  .fal,
+  .fab {
+    font-size: 1.3em;
+    padding: 0 0.3em;
+    color: #51b0e7;
+    top: 2px;
+    position: relative;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.6;
+    }
+    &.success:hover,
+    &.danger:hover {
+      opacity: 1;
+      cursor: default;
+    }
+  }
+
+  .divider {
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+    height: 1.85em;
+    opacity: 0.2;
+    border: solid 1px #cbddf2;
+    content: ' ';
+  }
+
+  .dropdown {
+    display: inline-block;
+    .dropdown-menu {
+      a {
+        width: 100%;
+      }
+      & > li > a i {
+        top: 0;
+        text-align: center;
+        height: 1.385em;
+        width: 1.385em;
+        &.fa,
+        &.fas,
+        &.far,
+        &.fab,
+        &.fal {
+          left: 0.3em;
+        }
+      }
+    }
+  }
+}
+
+.actions-wrapper > a {
+  width: calc(100% - 8em); // 11em for all
+  vertical-align: middle;
+
+  .ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+  }
+}
+
+// .actions-wrapper:hover .oo-actions {
+//   visibility: visible;
+// }

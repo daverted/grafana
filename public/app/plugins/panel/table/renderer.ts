@@ -227,30 +227,23 @@ export class TableRenderer {
       };
     }
 
+    ///// TODO integrate with string type
     if (column.style.type === 'actions') {
       return (value: any) => {
         try {
           const actions = JSON.parse(value);
           let renderedActions = '';
-          if (actions.dropdown) {
-            renderedActions += `<div class="dropdown">
-              <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-                <i class="fas fa-ellipsis-v"></i>
-              </a>`;
-            renderedActions +=
-              '<ul class="dropdown-menu ' +
-              (column.style && column.style.dropdownRight ? 'pull-right' : '') +
-              '" role="menu">';
-            actions.dropdown.forEach(el => {
-              renderedActions += `<li><a tabindex="-1" href="${el.href}" target="${el.target}"><i class="${
-                el.icon
-              }"></i> ${el.text}</a></li>`;
+          console.log('actions.icons: ', actions.icons);
+          if (actions.icons && Array.isArray(actions.icons)) {
+            actions.icons.array.forEach(el => {
+              console.log(el);
+              renderedActions += `<i class="${this.sanitize(el.icon)}"></i>`;
             });
-            renderedActions += `</ul></div>`;
           }
+
           return renderedActions;
         } catch (ex) {
-          console.error('Error parsing JSON: ', value);
+          console.error('Caught error rendering Actions ', value);
           console.error(ex);
         }
         return '';
@@ -346,10 +339,12 @@ export class TableRenderer {
       `;
     }
 
+    // get scoped vars
+    const scopedVars = this.renderRowVariables(rowIndex);
+    scopedVars['__cell'] = { value: value, text: value ? value.toString() : '' };
+
     if (column.style && column.style.link) {
       // Render cell as link
-      const scopedVars = this.renderRowVariables(rowIndex);
-      scopedVars['__cell'] = { value: value, text: value ? value.toString() : '' };
 
       const cellLink = this.templateSrv.replace(column.style.linkUrl, scopedVars, encodeURIComponent);
       const cellLinkTooltip = this.templateSrv.replace(column.style.linkTooltip, scopedVars);
@@ -357,15 +352,83 @@ export class TableRenderer {
 
       cellClasses.push('table-panel-cell-link');
 
+      if (column.style && column.style.eventActions) {
+        cellClasses.push('actions-wrapper');
+      }
+
       if (value !== '') {
         columnHtml += `
           <a href="${cellLink}" target="${cellTarget}" data-link-tooltip data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}>
-            ${value}
+            <span class="ellipsis">
+              ${value}
+            </span>
           </a>
         `;
       }
     } else {
       columnHtml += value;
+    }
+
+    let ticketUrl = '';
+    let eventId = '';
+    let envId = '';
+
+    if (column.style && column.style.eventActions) {
+      this.table.columns.forEach((col, ndx) => {
+        if (col.text === 'Jira issue url') {
+          ticketUrl = scopedVars['__cell_' + ndx].value;
+        } else if (col.text === 'Id') {
+          eventId = scopedVars['__cell_' + ndx].value;
+        } else if (col.text === 'envId') {
+          envId = scopedVars['__cell_' + ndx].value;
+        }
+      });
+
+      columnHtml += '<div class="oo-actions">';
+
+      //// TODO implement 'graph this event' action
+      // columnHtml += '<i class="oo-svg graph" data-link-tooltip ' +
+      //   'data-original-title="Plot this event as a series onto the dashboard graph." ' +
+      //   'data-placement="right"></i><span class="divider"></span>';
+
+      //// TODO implement 'new timer' action
+      // columnHtml += '<i class="oo-svg timer" data-link-tooltip ' +
+      //   'data-original-title="Add a timer to know when and why a method\'s execution time ' +
+      //   'exceeds a target millisecond threshold." data-placement="right"></i><span class="divider"></span>';
+
+      columnHtml +=
+        '<i class="oo-svg resolve oo-action-resolve" ' +
+        'title="Mark as Resolved: Should the event reoccur after the code is ' +
+        'redeployed, you will receive an alert and the event will be marked as &quot;Resurfaced&quot;." ' +
+        `data-event-id="${eventId}" data-env-id="${envId}"></i><span class="divider"></span>`;
+
+      columnHtml +=
+        '<i class="oo-svg archive" ' +
+        'title="Hide this event: The event will no longer appear in the dashboard or alerts."' +
+        '></i><span class="divider"></span>';
+
+      columnHtml += `<div class="dropdown">
+          <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+            <i class="oo-svg more" title="Show more actions"></i>
+          </a>
+          <ul class="dropdown-menu pull-right" role="menu">`;
+
+      if (ticketUrl !== '') {
+        columnHtml += `<li>
+              <a tabindex="-1" href="//${ticketUrl}" target="_blank">
+                <i class="fas fa-ticket-alt"></i> View Ticket
+              </a>
+            </li>`;
+      }
+
+      columnHtml += `<li>
+            <a tabindex="-1" href="">
+              <i class="oo-svg snapshot"></i> Force Snapshot
+            </a>
+          </li>`;
+
+      columnHtml += '</ul></div>'; // dropdown
+      columnHtml += '</div>'; // .oo-actions
     }
 
     if (column.filterable) {

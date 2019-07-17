@@ -99,6 +99,8 @@
       </label>
       <input type="text" class="gf-form-input width-13" ng-model="style.fontawesome" ng-blur="editor.render()" ng-model-onblur data-placement="right">
     </div>
+    <gf-form-switch class="gf-form" label-class="width-10" ng-if="style.type === 'string'" label="Show Event Actions" checked="style.eventActions"
+        on-change="editor.render()"></gf-form-switch>
 
     <div ng-if="style.type === 'number'">
       <div class="gf-form">
