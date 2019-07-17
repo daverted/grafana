@@ -265,8 +265,6 @@ class TablePanelCtrl extends MetricsPanelCtrl {
             urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/resolve');
           });
 
-        console.log('methodUrl: ', urls);
-
         // start spinner
         el.removeClass('oo-svg resolve').addClass('fa fa-spinner fa-spin');
 
@@ -284,16 +282,80 @@ class TablePanelCtrl extends MetricsPanelCtrl {
                 .prop('title', 'Error resolving event');
             },
             success: data => {
-              // replace spinner with green check
-              el.removeClass('fa fa-spinner fa-spin')
-                .addClass('far fa-check-circle success')
-                .prop('title', 'Resolved');
-
-              console.log('urls: ', urls);
               if (urls.length > 0) {
                 const url = urls.pop();
                 ajax(url);
+              } else {
+                // replace spinner with green check
+                el.removeClass('fa fa-spinner fa-spin')
+                  .addClass('far fa-check-circle success')
+                  .prop('title', 'Resolved');
               }
+
+              // TODO updates aren't instant, need to delay this
+              // refresh table
+              // ctrl.events.emit('refresh');
+            },
+          });
+        };
+
+        const url = urls.pop();
+        ajax(url);
+      } catch (e) {
+        el.removeClass('oo-svg resolve fa fa-spinner fa-spin')
+          .addClass('far fa-times-circle danger')
+          .prop('title', 'Error resolving event');
+        console.error('Caught Exception in ooActionResolve');
+        console.error(e);
+      }
+    }
+
+    function ooActionArchive(e: any) {
+      const el = $(e.currentTarget);
+      try {
+        // apiKey and apiUrl must exist as page variables
+        const apiKey = ctrl.renderer.templateSrv.index.apiKey.current.value;
+        const apiUrl = ctrl.renderer.templateSrv.index.apiUrl.current.value;
+        const apiVer = ctrl.renderer.templateSrv.index.apiVer.current.value;
+
+        const envId = el.data('envId');
+
+        const urls = [];
+
+        el.data('eventId')
+          .toString()
+          .split(',')
+          .forEach(eventId => {
+            urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/delete');
+          });
+
+        // start spinner
+        el.removeClass('oo-svg resolve').addClass('fa fa-spinner fa-spin');
+
+        // POST https://api.overops.com/api/v1/services/env_id/events/event_id/delete
+        const ajax = url => {
+          console.log('const ajax url: ', url);
+          $.ajax({
+            url: url,
+            headers: { 'x-api-key': apiKey },
+            method: 'POST',
+            error: err => {
+              // replace spinner with red x
+              el.removeClass('fa fa-spinner fa-spin')
+                .addClass('far fa-times-circle danger')
+                .prop('title', 'Error resolving event');
+            },
+            success: data => {
+              if (urls.length > 0) {
+                const url = urls.pop();
+                ajax(url);
+              } else {
+                // replace spinner with green check
+                el.removeClass('fa fa-spinner fa-spin')
+                  .addClass('far fa-check-circle success')
+                  .prop('title', 'Resolved');
+              }
+
               // TODO updates aren't instant, need to delay this
               // refresh table
               // ctrl.events.emit('refresh');
@@ -308,14 +370,9 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         el.removeClass('oo-svg resolve fa fa-spinner fa-spin')
           .addClass('far fa-times-circle danger')
           .prop('title', 'Error resolving event');
-        console.error('Caught Exception in ooActionResolve');
+        console.error('Caught Exception in ooActionArchive');
         console.error(e);
       }
-    }
-
-    function ooActionArchive(e: any) {
-      // TODO
-      console.log('TODO');
     }
 
     // hook up link tooltips
