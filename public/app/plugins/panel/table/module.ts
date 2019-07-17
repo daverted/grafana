@@ -270,7 +270,6 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
         // POST https://api.overops.com/api/v1/services/env_id/events/event_id/resolve
         const ajax = url => {
-          console.log('const ajax url: ', url);
           $.ajax({
             url: url,
             headers: { 'x-api-key': apiKey },
@@ -330,11 +329,10 @@ class TablePanelCtrl extends MetricsPanelCtrl {
           });
 
         // start spinner
-        el.removeClass('oo-svg resolve').addClass('fa fa-spinner fa-spin');
+        el.removeClass('oo-svg archive').addClass('fa fa-spinner fa-spin');
 
         // POST https://api.overops.com/api/v1/services/env_id/events/event_id/delete
         const ajax = url => {
-          console.log('const ajax url: ', url);
           $.ajax({
             url: url,
             headers: { 'x-api-key': apiKey },
@@ -364,7 +362,6 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         };
 
         const url = urls.pop();
-        console.log('calling ajax url...');
         ajax(url);
       } catch (e) {
         el.removeClass('oo-svg resolve fa fa-spinner fa-spin')
