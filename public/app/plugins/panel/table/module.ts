@@ -255,12 +255,15 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         const apiVer = ctrl.renderer.templateSrv.index.apiVer.current.value;
 
         const envId = el.data('envId');
+
+        console.log(envId);
+
         const eventId = el
           .data('eventId')
           .toString()
           .split(',')[0]; // TODO: apply to all events w/ forEach
 
-        const methodUrl = apiUrl + 'api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/resolve';
+        const methodUrl = apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/resolve';
         console.log('methodUrl: ', methodUrl);
 
         // start spinner
