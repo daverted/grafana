@@ -235,18 +235,18 @@
     .dropdown-menu {
       a {
         width: 100%;
+        vertical-align: middle;
       }
       & > li > a i {
         top: 0;
         text-align: center;
-        height: 1.385em;
         width: 1.385em;
         &.fa,
         &.fas,
         &.far,
         &.fab,
         &.fal {
-          left: 0.3em;
+          vertical-align: middle;
         }
       }
     }
