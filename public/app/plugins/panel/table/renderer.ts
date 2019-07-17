@@ -379,7 +379,7 @@ export class TableRenderer {
           ticketUrl = scopedVars['__cell_' + ndx].value;
         } else if (col.text === 'Id') {
           eventId = scopedVars['__cell_' + ndx].value;
-        } else if (col.text === 'envId') {
+        } else if (col.text === 'Env id') {
           envId = scopedVars['__cell_' + ndx].value;
         }
       });
