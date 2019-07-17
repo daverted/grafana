@@ -256,41 +256,54 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
         const envId = el.data('envId');
 
-        const eventId = el
-          .data('eventId')
+        const urls = [];
+
+        el.data('eventId')
           .toString()
-          .split(',')[0]; // TODO: apply to all events w/ forEach
+          .split(',')
+          .forEach(eventId => {
+            urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/resolve');
+          });
 
-        console.log('eventId: ', eventId);
-
-        const methodUrl = apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/resolve';
-        console.log('methodUrl: ', methodUrl);
+        console.log('methodUrl: ', urls);
 
         // start spinner
         el.removeClass('oo-svg resolve').addClass('fa fa-spinner fa-spin');
 
         // POST https://api.overops.com/api/v1/services/env_id/events/event_id/resolve
-        $.ajax({
-          url: methodUrl,
-          headers: { 'x-api-key': apiKey },
-          method: 'POST',
-          error: err => {
-            // replace spinner with red x
-            el.removeClass('fa fa-spinner fa-spin')
-              .addClass('far fa-times-circle danger')
-              .prop('title', 'Error resolving event');
-          },
-          success: data => {
-            // replace spinner with green check
-            el.removeClass('fa fa-spinner fa-spin')
-              .addClass('far fa-check-circle success')
-              .prop('title', 'Resolved');
+        const ajax = url => {
+          console.log('const ajax url: ', url);
+          $.ajax({
+            url: url,
+            headers: { 'x-api-key': apiKey },
+            method: 'POST',
+            error: err => {
+              // replace spinner with red x
+              el.removeClass('fa fa-spinner fa-spin')
+                .addClass('far fa-times-circle danger')
+                .prop('title', 'Error resolving event');
+            },
+            success: data => {
+              // replace spinner with green check
+              el.removeClass('fa fa-spinner fa-spin')
+                .addClass('far fa-check-circle success')
+                .prop('title', 'Resolved');
 
-            // TODO updates aren't instant, need to delay this
-            // refresh table
-            // ctrl.events.emit('refresh');
-          },
-        });
+              console.log('urls: ', urls);
+              if (urls.length > 0) {
+                const url = urls.pop();
+                ajax(url);
+              }
+              // TODO updates aren't instant, need to delay this
+              // refresh table
+              // ctrl.events.emit('refresh');
+            },
+          });
+        };
+
+        const url = urls.pop();
+        console.log('calling ajax url...');
+        ajax(url);
       } catch (e) {
         el.removeClass('oo-svg resolve fa fa-spinner fa-spin')
           .addClass('far fa-times-circle danger')
@@ -298,6 +311,11 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         console.error('Caught Exception in ooActionResolve');
         console.error(e);
       }
+    }
+
+    function ooActionArchive(e: any) {
+      // TODO
+      console.log('TODO');
     }
 
     // hook up link tooltips
@@ -319,7 +337,10 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
     elem.on('click', '.table-panel-page-link', switchPage);
     elem.on('click', '.table-panel-filter-link', addFilterClicked);
+
+    // wire up overops event actions
     elem.on('click', '.oo-action-resolve', ooActionResolve);
+    elem.on('click', '.oo-action-archive', ooActionArchive);
 
     const unbindDestroy = scope.$on('$destroy', () => {
       elem.off('click', '.table-panel-page-link');

@@ -403,9 +403,9 @@ export class TableRenderer {
         `data-event-id="${eventId}" data-env-id="${envId}"></i><span class="divider"></span>`;
 
       columnHtml +=
-        '<i class="oo-svg archive" ' +
+        '<i class="oo-svg archive oo-action-archive" ' +
         'title="Hide this event: The event will no longer appear in the dashboard or alerts."' +
-        '></i><span class="divider"></span>';
+        `data-event-id="${eventId}" data-env-id="${envId}"></i><span class="divider"></span>`;
 
       columnHtml += `<div class="dropdown">
           <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
