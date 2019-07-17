@@ -256,12 +256,12 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
         const envId = el.data('envId');
 
-        console.log(envId);
-
         const eventId = el
           .data('eventId')
           .toString()
           .split(',')[0]; // TODO: apply to all events w/ forEach
+
+        console.log('eventId: ', eventId);
 
         const methodUrl = apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/resolve';
         console.log('methodUrl: ', methodUrl);
