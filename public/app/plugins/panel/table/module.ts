@@ -247,9 +247,8 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     }
 
     function ooActionResolve(e: any) {
+      const el = $(e.currentTarget);
       try {
-        const el = $(e.currentTarget);
-
         // apiKey and apiUrl must exist as page variables
         const apiKey = ctrl.renderer.templateSrv.index.apiKey.current.value;
         const apiUrl = ctrl.renderer.templateSrv.index.apiUrl.current.value;
@@ -290,6 +289,9 @@ class TablePanelCtrl extends MetricsPanelCtrl {
           },
         });
       } catch (e) {
+        el.removeClass('oo-svg resolve fa fa-spinner fa-spin')
+          .addClass('far fa-times-circle danger')
+          .prop('title', 'Error resolving event');
         console.error('Caught Exception in ooActionResolve');
         console.error(e);
       }
