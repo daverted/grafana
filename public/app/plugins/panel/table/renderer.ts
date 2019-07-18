@@ -447,14 +447,19 @@ export class TableRenderer {
     const endPos = Math.min(startPos + pageSize, this.table.rows.length);
     let html = '';
 
+    let renderedColumns = 0;
     for (let y = startPos; y < endPos; y++) {
       const row = this.table.rows[y];
       let cellHtml = '';
       let rowStyle = '';
       const rowClasses = [];
       let rowClass = '';
+      renderedColumns = 0;
       for (let i = 0; i < this.table.columns.length; i++) {
         cellHtml += this.renderCell(i, y, row[i], y === startPos);
+        if (!this.table.columns[i].hidden) {
+          renderedColumns++;
+        }
       }
 
       if (this.colorState.row) {
@@ -469,6 +474,11 @@ export class TableRenderer {
 
       html += '<tr ' + rowClass + rowStyle + '>' + cellHtml + '</tr>';
     }
+
+    // add bottom whitespace for actions dropdown menu
+    html += `<tr><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
+       <tr><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
+       <tr><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>`;
 
     return html;
   }
