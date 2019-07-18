@@ -424,7 +424,7 @@ export class TableRenderer {
       }
 
       columnHtml += `<li>
-            <a tabindex="-1" href="#" class="oo-action-snapshot">
+            <a tabindex="-1" href="#" class="oo-action-snapshot" data-event-id="${eventId}" data-env-id="${envId}">
               <i class="oo-svg snapshot"></i> Force Snapshot
             </a>
           </li>`;
