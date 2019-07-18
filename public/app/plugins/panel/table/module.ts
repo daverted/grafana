@@ -341,7 +341,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
               // replace spinner with red x
               el.removeClass('fa fa-spinner fa-spin')
                 .addClass('far fa-times-circle danger')
-                .prop('title', 'Error resolving event');
+                .prop('title', 'Error hiding event');
             },
             success: data => {
               if (urls.length > 0) {
@@ -351,7 +351,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
                 // replace spinner with green check
                 el.removeClass('fa fa-spinner fa-spin')
                   .addClass('far fa-check-circle success')
-                  .prop('title', 'Resolved');
+                  .prop('title', 'Hidden');
               }
 
               // TODO updates aren't instant, need to delay this
