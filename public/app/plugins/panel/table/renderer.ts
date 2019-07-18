@@ -424,7 +424,7 @@ export class TableRenderer {
       }
 
       columnHtml += `<li>
-            <a tabindex="-1" href="">
+            <a tabindex="-1" href="#" class="oo-action-snapshot">
               <i class="oo-svg snapshot"></i> Force Snapshot
             </a>
           </li>`;

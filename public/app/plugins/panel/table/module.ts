@@ -364,10 +364,81 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         const url = urls.pop();
         ajax(url);
       } catch (e) {
-        el.removeClass('oo-svg resolve fa fa-spinner fa-spin')
+        el.removeClass('oo-svg archive fa fa-spinner fa-spin')
           .addClass('far fa-times-circle danger')
-          .prop('title', 'Error resolving event');
+          .prop('title', 'Error hiding event');
         console.error('Caught Exception in ooActionArchive');
+        console.error(e);
+      }
+    }
+
+    function ooActionForceSnapshot(e: any) {
+      const el = $(e.currentTarget);
+      const elIcon = el.children('i');
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      try {
+        // apiKey and apiUrl must exist as page variables
+        const apiKey = ctrl.renderer.templateSrv.index.apiKey.current.value;
+        const apiUrl = ctrl.renderer.templateSrv.index.apiUrl.current.value;
+        const apiVer = ctrl.renderer.templateSrv.index.apiVer.current.value;
+
+        const envId = el.data('envId');
+
+        const urls = [];
+
+        el.data('eventId')
+          .toString()
+          .split(',')
+          .forEach(eventId => {
+            urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/force-snapshot');
+          });
+
+        // start spinner
+        elIcon.removeClass('oo-svg snapshot').addClass('fa fa-spinner fa-spin');
+
+        // POST https://api.overops.com/api/v1/services/env_id/events/event_id/force-snapshot
+        const ajax = url => {
+          $.ajax({
+            url: url,
+            headers: { 'x-api-key': apiKey },
+            method: 'POST',
+            error: err => {
+              // replace spinner with red x
+              elIcon
+                .removeClass('fa fa-spinner fa-spin')
+                .addClass('far fa-times-circle danger')
+                .prop('title', 'Error forcing snapshot');
+            },
+            success: data => {
+              if (urls.length > 0) {
+                const url = urls.pop();
+                ajax(url);
+              } else {
+                // replace spinner with green check
+                elIcon
+                  .removeClass('fa fa-spinner fa-spin')
+                  .addClass('far fa-check-circle success')
+                  .prop('title', 'Forced snapshot');
+              }
+
+              // TODO updates aren't instant, need to delay this
+              // refresh table
+              // ctrl.events.emit('refresh');
+            },
+          });
+        };
+
+        const url = urls.pop();
+        ajax(url);
+      } catch (e) {
+        elIcon
+          .removeClass('oo-svg snapshot fa fa-spinner fa-spin')
+          .addClass('far fa-times-circle danger')
+          .prop('title', 'Error forcing snapshot');
+        console.error('Caught Exception in ooActionForceSnapshot');
         console.error(e);
       }
     }
@@ -395,6 +466,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     // wire up overops event actions
     elem.on('click', '.oo-action-resolve', ooActionResolve);
     elem.on('click', '.oo-action-archive', ooActionArchive);
+    elem.on('click', '.oo-action-snapshot', ooActionForceSnapshot);
 
     const unbindDestroy = scope.$on('$destroy', () => {
       elem.off('click', '.table-panel-page-link');
