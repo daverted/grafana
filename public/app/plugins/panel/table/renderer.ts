@@ -398,6 +398,12 @@ export class TableRenderer {
                 <i class="fas fa-ticket-alt"></i> View Ticket
               </a>
             </li>`;
+      } else {
+        columnHtml += `<li class="disabled">
+              <a tabindex="-1" href="#" target="_blank">
+                <i class="fas fa-ticket-alt"></i> No Ticket
+              </a>
+            </li>`;
       }
 
       columnHtml += `<li>
