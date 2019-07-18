@@ -227,29 +227,6 @@ export class TableRenderer {
       };
     }
 
-    ///// TODO integrate with string type
-    if (column.style.type === 'actions') {
-      return (value: any) => {
-        try {
-          const actions = JSON.parse(value);
-          let renderedActions = '';
-          console.log('actions.icons: ', actions.icons);
-          if (actions.icons && Array.isArray(actions.icons)) {
-            actions.icons.array.forEach(el => {
-              console.log(el);
-              renderedActions += `<i class="${this.sanitize(el.icon)}"></i>`;
-            });
-          }
-
-          return renderedActions;
-        } catch (ex) {
-          console.error('Caught error rendering Actions ', value);
-          console.error(ex);
-        }
-        return '';
-      };
-    }
-
     return (value: any) => {
       return this.defaultCellFormatter(value, column.style);
     };

@@ -50,7 +50,7 @@ export interface ColumnStyle {
   colors?: any[];
   decimals?: number;
   thresholds?: any[];
-  type?: 'date' | 'number' | 'string' | 'hidden' | 'html' | 'fontawesome' | 'actions';
+  type?: 'date' | 'number' | 'string' | 'hidden' | 'html' | 'fontawesome';
   unit?: string;
   dateFormat?: string;
   sanitize?: boolean; // not used in react
