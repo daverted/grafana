@@ -357,13 +357,15 @@ export class TableRenderer {
       }
 
       if (value !== '') {
-        columnHtml += `
-          <a href="${cellLink}" target="${cellTarget}" data-link-tooltip data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}>
-            <span class="ellipsis">
-              ${value}
-            </span>
-          </a>
-        `;
+        columnHtml +=
+          ` <a href="${cellLink}" target="${cellTarget}" data-link-tooltip ` +
+          `data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}> `;
+        if (column.style && column.style.eventActions) {
+          columnHtml += `<span class="ellipsis">${value}</span>`;
+        } else {
+          columnHtml += value;
+        }
+        columnHtml += ` </a> `;
       }
     } else {
       columnHtml += value;
