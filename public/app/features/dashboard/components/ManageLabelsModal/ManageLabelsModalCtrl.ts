@@ -139,6 +139,8 @@ export class ManageLabelsModalCtrl {
         if (
           label.type === 'USER' &&
           !label.name.includes('.infra') &&
+          !label.name.includes('.perf') &&
+          !label.name.includes('JIRA') &&
           this.originalLabels[i].checked !== label.checked
         ) {
           if (label.checked) {

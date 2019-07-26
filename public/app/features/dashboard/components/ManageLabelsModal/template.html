@@ -46,7 +46,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="(index, label) in ctrl.envLabels | filter: { type: 'USER'} | filter: { name: '!.infra' } | filter: { name: ctrl.filter }">
+            <tr ng-repeat="(index, label) in ctrl.envLabels | filter: { type: 'USER'} | filter: { name: '!.infra' } | filter: { name: '!.perf' } | filter: { name: '!JIRA'} | filter: { name: ctrl.filter }">
               <td class="width-4 filter-table__switch-cell">
                 <gf-form-checkbox switch-class="gf-form-switch--table-cell" checked="label.checked">
                 </gf-form-checkbox>
