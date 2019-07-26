@@ -18,6 +18,9 @@ import './components/ShareModal';
 import './components/AdHocFilters';
 import './components/RowOptions';
 
+// Custom Components
+import './components/ManageLabelsModal';
+
 import DashboardPermissions from './components/DashboardPermissions/DashboardPermissions';
 
 // angular wrappers

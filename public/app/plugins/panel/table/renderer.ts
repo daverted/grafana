@@ -351,6 +351,7 @@ export class TableRenderer {
     let ticketUrl = '';
     let eventId = '';
     let envId = '';
+    let labels = '';
 
     if (column.style && column.style.eventActions) {
       this.table.columns.forEach((col, ndx) => {
@@ -360,6 +361,8 @@ export class TableRenderer {
           eventId = scopedVars['__cell_' + ndx].value;
         } else if (col.text === 'Env id') {
           envId = scopedVars['__cell_' + ndx].value;
+        } else if (col.text === 'Labels') {
+          labels = scopedVars['__cell_' + ndx].value;
         }
       });
 
@@ -400,11 +403,19 @@ export class TableRenderer {
             </li>`;
       } else {
         columnHtml += `<li class="disabled">
-              <a tabindex="-1" href="#" target="_blank">
+              <a tabindex="-1" href="#">
                 <i class="fas fa-ticket-alt"></i> No Ticket
               </a>
             </li>`;
       }
+
+      columnHtml += `<li>
+            <a tabindex="-1" href="" role="button" class="oo-action-manage-labels"
+              data-toggle="modal" data-event-id="${eventId}" data-env-id="${envId}"
+              data-value="${value}" data-labels="${labels}">
+              <i class="oo-svg manage-labels"></i> Manage Labels
+            </a>
+          </li>`;
 
       columnHtml += `<li>
             <a tabindex="-1" href="#" class="oo-action-snapshot" data-event-id="${eventId}" data-env-id="${envId}">

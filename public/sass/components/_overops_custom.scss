@@ -138,6 +138,7 @@
   }
 }
 
+// TODO refactor
 .graph {
   background-image: url('/public/img/grid/01_graph.svg');
 
@@ -180,6 +181,14 @@
 
 .snapshot {
   background-image: url('/public/img/grid/13_reset_snapshot_blue.svg');
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.manage-labels {
+  background-image: url('/public/img/grid/08_label.svg');
 
   &:hover {
     opacity: 0.6;
@@ -278,3 +287,15 @@
 // .actions-wrapper:hover .oo-actions {
 //   visibility: visible;
 // }
+
+.modal-header-title {
+  .oo-svg.manage-labels {
+    height: 1.3em;
+    vertical-align: top;
+    margin-top: -0.2em;
+    background-image: none;
+    mask-image: url(/public/img/grid/08_label.svg);
+    mask-repeat: no-repeat;
+    background-color: #ddd;
+  }
+}

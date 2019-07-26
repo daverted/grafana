@@ -246,7 +246,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       rootElem.css({ 'max-height': panel.scroll ? getTableHeight() : '' });
     }
 
-    function ooActionResolve(e: any) {
+    function ooActionResolve(e: JQueryEventObject) {
       const el = $(e.currentTarget);
       try {
         // apiKey and apiUrl must exist as page variables
@@ -443,6 +443,30 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       }
     }
 
+    function ooActionManageLabels(e: JQueryEventObject) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const el = $(e.currentTarget);
+
+      const template =
+        '<manage-labels-modal event-id="model.eventId" event-env="model.envId" filter="" ' +
+        'event-name="model.eventName" event-labels="model.eventLabels" dismiss="dismiss()" ' +
+        'new-label="model.newLabel">' +
+        '</manage-labels-modal>';
+
+      ctrl.publishAppEvent('show-modal', {
+        templateHtml: template,
+        modalClass: 'modal--narrow',
+        model: {
+          eventId: el.data('eventId'),
+          envId: el.data('envId'),
+          eventName: el.data('value'),
+          eventLabels: el.data('labels'),
+        },
+      });
+    }
+
     // hook up link tooltips
     elem.tooltip({
       selector: '[data-link-tooltip]',
@@ -467,6 +491,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     elem.on('click', '.oo-action-resolve', ooActionResolve);
     elem.on('click', '.oo-action-archive', ooActionArchive);
     elem.on('click', '.oo-action-snapshot', ooActionForceSnapshot);
+    elem.on('click', '.oo-action-manage-labels', ooActionManageLabels);
 
     const unbindDestroy = scope.$on('$destroy', () => {
       elem.off('click', '.table-panel-page-link');

@@ -1,0 +1,1 @@
+export { ManageLabelsModalCtrl } from './ManageLabelsModalCtrl';
