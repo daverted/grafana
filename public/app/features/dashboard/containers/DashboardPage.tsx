@@ -231,7 +231,8 @@ export class DashboardPage extends PureComponent<Props, State> {
     return (
       <div className="dashboard-loading">
         <div className="dashboard-loading__text">
-          <i className="fa fa-spinner fa-spin" /> {this.props.initPhase}
+          {/* <i className="fa fa-spinner fa-spin" /> {this.props.initPhase} */}
+          <i className="fa fa-spinner fa-spin" /> Loading&hellip;
         </div>
       </div>
     );
