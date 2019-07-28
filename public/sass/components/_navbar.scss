@@ -127,6 +127,12 @@ i.navbar-page-btn__search {
   flex-grow: 1;
 }
 
+.navbar__logo > svg.img {
+  margin: 0 $dashboard-padding 0 -8px;
+  padding: 6px 0;
+  width: 44px;
+}
+
 .navbar-button {
   @include buttonBackground($btn-inverse-bg, $btn-inverse-bg-hl, $btn-inverse-text-color, $btn-inverse-text-shadow);
 
