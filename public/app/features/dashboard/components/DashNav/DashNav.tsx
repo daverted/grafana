@@ -124,25 +124,15 @@ export class DashNav extends PureComponent<Props> {
   renderDashboardTitleSearchButton() {
     const { dashboard } = this.props;
 
-    const folderTitle = dashboard.meta.folderTitle;
-    const haveFolder = dashboard.meta.folderId > 0;
+    // const folderTitle = dashboard.meta.folderTitle;
+    // const haveFolder = dashboard.meta.folderId > 0;
 
     return (
       <>
         <div>
           <div className="navbar-page-btn">
             {!this.isInFullscreenOrSettings && <i className="gicon gicon-dashboard" />}
-            {haveFolder && (
-              <>
-                <a className="navbar-page-btn__folder" onClick={this.onFolderNameClick}>
-                  {folderTitle}
-                </a>
-                <i className="fa fa-chevron-right navbar-page-btn__folder-icon" />
-              </>
-            )}
-            <a onClick={this.onDahboardNameClick}>
-              {dashboard.title} <i className="fa fa-caret-down navbar-page-btn__search" />
-            </a>
+            {dashboard.title}
           </div>
         </div>
         {this.isSettings && <span className="navbar-settings-title">&nbsp;/ Settings</span>}
