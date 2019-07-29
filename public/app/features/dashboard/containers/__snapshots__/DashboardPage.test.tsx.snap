@@ -229,8 +229,7 @@ exports[`DashboardPage Dashboard is fetching slowly Should render slow init stat
     <i
       className="fa fa-spinner fa-spin"
     />
-     
-    Fetching
+     Loading…
   </div>
 </div>
 `;
