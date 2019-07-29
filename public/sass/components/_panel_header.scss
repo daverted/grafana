@@ -13,9 +13,12 @@ $panel-header-no-title-zindex: 1;
       transition: none;
       background-color: $panel-bg;
     }
-    .panel-title-container,
+    .panel-title-container {
+      cursor: default;
+    }
     .panel-title-text {
       cursor: default;
+      color: inherit;
     }
   }
   &.panel-container--no-title {
