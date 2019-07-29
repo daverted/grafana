@@ -1,6 +1,12 @@
 import { coreModule } from 'app/core/core';
 
-const template = `
+const bootData = (window as any).grafanaBootData || {
+  settings: {},
+  user: {},
+};
+
+const template = bootData.user.isGrafanaAdmin
+  ? `
 <span class="panel-title">
   <span class="icon-gf panel-alert-icon"></span>
   <span class="panel-title-text">{{ctrl.panel.title | interpolateTemplateVars:this}}</span>
@@ -9,6 +15,13 @@ const template = `
     <ul class="dropdown-menu dropdown-menu--menu panel-menu" role="menu">
     </ul>
   </span>
+  <span class="panel-time-info" ng-if="ctrl.timeInfo"><i class="fa fa-clock-o"></i> {{ctrl.timeInfo}}</span>
+</span>
+`
+  : `
+<span class="panel-title">
+  <span class="icon-gf panel-alert-icon"></span>
+  <span class="panel-title-text">{{ctrl.panel.title | interpolateTemplateVars:this}}</span>
   <span class="panel-time-info" ng-if="ctrl.timeInfo"><i class="fa fa-clock-o"></i> {{ctrl.timeInfo}}</span>
 </span>`;
 

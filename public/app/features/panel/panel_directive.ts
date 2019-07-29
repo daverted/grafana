@@ -3,10 +3,17 @@ import $ from 'jquery';
 import Drop from 'tether-drop';
 import baron from 'baron';
 
+const bootData = (window as any).grafanaBootData || {
+  settings: {},
+  user: {},
+};
+
+const noHover = bootData.user.isGrafanaAdmin ? '' : 'no-hover';
+
 const module = angular.module('grafana.directives');
 
 const panelTemplate = `
-  <div class="panel-container" ng-class="{'panel-container--no-title': !ctrl.panel.title.length}">
+  <div class="panel-container ${noHover}" ng-class="{'panel-container--no-title': !ctrl.panel.title.length}">
       <div class="panel-header" ng-class="{'grid-drag-handle': !ctrl.panel.fullscreen}">
         <span class="panel-info-corner">
           <i class="fa"></i>
