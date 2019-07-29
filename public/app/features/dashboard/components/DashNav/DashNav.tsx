@@ -297,6 +297,7 @@ export class DashNav extends PureComponent<Props> {
               dashboard={dashboard}
               location={location}
               updateLocation={updateLocation}
+              refreshOnly={dashboard.timepicker.refreshOnly}
             />
           </div>
         )}

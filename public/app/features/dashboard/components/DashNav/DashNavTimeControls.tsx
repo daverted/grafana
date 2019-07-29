@@ -23,6 +23,7 @@ export interface Props {
   dashboard: DashboardModel;
   updateLocation: typeof updateLocation;
   location: LocationState;
+  refreshOnly: boolean;
 }
 
 export class DashNavTimeControls extends Component<Props> {
@@ -89,12 +90,22 @@ export class DashNavTimeControls extends Component<Props> {
   };
 
   render() {
-    const { dashboard } = this.props;
+    const { dashboard, refreshOnly } = this.props;
     const intervals = dashboard.timepicker.refresh_intervals;
     const timePickerValue = this.timeSrv.timeRange();
     const timeZone = dashboard.getTimezone();
 
-    return (
+    return refreshOnly ? (
+      <div className="dashboard-timepicker-wrapper">
+        <RefreshPicker
+          onIntervalChanged={this.onChangeRefreshInterval}
+          onRefresh={this.onRefresh}
+          value={dashboard.refresh}
+          intervals={intervals}
+          tooltip="Refresh dashboard"
+        />
+      </div>
+    ) : (
       <div className="dashboard-timepicker-wrapper">
         <TimePicker
           value={timePickerValue}

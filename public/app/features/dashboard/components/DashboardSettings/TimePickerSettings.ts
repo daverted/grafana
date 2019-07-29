@@ -51,6 +51,9 @@ const template = `
 
 		<gf-form-switch class="gf-form" label="Hide time picker" checked="ctrl.panel.hidden" label-class="width-10">
 		</gf-form-switch>
+
+		<gf-form-switch class="gf-form" ng-if="!ctrl.panel.hidden" label="Refresh only" checked="ctrl.panel.refreshOnly" label-class="width-10">
+		</gf-form-switch>
 	</div>
 </div>
 `;
