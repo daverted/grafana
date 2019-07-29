@@ -6,8 +6,6 @@ const bootData = (window as any).grafanaBootData || {
   user: {},
 };
 
-console.log('>> bootData.user.isGrafanaAdmin: ', bootData.user.isGrafanaAdmin);
-
 export class HelpCtrl {
   tabIndex: any;
   shortcuts: any;
