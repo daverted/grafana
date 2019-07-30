@@ -15,10 +15,14 @@ $panel-header-no-title-zindex: 1;
     }
     .panel-title-container {
       cursor: default;
-    }
-    .panel-title-text {
-      cursor: default;
-      color: inherit;
+      .panel-title {
+        height: auto;
+        .panel-title-text {
+          cursor: default;
+          color: inherit;
+          padding-top: 4px; // compensate for unsetting height
+        }
+      }
     }
   }
   &.panel-container--no-title {
