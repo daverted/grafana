@@ -60,11 +60,7 @@ export const defaultSelectOptions: TimeOption[] = [
 ];
 
 const defaultZoomOutTooltip = () => {
-  return (
-    <>
-      Time range zoom out <br /> CTRL+Z
-    </>
-  );
+  return <>Time range zoom out</>;
 };
 
 export interface State {
