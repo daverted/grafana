@@ -379,21 +379,23 @@ export class TableRenderer {
       //   'exceeds a target millisecond threshold." data-placement="right"></i><span class="divider"></span>';
 
       columnHtml +=
-        '<i class="oo-svg resolve oo-action-resolve" ' +
-        'title="Mark as Resolved: Should the event reoccur after the code is ' +
+        '<i class="oo-svg resolve oo-action-resolve" data-link-tooltip data-placement="right"' +
+        'data-original-title="Mark as Resolved: Should the event reoccur after the code is ' +
         'redeployed, you will receive an alert and the event will be marked as &quot;Resurfaced&quot;." ' +
         `data-event-id="${eventId}" data-env-id="${envId}"></i><span class="divider"></span>`;
 
       columnHtml +=
-        '<i class="oo-svg archive oo-action-archive" ' +
-        'title="Hide this event: The event will no longer appear in the dashboard or alerts."' +
+        '<i class="oo-svg archive oo-action-archive" data-link-tooltip data-placement="right"' +
+        'data-original-title="Hide this event: The event will no longer appear in the dashboard or alerts."' +
         `data-event-id="${eventId}" data-env-id="${envId}"></i><span class="divider"></span>`;
 
-      columnHtml += `<div class="dropdown">
-          <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-            <i class="oo-svg more" title="Show more actions"></i>
-          </a>
-          <ul class="dropdown-menu pull-right" role="menu">`;
+      columnHtml +=
+        '<div class="dropdown">' +
+        '<a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">' +
+        '<i class="oo-svg more" data-link-tooltip data-placement="right" ' +
+        'data-original-title="More Actions"></i>' +
+        '</a>' +
+        '<ul class="dropdown-menu pull-right" role="menu">';
 
       if (ticketUrl !== '') {
         columnHtml += `<li>
