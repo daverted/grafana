@@ -333,9 +333,12 @@ export class TableRenderer {
         cellClasses.push('actions-wrapper');
       }
 
+      const dataLinkTooltip =
+        column.style && column.style.mouseoverTooltip ? 'data-link-tooltip-mouseover' : 'data-link-tooltip';
+
       if (value !== '') {
         columnHtml +=
-          ` <a href="${cellLink}" target="${cellTarget}" data-link-tooltip ` +
+          ` <a href="${cellLink}" target="${cellTarget}" ${dataLinkTooltip} ` +
           `data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}> `;
         if (column.style && column.style.eventActions) {
           columnHtml += `<span class="ellipsis">${value}</span>`;

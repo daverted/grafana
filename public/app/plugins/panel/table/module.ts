@@ -472,6 +472,30 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       selector: '[data-link-tooltip]',
     });
 
+    // wire up mouseover tooltips
+    const drilldownTooltip = $('<div id="tooltip" class="">hello</div>"');
+
+    elem.mouseleave(() => {
+      drilldownTooltip.detach();
+    });
+
+    elem.mousemove(e => {
+      const target = $(e.target);
+      const linkTT = target.parents('[data-link-tooltip-mouseover]');
+
+      if (linkTT.length < 1) {
+        drilldownTooltip.detach();
+        return;
+      }
+
+      const originalTitle = linkTT.data('originalTitle');
+
+      if (originalTitle !== undefined && originalTitle !== '') {
+        drilldownTooltip.text(originalTitle);
+        drilldownTooltip.place_tt(e.pageX, e.pageY + 10);
+      }
+    });
+
     function addFilterClicked(e: any) {
       const filterData = $(e.currentTarget).data();
       const options = {

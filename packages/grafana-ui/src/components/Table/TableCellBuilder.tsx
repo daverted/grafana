@@ -71,6 +71,7 @@ export interface ColumnStyle {
   fontawesome?: string;
   valueAsTooltip?: boolean;
   eventActions?: boolean;
+  mouseoverTooltip?: boolean;
 }
 
 // private mapper:ValueMapper,
