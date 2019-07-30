@@ -54,6 +54,7 @@ $yellow: ${theme.colors.yellow};
 $orange: ${theme.colors.orange};
 $purple: ${theme.colors.purple};
 $variable: ${theme.colors.variable};
+$teal: ${theme.colors.teal};
 
 $brand-primary: ${theme.colors.brandPrimary};
 $brand-success: ${theme.colors.brandSuccess};
@@ -286,7 +287,7 @@ $popover-border-color: $dark-9;
 $popover-header-bg: $dark-9;
 $popover-shadow: 0 0 20px black;
 
-$popover-help-bg: $btn-secondary-bg;
+$popover-help-bg: $teal;
 $popover-help-color: $gray-6;
 
 $popover-error-bg: $btn-danger-bg;
@@ -298,7 +299,7 @@ $tooltipArrowWidth: 5px;
 $tooltipLinkColor: $link-color;
 $graph-tooltip-bg: $dark-1;
 
-$tooltipBackground: $black;
+$tooltipBackground: $teal;
 $tooltipColor: $gray-4;
 $tooltipArrowColor: $tooltipBackground;
 $tooltipBackgroundError: $brand-danger;
