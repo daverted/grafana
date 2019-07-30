@@ -196,8 +196,7 @@
 }
 
 .oo-actions {
-  // visibility: hidden;
-  display: inline-block;
+  display: none;
   vertical-align: middle;
 
   .oo-svg {
@@ -273,20 +272,30 @@
 }
 
 .actions-wrapper > a {
-  width: calc(100% - 8em); // 11em for all
+  width: calc(100%);
   vertical-align: middle;
 
   .ellipsis {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    display: block;
+    display: inline-block;
+    vertical-align: middle;
   }
 }
 
-// .actions-wrapper:hover .oo-actions {
-//   visibility: visible;
-// }
+.actions-wrapper:hover {
+  & > a {
+    margin-right: -8em; // 11em for all
+    .ellipsis {
+      width: calc(100% - 8em);
+    }
+  }
+
+  .oo-actions {
+    display: inline-block;
+  }
+}
 
 .modal-header-title {
   .oo-svg.manage-labels {
