@@ -375,7 +375,7 @@ export class TableRenderer {
 
       columnHtml +=
         '<i class="oo-svg inbox oo-action-inbox" data-link-tooltip data-placement="right"' +
-        'data-original-title="Return to Inbox" ' +
+        'data-original-title="Move to Inbox" ' +
         `data-event-id="${eventId}" data-env-id="${envId}"></i>`;
 
       columnHtml += '</span><span class="oo-actions-no-strike">';
