@@ -371,6 +371,15 @@ export class TableRenderer {
 
       columnHtml += '<div class="oo-actions">';
 
+      columnHtml += '<span class="oo-actions-strike">';
+
+      columnHtml +=
+        '<i class="oo-svg inbox oo-action-inbox" data-link-tooltip data-placement="right"' +
+        'data-original-title="Return to Inbox" ' +
+        `data-event-id="${eventId}" data-env-id="${envId}"></i>`;
+
+      columnHtml += '</span><span class="oo-actions-no-strike">';
+
       //// TODO implement 'graph this event' action
       // columnHtml += '<i class="oo-svg graph" data-link-tooltip ' +
       //   'data-original-title="Plot this event as a series onto the dashboard graph." ' +
@@ -429,6 +438,7 @@ export class TableRenderer {
           </li>`;
 
       columnHtml += '</ul></div>'; // dropdown
+      columnHtml += '</span>'; // .oo-actions-no-strike
       columnHtml += '</div>'; // .oo-actions
     }
 

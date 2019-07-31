@@ -8,6 +8,7 @@ import { columnOptionsTab } from './column_options';
 import { TableRenderer } from './renderer';
 import { isTableData } from '@grafana/data';
 import { TemplateSrv } from 'app/features/templating/template_srv';
+import { appEvents } from 'app/core/core';
 
 class TablePanelCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -268,7 +269,6 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         // start spinner
         el.removeClass('oo-svg resolve').addClass('fa fa-spinner fa-spin');
 
-        // POST https://api.overops.com/api/v1/services/env_id/events/event_id/resolve
         const ajax = url => {
           $.ajax({
             url: url,
@@ -276,24 +276,27 @@ class TablePanelCtrl extends MetricsPanelCtrl {
             method: 'POST',
             error: err => {
               // replace spinner with red x
-              el.removeClass('fa fa-spinner fa-spin')
+              el.removeClass('fa fa-spinner fa-spin oo-action-resolve')
                 .addClass('far fa-times-circle danger')
-                .prop('title', 'Error resolving event');
+                .attr('data-original-title', 'Error resolving event');
+
+              appEvents.emit('alert-error', ['Error resolving event']);
             },
             success: data => {
               if (urls.length > 0) {
                 const url = urls.pop();
                 ajax(url);
               } else {
-                // replace spinner with green check
-                el.removeClass('fa fa-spinner fa-spin')
-                  .addClass('far fa-check-circle success')
-                  .prop('title', 'Resolved');
-              }
+                // unset spinner
+                el.removeClass('fa fa-spinner fa-spin').addClass('oo-svg resolve');
 
-              // TODO updates aren't instant, need to delay this
-              // refresh table
-              // ctrl.events.emit('refresh');
+                el.parents('tr').addClass('strike');
+                appEvents.emit('alert-success', ['Event resolved']);
+
+                // setTimeout(() => {
+                //   ctrl.events.emit('refresh');
+                // }, 1000);
+              }
             },
           });
         };
@@ -301,15 +304,18 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         const url = urls.pop();
         ajax(url);
       } catch (e) {
-        el.removeClass('oo-svg resolve fa fa-spinner fa-spin')
+        el.removeClass('oo-svg resolve fa fa-spinner fa-spin oo-action-resolve')
           .addClass('far fa-times-circle danger')
-          .prop('title', 'Error resolving event');
+          .attr('data-original-title', 'Error resolving event');
+
+        appEvents.emit('alert-error', ['Error resolving event']);
+
         console.error('Caught Exception in ooActionResolve');
         console.error(e);
       }
     }
 
-    function ooActionArchive(e: any) {
+    function ooActionArchive(e: JQueryEventObject) {
       const el = $(e.currentTarget);
       try {
         // apiKey and apiUrl must exist as page variables
@@ -331,7 +337,6 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         // start spinner
         el.removeClass('oo-svg archive').addClass('fa fa-spinner fa-spin');
 
-        // POST https://api.overops.com/api/v1/services/env_id/events/event_id/delete
         const ajax = url => {
           $.ajax({
             url: url,
@@ -339,24 +344,23 @@ class TablePanelCtrl extends MetricsPanelCtrl {
             method: 'POST',
             error: err => {
               // replace spinner with red x
-              el.removeClass('fa fa-spinner fa-spin')
+              el.removeClass('fa fa-spinner fa-spin oo-action-archive')
                 .addClass('far fa-times-circle danger')
-                .prop('title', 'Error hiding event');
+                .attr('data-original-title', 'Error hiding event');
+
+              appEvents.emit('alert-error', ['Error hiding event']);
             },
             success: data => {
               if (urls.length > 0) {
                 const url = urls.pop();
                 ajax(url);
               } else {
-                // replace spinner with green check
-                el.removeClass('fa fa-spinner fa-spin')
-                  .addClass('far fa-check-circle success')
-                  .prop('title', 'Hidden');
-              }
+                // unset spinner
+                el.removeClass('fa fa-spinner fa-spin').addClass('oo-svg archive');
 
-              // TODO updates aren't instant, need to delay this
-              // refresh table
-              // ctrl.events.emit('refresh');
+                el.parents('tr').addClass('strike');
+                appEvents.emit('alert-success', ['Event hidden']);
+              }
             },
           });
         };
@@ -364,10 +368,82 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         const url = urls.pop();
         ajax(url);
       } catch (e) {
-        el.removeClass('oo-svg archive fa fa-spinner fa-spin')
+        el.removeClass('oo-svg archive fa fa-spinner fa-spin oo-action-archive')
           .addClass('far fa-times-circle danger')
-          .prop('title', 'Error hiding event');
+          .attr('data-original-title', 'Error hiding event');
+
+        appEvents.emit('alert-error', ['Error hiding event']);
+
         console.error('Caught Exception in ooActionArchive');
+        console.error(e);
+      }
+    }
+
+    function ooActionInbox(e: JQueryEventObject) {
+      const el = $(e.currentTarget);
+
+      try {
+        // apiKey and apiUrl must exist as page variables
+        const apiKey = ctrl.renderer.templateSrv.index.apiKey.current.value;
+        const apiUrl = ctrl.renderer.templateSrv.index.apiUrl.current.value;
+        const apiVer = ctrl.renderer.templateSrv.index.apiVer.current.value;
+
+        const envId = el.data('envId');
+
+        const urls = [];
+
+        el.data('eventId')
+          .toString()
+          .split(',')
+          .forEach(eventId => {
+            urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/inbox');
+          });
+
+        // start spinner
+        el.removeClass('oo-svg inbox').addClass('fa fa-spinner fa-spin');
+
+        const ajax = url => {
+          $.ajax({
+            url: url,
+            headers: { 'x-api-key': apiKey },
+            method: 'POST',
+            error: err => {
+              // replace spinner with red x
+              el.removeClass('fa fa-spinner fa-spin oo-action-inbox')
+                .addClass('far fa-times-circle danger')
+                .attr('data-original-title', 'Error moving event to inbox');
+
+              appEvents.emit('alert-error', ['Error moving event to inbox']);
+            },
+            success: data => {
+              if (urls.length > 0) {
+                const url = urls.pop();
+                ajax(url);
+              } else {
+                // replace spinner with green check
+                el.removeClass('fa fa-spinner fa-spin').addClass('oo-svg inbox');
+
+                el.parents('tr').removeClass('strike');
+                appEvents.emit('alert-success', ['Event moved to inbox']);
+
+                // setTimeout(() => {
+                //   ctrl.events.emit('refresh');
+                // }, 3000);
+              }
+            },
+          });
+        };
+
+        const url = urls.pop();
+        ajax(url);
+      } catch (e) {
+        el.removeClass('oo-svg inbox fa fa-spinner fa-spin oo-action-inbox')
+          .addClass('far fa-times-circle danger')
+          .attr('data-original-title', 'Error resolving event');
+
+        appEvents.emit('alert-error', ['Error moving event to inbox']);
+
+        console.error('Caught Exception in ooActionInbox');
         console.error(e);
       }
     }
@@ -399,7 +475,6 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         // start spinner
         elIcon.removeClass('oo-svg snapshot').addClass('fa fa-spinner fa-spin');
 
-        // POST https://api.overops.com/api/v1/services/env_id/events/event_id/force-snapshot
         const ajax = url => {
           $.ajax({
             url: url,
@@ -410,7 +485,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
               elIcon
                 .removeClass('fa fa-spinner fa-spin')
                 .addClass('far fa-times-circle danger')
-                .prop('title', 'Error forcing snapshot');
+                .attr('data-original-title', 'Error forcing snapshot');
             },
             success: data => {
               if (urls.length > 0) {
@@ -421,7 +496,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
                 elIcon
                   .removeClass('fa fa-spinner fa-spin')
                   .addClass('far fa-check-circle success')
-                  .prop('title', 'Forced snapshot');
+                  .attr('data-original-title', 'Forced snapshot');
               }
 
               // TODO updates aren't instant, need to delay this
@@ -437,7 +512,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         elIcon
           .removeClass('oo-svg snapshot fa fa-spinner fa-spin')
           .addClass('far fa-times-circle danger')
-          .prop('title', 'Error forcing snapshot');
+          .attr('data-original-title', 'Error forcing snapshot');
         console.error('Caught Exception in ooActionForceSnapshot');
         console.error(e);
       }
@@ -514,6 +589,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     // wire up overops event actions
     elem.on('click', '.oo-action-resolve', ooActionResolve);
     elem.on('click', '.oo-action-archive', ooActionArchive);
+    elem.on('click', '.oo-action-inbox', ooActionInbox);
     elem.on('click', '.oo-action-snapshot', ooActionForceSnapshot);
     elem.on('click', '.oo-action-manage-labels', ooActionManageLabels);
 
