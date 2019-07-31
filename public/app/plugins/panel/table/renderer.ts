@@ -337,15 +337,18 @@ export class TableRenderer {
         column.style && column.style.mouseoverTooltip ? 'data-link-tooltip-mouseover' : 'data-link-tooltip';
 
       if (value !== '') {
-        columnHtml +=
-          ` <a href="${cellLink}" target="${cellTarget}" ${dataLinkTooltip} ` +
-          `data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}> `;
         if (column.style && column.style.eventActions) {
-          columnHtml += `<span class="ellipsis">${value}</span>`;
+          columnHtml += `
+            <a href="${cellLink}" target="${cellTarget}" ${textStyle}>
+              <span class="ellipsis" ${dataLinkTooltip} data-original-title="${cellLinkTooltip}" data-placement="right">
+                ${value}
+              </span>
+            </a> `;
         } else {
-          columnHtml += value;
+          columnHtml +=
+            ` <a href="${cellLink}" target="${cellTarget}" ${dataLinkTooltip} ` +
+            `data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}> ${value} </a>`;
         }
-        columnHtml += ` </a> `;
       }
     } else {
       columnHtml += value;
@@ -375,7 +378,7 @@ export class TableRenderer {
 
       columnHtml +=
         '<i class="oo-svg inbox oo-action-inbox" data-link-tooltip data-placement="right"' +
-        'data-original-title="Move to Inbox" ' +
+        'data-original-title="Restore this event: The event will now appear in the dashboard and alerts." ' +
         `data-event-id="${eventId}" data-env-id="${envId}"></i>`;
 
       columnHtml += '</span><span class="oo-actions-no-strike">';
@@ -391,13 +394,13 @@ export class TableRenderer {
       //   'exceeds a target millisecond threshold." data-placement="right"></i><span class="divider"></span>';
 
       columnHtml +=
-        '<i class="oo-svg resolve oo-action-resolve" data-link-tooltip data-placement="right"' +
+        '<i class="oo-svg resolve oo-action-resolve" data-link-tooltip data-placement="bottom"' +
         'data-original-title="Mark as Resolved: Should the event reoccur after the code is ' +
         'redeployed, you will receive an alert and the event will be marked as &quot;Resurfaced&quot;." ' +
         `data-event-id="${eventId}" data-env-id="${envId}"></i><span class="divider"></span>`;
 
       columnHtml +=
-        '<i class="oo-svg archive oo-action-archive" data-link-tooltip data-placement="right"' +
+        '<i class="oo-svg archive oo-action-archive" data-link-tooltip data-placement="bottom"' +
         'data-original-title="Hide this event: The event will no longer appear in the dashboard or alerts."' +
         `data-event-id="${eventId}" data-env-id="${envId}"></i><span class="divider"></span>`;
 
@@ -405,7 +408,7 @@ export class TableRenderer {
         '<div class="dropdown">' +
         '<a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">' +
         '<i class="oo-svg more" data-link-tooltip data-placement="right" ' +
-        'data-original-title="More Actions"></i>' +
+        'data-original-title="More&nbsp;Actions"></i>' +
         '</a>' +
         '<ul class="dropdown-menu pull-right" role="menu">';
 

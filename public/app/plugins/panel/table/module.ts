@@ -556,7 +556,13 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
     elem.mousemove(e => {
       const target = $(e.target);
-      const linkTT = target.parents('[data-link-tooltip-mouseover]');
+      let linkTT;
+
+      if (target.data('linkTooltipMouseover') !== undefined) {
+        linkTT = target;
+      } else {
+        linkTT = target.parents('[data-link-tooltip-mouseover]');
+      }
 
       if (linkTT.length < 1) {
         drilldownTooltip.detach();
@@ -567,7 +573,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
       if (originalTitle !== undefined && originalTitle !== '') {
         drilldownTooltip.text(originalTitle);
-        drilldownTooltip.place_tt(e.pageX, e.pageY + 10);
+        drilldownTooltip.place_tt(e.pageX - 10, e.pageY + 20);
       }
     });
 
