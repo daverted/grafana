@@ -303,6 +303,9 @@
 .actions-wrapper:hover {
   & > a {
     margin-right: -8em; // 11em for all
+    .ellipsis {
+      max-width: calc(100% - 8em);
+    }
   }
 
   .oo-actions {
