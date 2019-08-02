@@ -347,7 +347,7 @@ export class TableRenderer {
         } else {
           columnHtml +=
             ` <a href="${cellLink}" target="${cellTarget}" ${dataLinkTooltip} ` +
-            `data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}> ${value} </a>`;
+            `data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}> ${value} </a> `;
         }
       }
     } else {
