@@ -8,6 +8,7 @@ import { columnOptionsTab } from './column_options';
 import { TableRenderer } from './renderer';
 import { isTableData } from '@grafana/data';
 import { TemplateSrv } from 'app/features/templating/template_srv';
+import { appEvents } from 'app/core/core';
 
 class TablePanelCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -246,9 +247,334 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       rootElem.css({ 'max-height': panel.scroll ? getTableHeight() : '' });
     }
 
+    function ooActionResolve(e: JQueryEventObject) {
+      const el = $(e.currentTarget);
+      try {
+        // apiKey and apiUrl must exist as page variables
+        const apiKey = ctrl.renderer.templateSrv.index.apiKey.current.value;
+        const apiUrl = ctrl.renderer.templateSrv.index.apiUrl.current.value;
+        const apiVer = ctrl.renderer.templateSrv.index.apiVer.current.value;
+
+        const envId = el.data('envId');
+
+        const urls = [];
+
+        el.data('eventId')
+          .toString()
+          .split(',')
+          .forEach(eventId => {
+            urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/resolve');
+          });
+
+        // start spinner
+        el.removeClass('oo-svg resolve').addClass('fa fa-spinner fa-spin');
+
+        const ajax = url => {
+          $.ajax({
+            url: url,
+            headers: { 'x-api-key': apiKey },
+            method: 'POST',
+            error: err => {
+              // replace spinner with red x
+              el.removeClass('fa fa-spinner fa-spin oo-action-resolve')
+                .addClass('far fa-times-circle danger')
+                .attr('data-original-title', 'Error resolving event');
+
+              appEvents.emit('alert-error', ['Error resolving event']);
+            },
+            success: data => {
+              if (urls.length > 0) {
+                const url = urls.pop();
+                ajax(url);
+              } else {
+                // unset spinner
+                el.removeClass('fa fa-spinner fa-spin').addClass('oo-svg resolve');
+
+                el.parents('tr').addClass('strike');
+                appEvents.emit('alert-success', ['Event resolved']);
+
+                // setTimeout(() => {
+                //   ctrl.events.emit('refresh');
+                // }, 1000);
+              }
+            },
+          });
+        };
+
+        const url = urls.pop();
+        ajax(url);
+      } catch (e) {
+        el.removeClass('oo-svg resolve fa fa-spinner fa-spin oo-action-resolve')
+          .addClass('far fa-times-circle danger')
+          .attr('data-original-title', 'Error resolving event');
+
+        appEvents.emit('alert-error', ['Error resolving event']);
+
+        console.error('Caught Exception in ooActionResolve');
+        console.error(e);
+      }
+    }
+
+    function ooActionArchive(e: JQueryEventObject) {
+      const el = $(e.currentTarget);
+      try {
+        // apiKey and apiUrl must exist as page variables
+        const apiKey = ctrl.renderer.templateSrv.index.apiKey.current.value;
+        const apiUrl = ctrl.renderer.templateSrv.index.apiUrl.current.value;
+        const apiVer = ctrl.renderer.templateSrv.index.apiVer.current.value;
+
+        const envId = el.data('envId');
+
+        const urls = [];
+
+        el.data('eventId')
+          .toString()
+          .split(',')
+          .forEach(eventId => {
+            urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/delete');
+          });
+
+        // start spinner
+        el.removeClass('oo-svg archive').addClass('fa fa-spinner fa-spin');
+
+        const ajax = url => {
+          $.ajax({
+            url: url,
+            headers: { 'x-api-key': apiKey },
+            method: 'POST',
+            error: err => {
+              // replace spinner with red x
+              el.removeClass('fa fa-spinner fa-spin oo-action-archive')
+                .addClass('far fa-times-circle danger')
+                .attr('data-original-title', 'Error hiding event');
+
+              appEvents.emit('alert-error', ['Error hiding event']);
+            },
+            success: data => {
+              if (urls.length > 0) {
+                const url = urls.pop();
+                ajax(url);
+              } else {
+                // unset spinner
+                el.removeClass('fa fa-spinner fa-spin').addClass('oo-svg archive');
+
+                el.parents('tr').addClass('strike');
+                appEvents.emit('alert-success', ['Event hidden']);
+              }
+            },
+          });
+        };
+
+        const url = urls.pop();
+        ajax(url);
+      } catch (e) {
+        el.removeClass('oo-svg archive fa fa-spinner fa-spin oo-action-archive')
+          .addClass('far fa-times-circle danger')
+          .attr('data-original-title', 'Error hiding event');
+
+        appEvents.emit('alert-error', ['Error hiding event']);
+
+        console.error('Caught Exception in ooActionArchive');
+        console.error(e);
+      }
+    }
+
+    function ooActionInbox(e: JQueryEventObject) {
+      const el = $(e.currentTarget);
+
+      try {
+        // apiKey and apiUrl must exist as page variables
+        const apiKey = ctrl.renderer.templateSrv.index.apiKey.current.value;
+        const apiUrl = ctrl.renderer.templateSrv.index.apiUrl.current.value;
+        const apiVer = ctrl.renderer.templateSrv.index.apiVer.current.value;
+
+        const envId = el.data('envId');
+
+        const urls = [];
+
+        el.data('eventId')
+          .toString()
+          .split(',')
+          .forEach(eventId => {
+            urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/inbox');
+          });
+
+        // start spinner
+        el.removeClass('oo-svg inbox').addClass('fa fa-spinner fa-spin');
+
+        const ajax = url => {
+          $.ajax({
+            url: url,
+            headers: { 'x-api-key': apiKey },
+            method: 'POST',
+            error: err => {
+              // replace spinner with red x
+              el.removeClass('fa fa-spinner fa-spin oo-action-inbox')
+                .addClass('far fa-times-circle danger')
+                .attr('data-original-title', 'Error moving event to inbox');
+
+              appEvents.emit('alert-error', ['Error moving event to inbox']);
+            },
+            success: data => {
+              if (urls.length > 0) {
+                const url = urls.pop();
+                ajax(url);
+              } else {
+                // replace spinner with green check
+                el.removeClass('fa fa-spinner fa-spin').addClass('oo-svg inbox');
+
+                el.parents('tr').removeClass('strike');
+                appEvents.emit('alert-success', ['Event moved to inbox']);
+
+                // setTimeout(() => {
+                //   ctrl.events.emit('refresh');
+                // }, 3000);
+              }
+            },
+          });
+        };
+
+        const url = urls.pop();
+        ajax(url);
+      } catch (e) {
+        el.removeClass('oo-svg inbox fa fa-spinner fa-spin oo-action-inbox')
+          .addClass('far fa-times-circle danger')
+          .attr('data-original-title', 'Error resolving event');
+
+        appEvents.emit('alert-error', ['Error moving event to inbox']);
+
+        console.error('Caught Exception in ooActionInbox');
+        console.error(e);
+      }
+    }
+
+    function ooActionForceSnapshot(e: any) {
+      const el = $(e.currentTarget);
+      const elIcon = el.children('i');
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      try {
+        // apiKey and apiUrl must exist as page variables
+        const apiKey = ctrl.renderer.templateSrv.index.apiKey.current.value;
+        const apiUrl = ctrl.renderer.templateSrv.index.apiUrl.current.value;
+        const apiVer = ctrl.renderer.templateSrv.index.apiVer.current.value;
+
+        const envId = el.data('envId');
+
+        const urls = [];
+
+        el.data('eventId')
+          .toString()
+          .split(',')
+          .forEach(eventId => {
+            urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/force-snapshot');
+          });
+
+        // start spinner
+        elIcon.removeClass('oo-svg snapshot').addClass('fa fa-spinner fa-spin');
+
+        const ajax = url => {
+          $.ajax({
+            url: url,
+            headers: { 'x-api-key': apiKey },
+            method: 'POST',
+            error: err => {
+              // replace spinner with red x
+              elIcon
+                .removeClass('fa fa-spinner fa-spin')
+                .addClass('far fa-times-circle danger')
+                .attr('data-original-title', 'Error forcing snapshot');
+            },
+            success: data => {
+              if (urls.length > 0) {
+                const url = urls.pop();
+                ajax(url);
+              } else {
+                // replace spinner with green check
+                elIcon
+                  .removeClass('fa fa-spinner fa-spin')
+                  .addClass('far fa-check-circle success')
+                  .attr('data-original-title', 'Forced snapshot');
+              }
+
+              // TODO updates aren't instant, need to delay this
+              // refresh table
+              // ctrl.events.emit('refresh');
+            },
+          });
+        };
+
+        const url = urls.pop();
+        ajax(url);
+      } catch (e) {
+        elIcon
+          .removeClass('oo-svg snapshot fa fa-spinner fa-spin')
+          .addClass('far fa-times-circle danger')
+          .attr('data-original-title', 'Error forcing snapshot');
+        console.error('Caught Exception in ooActionForceSnapshot');
+        console.error(e);
+      }
+    }
+
+    function ooActionManageLabels(e: JQueryEventObject) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const el = $(e.currentTarget);
+
+      const template =
+        '<manage-labels-modal event-id="model.eventId" event-env="model.envId" filter="" ' +
+        'event-name="model.eventName" event-labels="model.eventLabels" dismiss="dismiss()" ' +
+        'new-label="model.newLabel">' +
+        '</manage-labels-modal>';
+
+      ctrl.publishAppEvent('show-modal', {
+        templateHtml: template,
+        modalClass: 'modal--narrow',
+        model: {
+          eventId: el.data('eventId'),
+          envId: el.data('envId'),
+          eventName: el.data('value'),
+          eventLabels: el.data('labels'),
+        },
+      });
+    }
+
     // hook up link tooltips
     elem.tooltip({
       selector: '[data-link-tooltip]',
+    });
+
+    // wire up mouseover tooltips
+    const drilldownTooltip = $('<div id="tooltip" class="">hello</div>"');
+
+    elem.mouseleave(() => {
+      drilldownTooltip.detach();
+    });
+
+    elem.mousemove(e => {
+      const target = $(e.target);
+      let linkTT;
+
+      if (target.data('linkTooltipMouseover') !== undefined) {
+        linkTT = target;
+      } else {
+        linkTT = target.parents('[data-link-tooltip-mouseover]');
+      }
+
+      if (linkTT.length < 1) {
+        drilldownTooltip.detach();
+        return;
+      }
+
+      const originalTitle = linkTT.data('originalTitle');
+
+      if (originalTitle !== undefined && originalTitle !== '') {
+        drilldownTooltip.text(originalTitle);
+        drilldownTooltip.place_tt(e.pageX - 10, e.pageY + 20);
+      }
     });
 
     function addFilterClicked(e: any) {
@@ -265,6 +591,13 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
     elem.on('click', '.table-panel-page-link', switchPage);
     elem.on('click', '.table-panel-filter-link', addFilterClicked);
+
+    // wire up overops event actions
+    elem.on('click', '.oo-action-resolve', ooActionResolve);
+    elem.on('click', '.oo-action-archive', ooActionArchive);
+    elem.on('click', '.oo-action-inbox', ooActionInbox);
+    elem.on('click', '.oo-action-snapshot', ooActionForceSnapshot);
+    elem.on('click', '.oo-action-manage-labels', ooActionManageLabels);
 
     const unbindDestroy = scope.$on('$destroy', () => {
       elem.off('click', '.table-panel-page-link');

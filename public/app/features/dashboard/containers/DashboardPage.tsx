@@ -107,7 +107,7 @@ export class DashboardPage extends PureComponent<Props, State> {
 
     // if we just got dashboard update title
     if (!prevProps.dashboard) {
-      document.title = dashboard.title + ' - Grafana';
+      document.title = dashboard.title + ' - OverOps';
     }
 
     // Due to the angular -> react url bridge we can ge an update here with new uid before the container unmounts
@@ -231,7 +231,8 @@ export class DashboardPage extends PureComponent<Props, State> {
     return (
       <div className="dashboard-loading">
         <div className="dashboard-loading__text">
-          <i className="fa fa-spinner fa-spin" /> {this.props.initPhase}
+          {/* <i className="fa fa-spinner fa-spin" /> {this.props.initPhase} */}
+          <i className="fa fa-spinner fa-spin" /> Loading&hellip;
         </div>
       </div>
     );

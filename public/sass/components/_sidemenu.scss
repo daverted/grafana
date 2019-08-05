@@ -26,6 +26,10 @@ $mobile-menu-breakpoint: md;
     position: relative;
     z-index: $zindex-sidemenu;
   }
+
+  &:empty {
+    display: none;
+  }
 }
 
 // body class that hides sidemenu

@@ -47,6 +47,7 @@ $yellow: ${theme.colors.yellow};
 $orange: ${theme.colors.orange};
 $purple: ${theme.colors.purple};
 $variable: ${theme.colors.variable};
+$teal: ${theme.colors.teal};
 
 $brand-primary: ${theme.colors.brandPrimary};
 $brand-success: ${theme.colors.brandSuccess};
@@ -274,7 +275,7 @@ $popover-border-color: $gray-5;
 $popover-header-bg: $gray-5;
 $popover-shadow: 0 0 20px $white;
 
-$popover-help-bg: $btn-secondary-bg;
+$popover-help-bg: $teal;
 $popover-help-color: $gray-6;
 
 $popover-error-bg: $btn-danger-bg;
@@ -286,7 +287,7 @@ $tooltipArrowWidth: 5px;
 $tooltipLinkColor: lighten($popover-help-color, 5%);
 $graph-tooltip-bg: $gray-5;
 
-$tooltipBackground: $gray-1;
+$tooltipBackground: $teal;
 $tooltipColor: $gray-7;
 $tooltipArrowColor: $tooltipBackground; // Used by Angular tooltip
 $tooltipBackgroundError: $brand-danger;

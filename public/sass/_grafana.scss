@@ -1,3 +1,8 @@
+// CUSTOM
+@import '../fontawesome-pro-5.9.0/css/all.css';
+@import '../fontawesome-pro-5.9.0/css/brands.css';
+@import 'components/overops_custom';
+
 // DEPENDENCIES
 @import '../../node_modules/react-table/react-table.css';
 
@@ -98,6 +103,7 @@
 @import 'components/toggle_button_group';
 @import 'components/popover-box';
 @import 'components/panel_header';
+@import 'components/text_colors';
 
 // LOAD @grafana/ui components
 @import '../../packages/grafana-ui/src/index';

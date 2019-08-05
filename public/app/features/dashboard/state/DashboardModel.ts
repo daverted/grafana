@@ -49,6 +49,7 @@ export class DashboardModel {
   links: any;
   gnetId: any;
   panels: PanelModel[];
+  refreshOnly: boolean;
 
   // ------------------
   // not persisted

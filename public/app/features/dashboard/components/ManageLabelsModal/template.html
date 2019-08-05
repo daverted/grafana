@@ -1,0 +1,95 @@
+<div class="modal-body">
+  <div class="modal-header">
+    <h2 class="modal-header-title">
+      <i class="oo-svg manage-labels"></i>
+      <span>Manage Labels</span>
+    </h2>
+
+    <a class="modal-header-close" ng-click="ctrl.dismiss();">
+      <i class="fa fa-remove"></i>
+    </a>
+  </div>
+
+  <div class="modal-content">
+    <h4 class="p-b-2">
+      <span ng-if="ctrl.isNew">Create a New Label</span>
+      <span ng-if="!ctrl.isNew">
+        {{ctrl.eventName}}
+      </span>
+    </h4>
+
+    <div ng-if="ctrl.isLoading">
+      <i class="fa fa-spinner fa-spin"></i>
+      <em>Loading&hellip;</em>
+    </div>
+
+    <div ng-if="!ctrl.isLoading && !ctrl.isNew">
+      <div class="gf-form-group table-panel-scroll" style="max-height: 300px">
+        <table class="filter-table">
+          <thead>
+            <tr>
+              <td class="width-4 filter-table__switch-cell">
+                <gf-form-checkbox switch-class="gf-form-switch--table-cell" checked="ctrl.allCheck" on-change="ctrl.checkAll()">
+                </gf-form-checkbox>
+              </td>
+              <td class="p-x-0">
+                <input
+                  type="text"
+                  name="filter"
+                  class="gf-form-input"
+                  placeholder="Search"
+                  give-focus="true"
+                  ng-model="ctrl.filter"
+                  autocomplete="off"
+                  ng-change="ctrl.uncheckAll()" />
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="(index, label) in ctrl.envLabels | filter: { type: 'USER'} | filter: { name: '!.infra' } | filter: { name: '!.perf' } | filter: { name: '!JIRA'} | filter: { name: ctrl.filter }">
+              <td class="width-4 filter-table__switch-cell">
+                <gf-form-checkbox switch-class="gf-form-switch--table-cell" checked="label.checked">
+                </gf-form-checkbox>
+              </td>
+              <td title="Created on {{label.created_on}} by {{label.created_by}}">
+                <span class="ellipsis width-26">{{label.name}}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div ng-if="ctrl.isNew">
+      <input
+        type="text"
+        name="newLabel"
+        class="gf-form-input"
+        give-focus="true"
+        ng-model="ctrl.newLabel"
+        ng-keypress="$event.keyCode === 13 && ctrl.save()"
+        ng-disabled="ctrl.isSaving"
+        autocomplete="off" />
+    </div>
+
+
+    <div class="gf-form-button-row text-right">
+      <button class="btn btn-inverse pull-left" ng-if="!ctrl.isNew" ng-click="ctrl.createNew();">
+        <i class="fas fa-plus"></i> &nbsp; New
+      </button>
+      <button class="btn btn-inverse" ng-if="!ctrl.isNew" ng-click="ctrl.dismiss();">Cancel</button>
+      <button class="btn btn-inverse" ng-if="ctrl.isNew" ng-click="ctrl.selectOld();">Cancel</button>
+      <button
+        id="saveBtn"
+        type="button"
+        class="btn btn-primary m-r-0"
+        ng-click="ctrl.save();"
+        ng-class="{'btn-primary--processing': ctrl.isSaving}"
+        ng-disabled="ctrl.isSaving || ctrl.isLoading"
+      >
+        <span ng-if="!ctrl.isSaving">Save</span>
+        <span ng-if="ctrl.isSaving === true">Saving...</span>
+      </button>
+    </div>
+  </div>
+</div>

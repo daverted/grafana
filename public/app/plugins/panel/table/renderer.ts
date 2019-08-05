@@ -187,6 +187,46 @@ export class TableRenderer {
       };
     }
 
+    if (column.style.type === 'html') {
+      return (value: any) => {
+        return value;
+      };
+    }
+
+    if (column.style.type === 'fontawesome') {
+      return (value: any) => {
+        const mappingType = column.style.mappingType || 0;
+
+        const template = (icon, v) => {
+          if (column.style.valueAsTooltip) {
+            return `<i class="${icon}" data-link-tooltip data-original-title="${v}" data-placement="right"></i>`;
+          }
+          return `<i class="${icon}"></i>`;
+        };
+
+        if (mappingType === 1 && column.style.valueMaps) {
+          for (let i = 0; i < column.style.valueMaps.length; i++) {
+            const map = column.style.valueMaps[i];
+            if (value === null) {
+              if (map.value === 'null') {
+                return template(map.text, map.value);
+              }
+              continue;
+            }
+
+            // Allow both numeric and string values to be mapped
+            if ((!_.isString(value) && Number(map.value) === Number(value)) || map.value === value) {
+              this.setColorState(value, column.style);
+              return template(this.defaultCellFormatter(map.text, column.style), map.value);
+            }
+          }
+        }
+
+        const sanitized = this.sanitize(value);
+        return template(sanitized, sanitized);
+      };
+    }
+
     return (value: any) => {
       return this.defaultCellFormatter(value, column.style);
     };
@@ -246,7 +286,10 @@ export class TableRenderer {
     // this hack adds header content to cell (not visible)
     let columnHtml = '';
     if (addWidthHack) {
-      columnHtml = '<div class="table-panel-width-hack">' + this.table.columns[columnIndex].title + '</div>';
+      columnHtml =
+        '<div class="table-panel-width-hack">' +
+        (column.style && column.style.noHeader ? '' : this.table.columns[columnIndex].title) +
+        '</div>';
     }
 
     if (value === undefined) {
@@ -264,10 +307,21 @@ export class TableRenderer {
       cellClasses.push('table-panel-cell-pre');
     }
 
+    if (column.style && column.style.fontawesome) {
+      const scopedVars = this.renderRowVariables(rowIndex);
+      const icon = this.templateSrv.replace(column.style.fontawesome, scopedVars);
+
+      value = `
+        <i class="${icon}" style="padding-right:.5rem"></i>${value}
+      `;
+    }
+
+    // get scoped vars
+    const scopedVars = this.renderRowVariables(rowIndex);
+    scopedVars['__cell'] = { value: value, text: value ? value.toString() : '' };
+
     if (column.style && column.style.link) {
       // Render cell as link
-      const scopedVars = this.renderRowVariables(rowIndex);
-      scopedVars['__cell'] = { value: value, text: value ? value.toString() : '' };
 
       const cellLink = this.templateSrv.replace(column.style.linkUrl, scopedVars, encodeURIComponent);
       const cellLinkTooltip = this.templateSrv.replace(column.style.linkTooltip, scopedVars);
@@ -275,13 +329,120 @@ export class TableRenderer {
 
       cellClasses.push('table-panel-cell-link');
 
-      columnHtml += `
-        <a href="${cellLink}" target="${cellTarget}" data-link-tooltip data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}>
-          ${value}
-        </a>
-      `;
+      if (column.style && column.style.eventActions) {
+        cellClasses.push('actions-wrapper');
+      }
+
+      const dataLinkTooltip =
+        column.style && column.style.mouseoverTooltip ? 'data-link-tooltip-mouseover' : 'data-link-tooltip';
+
+      if (value !== '') {
+        if (column.style && column.style.eventActions) {
+          columnHtml += `
+            <a href="${cellLink}" target="${cellTarget}" ${textStyle}>
+              <span class="ellipsis" ${dataLinkTooltip} data-original-title="${cellLinkTooltip}" data-placement="right">
+                ${value}
+              </span>
+            </a> `;
+        } else {
+          columnHtml +=
+            ` <a href="${cellLink}" target="${cellTarget}" ${dataLinkTooltip} ` +
+            `data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}> ${value} </a> `;
+        }
+      }
     } else {
       columnHtml += value;
+    }
+
+    let ticketUrl = '';
+    let eventId = '';
+    let envId = '';
+    let labels = '';
+
+    if (column.style && column.style.eventActions) {
+      this.table.columns.forEach((col, ndx) => {
+        if (col.text === 'Jira issue url') {
+          ticketUrl = scopedVars['__cell_' + ndx].value;
+        } else if (col.text === 'Id') {
+          eventId = scopedVars['__cell_' + ndx].value;
+        } else if (col.text === 'Env id') {
+          envId = scopedVars['__cell_' + ndx].value;
+        } else if (col.text === 'Labels') {
+          labels = scopedVars['__cell_' + ndx].value;
+        }
+      });
+
+      columnHtml += '<div class="oo-actions">';
+
+      columnHtml += '<span class="oo-actions-strike">';
+
+      columnHtml +=
+        '<i class="oo-svg inbox oo-action-inbox" data-link-tooltip data-placement="right"' +
+        'data-original-title="Restore this event: The event will now appear in the dashboard and alerts." ' +
+        `data-event-id="${eventId}" data-env-id="${envId}"></i>`;
+
+      columnHtml += '</span><span class="oo-actions-no-strike">';
+
+      //// TODO implement 'graph this event' action
+      // columnHtml += '<i class="oo-svg graph" data-link-tooltip ' +
+      //   'data-original-title="Plot this event as a series onto the dashboard graph." ' +
+      //   'data-placement="right"></i><span class="divider"></span>';
+
+      //// TODO implement 'new timer' action
+      // columnHtml += '<i class="oo-svg timer" data-link-tooltip ' +
+      //   'data-original-title="Add a timer to know when and why a method\'s execution time ' +
+      //   'exceeds a target millisecond threshold." data-placement="right"></i><span class="divider"></span>';
+
+      columnHtml +=
+        '<i class="oo-svg resolve oo-action-resolve" data-link-tooltip data-placement="bottom"' +
+        'data-original-title="Mark as Resolved: Should the event reoccur after the code is ' +
+        'redeployed, you will receive an alert and the event will be marked as &quot;Resurfaced&quot;." ' +
+        `data-event-id="${eventId}" data-env-id="${envId}"></i><span class="divider"></span>`;
+
+      columnHtml +=
+        '<i class="oo-svg archive oo-action-archive" data-link-tooltip data-placement="bottom"' +
+        'data-original-title="Hide this event: The event will no longer appear in the dashboard or alerts."' +
+        `data-event-id="${eventId}" data-env-id="${envId}"></i><span class="divider"></span>`;
+
+      columnHtml +=
+        '<div class="dropdown">' +
+        '<a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">' +
+        '<i class="oo-svg more" data-link-tooltip data-placement="right" ' +
+        'data-original-title="More&nbsp;Actions"></i>' +
+        '</a>' +
+        '<ul class="dropdown-menu pull-right" role="menu">';
+
+      if (ticketUrl !== '') {
+        columnHtml += `<li>
+              <a tabindex="-1" href="//${ticketUrl}" target="_blank">
+                <i class="fas fa-ticket-alt"></i> View Ticket
+              </a>
+            </li>`;
+      } else {
+        columnHtml += `<li class="disabled">
+              <a tabindex="-1" href="#">
+                <i class="fas fa-ticket-alt"></i> No Ticket
+              </a>
+            </li>`;
+      }
+
+      columnHtml += `<li>
+            <a tabindex="-1" href="" role="button" class="oo-action-manage-labels"
+              data-toggle="modal" data-event-id="${eventId}" data-env-id="${envId}"
+              data-value="${value}" data-labels="${labels}">
+              <i class="oo-svg manage-labels"></i> Manage Labels
+            </a>
+          </li>`;
+
+      columnHtml += `<li>
+            <a tabindex="-1" href="#" class="oo-action-snapshot" data-event-id="${eventId}" data-env-id="${envId}">
+              <i class="oo-svg snapshot"></i> Force Snapshot
+            </a>
+          </li>`;
+
+      columnHtml += '</ul></div>'; // dropdown
+      columnHtml += '</span>'; // .oo-actions-no-strike
+      columnHtml += '</div>'; // .oo-actions
     }
 
     if (column.filterable) {
@@ -295,6 +456,10 @@ export class TableRenderer {
            data-row="${rowIndex}" data-column="${columnIndex}" data-operator="=">
           <i class="fa fa-search-plus"></i>
         </a>`;
+    }
+
+    if (column.style && column.style.type === 'fontawesome') {
+      cellClasses.push('text-center');
     }
 
     if (cellClasses.length) {
@@ -311,14 +476,19 @@ export class TableRenderer {
     const endPos = Math.min(startPos + pageSize, this.table.rows.length);
     let html = '';
 
+    let renderedColumns = 0;
     for (let y = startPos; y < endPos; y++) {
       const row = this.table.rows[y];
       let cellHtml = '';
       let rowStyle = '';
       const rowClasses = [];
       let rowClass = '';
+      renderedColumns = 0;
       for (let i = 0; i < this.table.columns.length; i++) {
         cellHtml += this.renderCell(i, y, row[i], y === startPos);
+        if (!this.table.columns[i].hidden) {
+          renderedColumns++;
+        }
       }
 
       if (this.colorState.row) {
@@ -333,6 +503,11 @@ export class TableRenderer {
 
       html += '<tr ' + rowClass + rowStyle + '>' + cellHtml + '</tr>';
     }
+
+    // add bottom whitespace for actions dropdown menu
+    html += `<tr><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
+       <tr><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
+       <tr><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>`;
 
     return html;
   }

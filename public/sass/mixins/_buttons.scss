@@ -2,7 +2,8 @@
 // ------------------
 @mixin buttonBackground($startColor, $endColor, $text-color: #fff, $textShadow: 0px 1px 0 rgba(0, 0, 0, 0.1)) {
   // gradientBar will set the background to a pleasing blend of these, to support IE<=9
-  @include gradientBar($startColor, $endColor, $text-color, $textShadow);
+  // @include gradientBar($startColor, $endColor, $text-color, $textShadow);
+  @include gradient-directional($startColor, $endColor, 135deg);
 
   // in these cases the gradient won't cover the background, so we override
   &:hover,

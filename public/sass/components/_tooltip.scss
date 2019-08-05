@@ -98,15 +98,15 @@
   left: 0;
   color: $tooltipColor;
   padding: 10px;
-  font-size: 11pt;
-  font-weight: 200;
+  font-size: 13px;
+  font-weight: 400;
   background-color: $tooltipBackground;
   border-radius: 5px;
   z-index: 9999;
   max-width: 800px;
   max-height: 600px;
   overflow: hidden;
-  line-height: 14px;
+  line-height: 19px;
 
   a {
     color: $tooltipLinkColor;

@@ -7,6 +7,31 @@ $panel-header-no-title-zindex: 1;
   }
 }
 
+.no-hover {
+  .panel-header {
+    &:hover {
+      transition: none;
+      background-color: $panel-bg;
+    }
+    .panel-title-container {
+      cursor: default;
+      .panel-title {
+        height: auto;
+        .panel-title-text {
+          cursor: default;
+          color: inherit;
+          padding-top: 4px; // compensate for unsetting height
+        }
+      }
+    }
+  }
+  &.panel-container--no-title {
+    .panel-header {
+      background-color: transparent;
+    }
+  }
+}
+
 .panel-container--no-title {
   .panel-header {
     position: absolute;

@@ -9,11 +9,17 @@
             data-placement="right">
       </div>
     </div>
-    <div class="gf-form" ng-if="style.type !== 'hidden'">
+    <div class="gf-form" ng-if="style.type !== 'hidden' && !style.noHeader">
       <label class="gf-form-label width-12">Column Header</label>
       <input type="text" class="gf-form-input width-12" ng-model="style.alias" ng-change="editor.render()" ng-model-onblur placeholder="Override header label">
     </div>
-    <gf-form-switch class="gf-form" label-class="width-12" label="Render value as link" checked="style.link" on-change="editor.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-12" label="Hide Column Header" checked="style.noHeader" on-change="editor.render()"></gf-form-switch>
+    <gf-form-switch ng-if="style.type !== 'html'" class="gf-form"
+      label-class="width-12" label="Render value as link" checked="style.link" on-change="editor.render()">
+    </gf-form-switch>
+    <gf-form-switch ng-if="style.type !== 'html'" class="gf-form"
+      label-class="width-12" label="Mouseover Tooltip (beta)" checked="style.mouseoverTooltip" on-change="editor.render()">
+    </gf-form-switch>
   </div>
 
   <div class="section gf-form-group">
@@ -40,6 +46,64 @@
       <gf-form-switch class="gf-form" label-class="width-10" ng-if="style.type === 'string'" label="Preserve Formatting" checked="style.preserveFormat"
           on-change="editor.render()"></gf-form-switch>
     </div>
+    <div class="gf-form" ng-if="style.type === 'string'">
+      <label class="gf-form-label width-11">
+        Font Awesome icon
+        <info-popover mode="right-normal">
+          <p>
+            See <a href="https://fontawesome.com/" target="_blank">https://fontawesome.com/icons</a>
+            for list of icons and advanced usage.
+          </p>
+          <p>For example, </p>
+          <ul class="unstyled">
+            <li><i class="fas fa-smile"></i> <code>fas fa-smile</code></li>
+            <li><i class="far fa-smile"></i> <code>far fa-smile</code></li>
+            <li><i class="fal fa-smile"></i> <code>fal fa-smile</code></li>
+          </ul>
+          <p>To change colors, use:</p>
+          <ul class="unstyled">
+            <li><i class="fas fa-smile red"></i> <code>fas fa-smile red</code></li>
+            <li><i class="fas fa-smile orange"></i> <code>fas fa-smile orange</code></li>
+            <li><i class="fas fa-smile yellow"></i> <code>fas fa-smile yellow</code></li>
+            <li><i class="fas fa-smile green"></i> <code>fas fa-smile green</code></li>
+            <li><i class="fas fa-smile blue"></i> <code>fas fa-smile blue</code></li>
+            <li><i class="fas fa-smile purple"></i> <code>fas fa-smile purple</code></li>
+          </ul>
+          <p>
+            OverOps icons:
+          </p>
+          <ul class="unstyled">
+            <li><i class="oo-svg cex"></i> <code>oo-svg cex</code></li>
+            <li><i class="oo-svg swl"></i> <code>oo-svg swl</code></li>
+            <li><i class="oo-svg http"></i> <code>oo-svg http</code></li>
+            <li><i class="oo-svg wrn"></i> <code>oo-svg wrn</code></li>
+            <li><i class="oo-svg tmr"></i> <code>oo-svg tmr</code></li>
+            <li><i class="oo-svg unc"></i> <code>oo-svg unc</code></li>
+            <li><i class="oo-svg err"></i> <code>oo-svg err</code></li>
+          </ul>
+          <p>
+            OverOps icon sizes:<br>
+            <i class="oo-svg oo-lg swl"></i>
+            <i class="oo-svg oo-2x swl"></i>
+            <i class="oo-svg oo-3x swl"></i>
+            <i class="oo-svg oo-5x swl"></i>
+            <br>
+            <code>oo-lg</code>
+            <code>oo-2x</code>
+            <code>oo-3x</code>
+            <code>oo-5x</code>
+          </p>
+          <p>
+            Use special variables to specify cell values:
+            <em>${__cell_1}</em> refers to second column's value.
+          </p>
+          <p><em>→ blur/focus the input twice to preview</em></p>
+        </info-popover>
+      </label>
+      <input type="text" class="gf-form-input width-13" ng-model="style.fontawesome" ng-blur="editor.render()" ng-model-onblur data-placement="right">
+    </div>
+    <gf-form-switch class="gf-form" label-class="width-10" ng-if="style.type === 'string'" label="Show Event Actions" checked="style.eventActions"
+        on-change="editor.render()"></gf-form-switch>
 
     <div ng-if="style.type === 'number'">
       <div class="gf-form">
@@ -52,9 +116,15 @@
             ng-model-onblur>
       </div>
     </div>
+
+    <gf-form-switch class="gf-form" ng-if="style.type === 'actions'" label-class="width-12"
+      label="Open menu to the left" checked="style.dropdownRight" on-change="editor.render()"></gf-form-switch>
+
+    <gf-form-switch class="gf-form" ng-if="style.type === 'fontawesome'" label-class="width-12"
+      label="Value as tooltip" checked="style.valueAsTooltip" on-change="editor.render()"></gf-form-switch>
   </div>
 
-  <div class="section gf-form-group" ng-if="style.type === 'string'">
+  <div class="section gf-form-group" ng-if="style.type === 'string' || style.type === 'fontawesome'">
     <h5 class="section-heading">Value Mappings</h5>
     <div class="editor-row">
       <div class="gf-form-group">

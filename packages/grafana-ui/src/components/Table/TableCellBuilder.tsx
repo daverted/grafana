@@ -50,7 +50,7 @@ export interface ColumnStyle {
   colors?: any[];
   decimals?: number;
   thresholds?: any[];
-  type?: 'date' | 'number' | 'string' | 'hidden';
+  type?: 'date' | 'number' | 'string' | 'hidden' | 'html' | 'fontawesome';
   unit?: string;
   dateFormat?: string;
   sanitize?: boolean; // not used in react
@@ -58,12 +58,20 @@ export interface ColumnStyle {
   valueMaps?: any;
   rangeMaps?: any;
 
+  noHeader?: boolean;
+  dropdownRight?: boolean;
+
   link?: any;
   linkUrl?: any;
   linkTooltip?: any;
   linkTargetBlank?: boolean;
 
   preserveFormat?: boolean;
+
+  fontawesome?: string;
+  valueAsTooltip?: boolean;
+  eventActions?: boolean;
+  mouseoverTooltip?: boolean;
 }
 
 // private mapper:ValueMapper,

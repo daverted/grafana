@@ -36,6 +36,7 @@ const basicColors = {
   purple: '#9954bb',
   variable: '#007580',
   orange: '#ff7941',
+  teal: '#005f81',
 };
 
 const lightTheme: GrafanaTheme = {

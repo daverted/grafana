@@ -41,10 +41,14 @@ export class KeybindingSrv {
   setupGlobal() {
     this.bind(['?', 'h'], this.showHelpModal);
     this.bind('g h', this.goToHome);
-    this.bind('g a', this.openAlerting);
-    this.bind('g p', this.goToProfile);
-    this.bind('s o', this.openSearch);
-    this.bind('f', this.openSearch);
+
+    if (this.contextSrv.isGrafanaAdmin) {
+      this.bind('g a', this.openAlerting);
+      this.bind('g p', this.goToProfile);
+      this.bind('s o', this.openSearch);
+      this.bind('f', this.openSearch);
+    }
+
     this.bindGlobal('esc', this.exit);
   }
 
@@ -141,100 +145,102 @@ export class KeybindingSrv {
   }
 
   setupDashboardBindings(scope: any, dashboard: any) {
-    this.bind('mod+o', () => {
-      dashboard.graphTooltip = (dashboard.graphTooltip + 1) % 3;
-      appEvents.emit('graph-hover-clear');
-      dashboard.startRefresh();
-    });
+    if (this.contextSrv.isGrafanaAdmin) {
+      this.bind('mod+o', () => {
+        dashboard.graphTooltip = (dashboard.graphTooltip + 1) % 3;
+        appEvents.emit('graph-hover-clear');
+        dashboard.startRefresh();
+      });
 
-    this.bind('mod+s', () => {
-      scope.appEvent('save-dashboard');
-    });
+      this.bind('mod+s', () => {
+        scope.appEvent('save-dashboard');
+      });
 
-    this.bind('t z', () => {
-      scope.appEvent('zoom-out', 2);
-    });
+      this.bind('t z', () => {
+        scope.appEvent('zoom-out', 2);
+      });
 
-    this.bind('ctrl+z', () => {
-      scope.appEvent('zoom-out', 2);
-    });
+      this.bind('ctrl+z', () => {
+        scope.appEvent('zoom-out', 2);
+      });
 
-    this.bind('t left', () => {
-      scope.appEvent('shift-time-backward');
-    });
+      this.bind('t left', () => {
+        scope.appEvent('shift-time-backward');
+      });
 
-    this.bind('t right', () => {
-      scope.appEvent('shift-time-forward');
-    });
+      this.bind('t right', () => {
+        scope.appEvent('shift-time-forward');
+      });
 
-    // edit panel
-    this.bind('e', () => {
-      if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
-        appEvents.emit('panel-change-view', {
-          fullscreen: true,
-          edit: true,
-          panelId: dashboard.meta.focusPanelId,
-          toggle: true,
-        });
-      }
-    });
+      // edit panel
+      this.bind('e', () => {
+        if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
+          appEvents.emit('panel-change-view', {
+            fullscreen: true,
+            edit: true,
+            panelId: dashboard.meta.focusPanelId,
+            toggle: true,
+          });
+        }
+      });
 
-    // view panel
-    this.bind('v', () => {
-      if (dashboard.meta.focusPanelId) {
-        appEvents.emit('panel-change-view', {
-          fullscreen: true,
-          edit: null,
-          panelId: dashboard.meta.focusPanelId,
-          toggle: true,
-        });
-      }
-    });
-
-    // jump to explore if permissions allow
-    if (this.contextSrv.hasAccessToExplore()) {
-      this.bind('x', async () => {
+      // view panel
+      this.bind('v', () => {
         if (dashboard.meta.focusPanelId) {
-          const panel = dashboard.getPanelById(dashboard.meta.focusPanelId);
-          const datasource = await this.datasourceSrv.get(panel.datasource);
-          const url = await getExploreUrl(panel, panel.targets, datasource, this.datasourceSrv, this.timeSrv);
-          if (url) {
-            this.$timeout(() => this.$location.url(url));
+          appEvents.emit('panel-change-view', {
+            fullscreen: true,
+            edit: null,
+            panelId: dashboard.meta.focusPanelId,
+            toggle: true,
+          });
+        }
+      });
+
+      // jump to explore if permissions allow
+      if (this.contextSrv.hasAccessToExplore()) {
+        this.bind('x', async () => {
+          if (dashboard.meta.focusPanelId) {
+            const panel = dashboard.getPanelById(dashboard.meta.focusPanelId);
+            const datasource = await this.datasourceSrv.get(panel.datasource);
+            const url = await getExploreUrl(panel, panel.targets, datasource, this.datasourceSrv, this.timeSrv);
+            if (url) {
+              this.$timeout(() => this.$location.url(url));
+            }
           }
+        });
+      }
+
+      // delete panel
+      this.bind('p r', () => {
+        if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
+          appEvents.emit('remove-panel', dashboard.meta.focusPanelId);
+          dashboard.meta.focusPanelId = 0;
+        }
+      });
+
+      // duplicate panel
+      this.bind('p d', () => {
+        if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
+          const panelIndex = dashboard.getPanelInfoById(dashboard.meta.focusPanelId).index;
+          dashboard.duplicatePanel(dashboard.panels[panelIndex]);
+        }
+      });
+
+      // share panel
+      this.bind('p s', () => {
+        if (dashboard.meta.focusPanelId) {
+          const shareScope = scope.$new();
+          const panelInfo = dashboard.getPanelInfoById(dashboard.meta.focusPanelId);
+          shareScope.panel = panelInfo.panel;
+          shareScope.dashboard = dashboard;
+
+          appEvents.emit('show-modal', {
+            src: 'public/app/features/dashboard/components/ShareModal/template.html',
+            scope: shareScope,
+          });
         }
       });
     }
-
-    // delete panel
-    this.bind('p r', () => {
-      if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
-        appEvents.emit('remove-panel', dashboard.meta.focusPanelId);
-        dashboard.meta.focusPanelId = 0;
-      }
-    });
-
-    // duplicate panel
-    this.bind('p d', () => {
-      if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
-        const panelIndex = dashboard.getPanelInfoById(dashboard.meta.focusPanelId).index;
-        dashboard.duplicatePanel(dashboard.panels[panelIndex]);
-      }
-    });
-
-    // share panel
-    this.bind('p s', () => {
-      if (dashboard.meta.focusPanelId) {
-        const shareScope = scope.$new();
-        const panelInfo = dashboard.getPanelInfoById(dashboard.meta.focusPanelId);
-        shareScope.panel = panelInfo.panel;
-        shareScope.dashboard = dashboard;
-
-        appEvents.emit('show-modal', {
-          src: 'public/app/features/dashboard/components/ShareModal/template.html',
-          scope: shareScope,
-        });
-      }
-    });
 
     // toggle panel legend
     this.bind('p l', () => {
@@ -253,27 +259,31 @@ export class KeybindingSrv {
       dashboard.toggleLegendsForAll();
     });
 
-    // collapse all rows
-    this.bind('d shift+c', () => {
-      dashboard.collapseRows();
-    });
+    if (this.contextSrv.isGrafanaAdmin) {
+      // collapse all rows
+      this.bind('d shift+c', () => {
+        dashboard.collapseRows();
+      });
 
-    // expand all rows
-    this.bind('d shift+e', () => {
-      dashboard.expandRows();
-    });
+      // expand all rows
+      this.bind('d shift+e', () => {
+        dashboard.expandRows();
+      });
 
-    this.bind('d n', () => {
-      this.$location.url('/dashboard/new');
-    });
+      this.bind('d n', () => {
+        this.$location.url('/dashboard/new');
+      });
+    }
 
     this.bind('d r', () => {
       dashboard.startRefresh();
     });
 
-    this.bind('d s', () => {
-      this.showDashEditView();
-    });
+    if (this.contextSrv.isGrafanaAdmin) {
+      this.bind('d s', () => {
+        this.showDashEditView();
+      });
+    }
 
     this.bind('d k', () => {
       appEvents.emit('toggle-kiosk-mode');
@@ -283,13 +293,15 @@ export class KeybindingSrv {
       appEvents.emit('toggle-view-mode');
     });
 
-    //Autofit panels
-    this.bind('d a', () => {
-      // this has to be a full page reload
-      const queryParams = store.getState().location.query;
-      const newUrlParam = queryParams.autofitpanels ? '' : '&autofitpanels';
-      window.location.href = window.location.href + newUrlParam;
-    });
+    if (this.contextSrv.isGrafanaAdmin) {
+      //Autofit panels
+      this.bind('d a', () => {
+        // this has to be a full page reload
+        const queryParams = store.getState().location.query;
+        const newUrlParam = queryParams.autofitpanels ? '' : '&autofitpanels';
+        window.location.href = window.location.href + newUrlParam;
+      });
+    }
   }
 }
 
