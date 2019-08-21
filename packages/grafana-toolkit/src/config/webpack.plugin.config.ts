@@ -5,9 +5,10 @@ const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 import * as webpack from 'webpack';
-import { hasThemeStylesheets, getStyleLoaders, getStylesheetEntries, getFileLoaders } from './webpack/loaders';
+import { getStyleLoaders, getStylesheetEntries, getFileLoaders } from './webpack/loaders';
 
 interface WebpackConfigurationOptions {
   watch?: boolean;
@@ -41,7 +42,7 @@ const getModuleFiles = () => {
 
 const getManualChunk = (id: string) => {
   if (id.endsWith('module.ts') || id.endsWith('module.tsx')) {
-    const idx = id.indexOf('/src/');
+    const idx = id.lastIndexOf(path.sep + 'src' + path.sep);
     if (idx > 0) {
       const name = id.substring(idx + 5, id.lastIndexOf('.'));
 
@@ -51,6 +52,7 @@ const getManualChunk = (id: string) => {
       };
     }
   }
+  return null;
 };
 
 const getEntries = () => {
@@ -115,6 +117,8 @@ export const getWebpackConfig: WebpackConfigurationGetter = options => {
 
   if (options.production) {
     optimization.minimizer = [new TerserPlugin(), new OptimizeCssAssetsPlugin()];
+  } else if (options.watch) {
+    plugins.push(new HtmlWebpackPlugin());
   }
 
   return {
@@ -147,6 +151,8 @@ export const getWebpackConfig: WebpackConfigurationGetter = options => {
       'slate-react',
       'react',
       'react-dom',
+      'react-redux',
+      'redux',
       'rxjs',
       'd3',
       'angular',
@@ -181,8 +187,10 @@ export const getWebpackConfig: WebpackConfigurationGetter = options => {
                 plugins: ['angularjs-annotate'],
               },
             },
-
-            'ts-loader',
+            {
+              loader: 'ts-loader',
+              options: { onlyCompileBundledFiles: true },
+            },
           ],
           exclude: /(node_modules)/,
         },

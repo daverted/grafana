@@ -42,7 +42,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       },
     ],
     columns: [],
-    scroll: true,
+
     fontSize: '100%',
     sort: { col: 0, desc: true },
   };
@@ -244,7 +244,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       appendTableRows(tbodyElem);
       appendPaginationControls(footerElem);
 
-      rootElem.css({ 'max-height': panel.scroll ? getTableHeight() : '' });
+      rootElem.css({ 'max-height': getTableHeight() });
     }
 
     function ooActionResolve(e: JQueryEventObject) {
@@ -257,19 +257,19 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
         const envId = el.data('envId');
 
-        const urls = [];
+        const urls: any = [];
 
         el.data('eventId')
           .toString()
           .split(',')
-          .forEach(eventId => {
+          .forEach((eventId: string) => {
             urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/resolve');
           });
 
         // start spinner
         el.removeClass('oo-svg resolve').addClass('fa fa-spinner fa-spin');
 
-        const ajax = url => {
+        const ajax = (url: string) => {
           $.ajax({
             url: url,
             headers: { 'x-api-key': apiKey },
@@ -325,19 +325,19 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
         const envId = el.data('envId');
 
-        const urls = [];
+        const urls: any[] | string[] = [];
 
         el.data('eventId')
           .toString()
           .split(',')
-          .forEach(eventId => {
+          .forEach((eventId: string) => {
             urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/delete');
           });
 
         // start spinner
         el.removeClass('oo-svg archive').addClass('fa fa-spinner fa-spin');
 
-        const ajax = url => {
+        const ajax = (url: string) => {
           $.ajax({
             url: url,
             headers: { 'x-api-key': apiKey },
@@ -390,19 +390,19 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
         const envId = el.data('envId');
 
-        const urls = [];
+        const urls: any[] | string[] = [];
 
         el.data('eventId')
           .toString()
           .split(',')
-          .forEach(eventId => {
+          .forEach((eventId: string) => {
             urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/inbox');
           });
 
         // start spinner
         el.removeClass('oo-svg inbox').addClass('fa fa-spinner fa-spin');
 
-        const ajax = url => {
+        const ajax = (url: string) => {
           $.ajax({
             url: url,
             headers: { 'x-api-key': apiKey },
@@ -463,19 +463,19 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
         const envId = el.data('envId');
 
-        const urls = [];
+        const urls: any[] | string[] = [];
 
         el.data('eventId')
           .toString()
           .split(',')
-          .forEach(eventId => {
+          .forEach((eventId: string) => {
             urls.push(apiUrl + '/api/v' + apiVer + '/services/' + envId + '/events/' + eventId + '/force-snapshot');
           });
 
         // start spinner
         elIcon.removeClass('oo-svg snapshot').addClass('fa fa-spinner fa-spin');
 
-        const ajax = url => {
+        const ajax = (url: string) => {
           $.ajax({
             url: url,
             headers: { 'x-api-key': apiKey },

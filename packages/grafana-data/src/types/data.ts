@@ -1,17 +1,11 @@
+export type KeyValue<T = any> = { [s: string]: T };
+
 export enum LoadingState {
   NotStarted = 'NotStarted',
   Loading = 'Loading',
   Streaming = 'Streaming',
   Done = 'Done',
   Error = 'Error',
-}
-
-export enum FieldType {
-  time = 'time', // or date
-  number = 'number',
-  string = 'string',
-  boolean = 'boolean',
-  other = 'other', // Object, Array, etc
 }
 
 export interface QueryResultMeta {
@@ -39,27 +33,8 @@ export interface QueryResultBase {
   meta?: QueryResultMeta;
 }
 
-export interface Field {
-  name: string; // The column name
-  title?: string; // The display value for this field.  This supports template variables blank is auto
-  type?: FieldType;
-  filterable?: boolean;
-  unit?: string;
-  dateFormat?: string; // Source data format
-  decimals?: number | null; // Significant digits (for display)
-  min?: number | null;
-  max?: number | null;
-}
-
 export interface Labels {
   [key: string]: string;
-}
-
-export interface DataFrame extends QueryResultBase {
-  name?: string;
-  fields: Field[];
-  rows: any[][];
-  labels?: Labels;
 }
 
 export interface Column {
@@ -107,4 +82,7 @@ export interface AnnotationEvent {
   text?: string;
   type?: string;
   tags?: string[];
+
+  // Currently used to merge annotations from alerts and dashboard
+  source?: any; // source.type === 'dashboard'
 }

@@ -22,7 +22,7 @@ const DEFAULT_KEYS = ['job', 'namespace'];
 const EMPTY_SELECTOR = '{}';
 const HISTORY_ITEM_COUNT = 10;
 const HISTORY_COUNT_CUTOFF = 1000 * 60 * 60 * 24; // 24h
-const NS_IN_MS = 1_000_000;
+const NS_IN_MS = 1000000;
 export const LABEL_REFRESH_INTERVAL = 1000 * 30; // 30sec
 
 const wrapLabel = (label: string) => ({ label });
@@ -246,13 +246,6 @@ export default class LokiLanguageProvider extends LanguageProvider {
         [EMPTY_SELECTOR]: labelKeys,
       };
       this.logLabelOptions = labelKeys.map((key: string) => ({ label: key, value: key, isLeaf: false }));
-
-      // Pre-load values for default labels
-      return Promise.all(
-        labelKeys
-          .filter((key: string) => DEFAULT_KEYS.indexOf(key) > -1)
-          .map((key: string) => this.fetchLabelValues(key, absoluteRange))
-      );
     } catch (e) {
       console.error(e);
     }

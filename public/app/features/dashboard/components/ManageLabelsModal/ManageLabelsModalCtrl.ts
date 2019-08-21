@@ -5,8 +5,8 @@ export class ManageLabelsModalCtrl {
   eventEnv: string;
   eventName: string;
   eventLabels: string;
-  envLabels = [];
-  originalLabels = [];
+  envLabels: any[];
+  originalLabels: any[];
   isLoading: boolean;
   isNew: boolean;
   newLabel: string;
@@ -17,7 +17,7 @@ export class ManageLabelsModalCtrl {
   isSaving: boolean;
 
   /** @ngInject */
-  constructor(private templateSrv, private $scope, private $rootScope) {
+  constructor(private templateSrv: any, private $scope: any, private $rootScope: any) {
     this.isLoading = true;
     this.isNew = false;
     this.allCheck = false;
@@ -131,9 +131,9 @@ export class ManageLabelsModalCtrl {
       const apiUrl = this.templateSrv.index.apiUrl.current.value;
       const apiVer = this.templateSrv.index.apiVer.current.value;
 
-      const add = [];
-      const remove = [];
-      const urls = [];
+      const add: any[] = [];
+      const remove: any[] = [];
+      const urls: any[] = [];
 
       this.envLabels.forEach((label, i) => {
         if (
@@ -159,7 +159,7 @@ export class ManageLabelsModalCtrl {
         });
 
       try {
-        const ajax = url => {
+        const ajax = (url: any) => {
           $.ajax({
             url: url,
             headers: { 'x-api-key': apiKey },

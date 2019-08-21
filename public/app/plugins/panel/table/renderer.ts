@@ -55,7 +55,7 @@ export class TableRenderer {
   }
 
   getColorForValue(value: number, style: ColumnStyle) {
-    if (!style.thresholds) {
+    if (!style.thresholds || !style.colors) {
       return null;
     }
     for (let i = style.thresholds.length; i > 0; i--) {
@@ -197,7 +197,7 @@ export class TableRenderer {
       return (value: any) => {
         const mappingType = column.style.mappingType || 0;
 
-        const template = (icon, v) => {
+        const template = (icon: any, v: any) => {
           if (column.style.valueAsTooltip) {
             return `<i class="${icon}" data-link-tooltip data-original-title="${v}" data-placement="right"></i>`;
           }
