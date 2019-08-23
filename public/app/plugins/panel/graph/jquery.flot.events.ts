@@ -539,6 +539,7 @@ export class EventMarkers {
         'border-left-style': lineStyle,
         'border-left-color': color,
         color: color,
+        display: 'none', //// these are showing up as extra lines on the right of a graph, but removing them breaks the graph
       });
       line.appendTo(container);
     });
