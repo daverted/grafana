@@ -1324,6 +1324,8 @@ Licensed under the MIT license.
                 placeholder.css("position", "relative"); // for positioning labels and overlay
 
             surface = new Canvas("flot-base", placeholder);
+            console.log('surface:');
+            console.log(surface);
             overlay = new Canvas("flot-overlay", placeholder); // overlay canvas for interactive features
 
             ctx = surface.context;
@@ -2011,6 +2013,7 @@ Licensed under the MIT license.
 
             // draw markings
             var markings = options.grid.markings;
+            console.log('markings: ', markings);
             if (markings) {
                 if ($.isFunction(markings)) {
                     axes = plot.getAxes();
@@ -2077,10 +2080,11 @@ Licensed under the MIT license.
                         }
                         ctx.stroke();
                     } else {
-                        ctx.fillStyle = m.color || options.grid.markingsColor;
-                        ctx.fillRect(xrange.from, yrange.to,
-                                     xrange.to - xrange.from,
-                                     yrange.from - yrange.to);
+                        /////// this draws a solid blue background from time to time...
+                        // ctx.fillStyle = m.color || options.grid.markingsColor;
+                        // ctx.fillRect(xrange.from, yrange.to,
+                        //               xrange.to - xrange.from,
+                        //               yrange.from - yrange.to);
                     }
                 }
             }
