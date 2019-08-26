@@ -424,7 +424,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
                 el.removeClass('fa fa-spinner fa-spin').addClass('oo-svg inbox');
 
                 el.parents('tr').removeClass('strike');
-                appEvents.emit('alert-success', ['Event moved to inbox']);
+                appEvents.emit('alert-success', ['Event restored']);
 
                 // setTimeout(() => {
                 //   ctrl.events.emit('refresh');
