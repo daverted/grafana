@@ -90,4 +90,5 @@ theOutput/
 # Ignore go local build dependencies
 /scripts/go/bin/**
 
-.gz
+# archives
+*.tar.gz
