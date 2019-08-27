@@ -64,7 +64,7 @@ async function fetchDashboard(
           const path = localStorage.getItem('path');
 
           // if set, redirect to the path
-          if (path !== void 0) {
+          if (path !== null && path !== '') {
             dispatch(updateLocation({ path: path, replace: true }));
             return null;
           }
