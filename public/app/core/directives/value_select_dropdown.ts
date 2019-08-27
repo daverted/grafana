@@ -258,7 +258,7 @@ export function valueSelectDropdown($compile: any, $window: any, $timeout: any, 
       const inputEl = elem.find('input');
 
       function openDropdown() {
-        inputEl.css('width', Math.max(linkEl.width(), 80) + 'px');
+        inputEl.css('width', linkEl.outerWidth() + 'px');
 
         inputEl.show();
         linkEl.hide();

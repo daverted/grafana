@@ -10,6 +10,7 @@ import { PlaylistSrv } from 'app/features/playlist/playlist_srv';
 import { DashNavButton } from './DashNavButton';
 import { DashNavTimeControls } from './DashNavTimeControls';
 import { Tooltip } from '@grafana/ui';
+import { EnvMenu } from '../../components/EnvMenu';
 
 // State
 import { updateLocation } from 'app/core/actions';
@@ -127,10 +128,7 @@ export class DashNav extends PureComponent<Props> {
     return (
       <>
         <div>
-          <div className="navbar-page-btn">
-            {!this.isInFullscreenOrSettings && <i className="gicon gicon-dashboard" />}
-            {dashboard.title}
-          </div>
+          <div className="navbar-page-btn">{dashboard.title}</div>
         </div>
         {this.isSettings && <span className="navbar-settings-title">&nbsp;/ Settings</span>}
         <div className="navbar__spacer" />
@@ -173,6 +171,12 @@ export class DashNav extends PureComponent<Props> {
     );
   }
 
+  renderEnv() {
+    const { dashboard } = this.props;
+
+    return <EnvMenu dashboard={dashboard} />;
+  }
+
   get isInFullscreenOrSettings() {
     return this.props.editview || this.props.isFullscreen;
   }
@@ -201,6 +205,7 @@ export class DashNav extends PureComponent<Props> {
     return (
       <div className="navbar">
         {this.renderLogo()}
+        {this.renderEnv()}
         {this.isInFullscreenOrSettings && this.renderBackButton()}
         {this.renderDashboardTitleSearchButton()}
 

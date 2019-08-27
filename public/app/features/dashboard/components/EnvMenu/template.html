@@ -1,0 +1,6 @@
+<div ng-repeat="variable in ctrl.variables" class="submenu-item gf-form-inline menu-item">
+  <div class="gf-form">
+    <value-select-dropdown ng-if="variable.type !== 'adhoc' && variable.type !== 'textbox'" dashboard="ctrl.dashboard" variable="variable" on-updated="ctrl.variableUpdated(variable)"></value-select-dropdown>
+    <input type="text" ng-if="variable.type === 'textbox'" ng-model="variable.query" class="gf-form-input width-12"  ng-blur="variable.current.value != variable.query && variable.updateOptions() && ctrl.variableUpdated(variable);" ng-keydown="$event.keyCode === 13 && variable.current.value != variable.query && variable.updateOptions() && ctrl.variableUpdated(variable);" ></input>
+  </div>
+</div>
