@@ -18,9 +18,6 @@ import { updateLocation } from 'app/core/actions';
 import { DashboardModel } from '../../state';
 import { StoreState } from 'app/types';
 
-// Config
-import config from 'app/core/config';
-
 export interface OwnProps {
   dashboard: DashboardModel;
   editview: string;
@@ -142,7 +139,7 @@ export class DashNav extends PureComponent<Props> {
   }
 
   renderLogo() {
-    const homeUrl = config.appSubUrl || '/';
+    const homeUrl = '/d/lg0U4qriz/home';
 
     return (
       <a href={homeUrl} className="navbar__logo" key="logo">

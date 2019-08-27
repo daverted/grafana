@@ -59,6 +59,19 @@ async function fetchDashboard(
   try {
     switch (args.routeInfo) {
       case DashboardRouteInfo.Home: {
+        // check for last path saved in localStorage
+        try {
+          const path = localStorage.getItem('path');
+
+          // if set, redirect to the path
+          if (path !== void 0) {
+            dispatch(updateLocation({ path: path, replace: true }));
+            return null;
+          }
+        } catch (e) {
+          console.warn('unable to load last dashboard from localStorage');
+        }
+
         // load home dash
         const dashDTO: DashboardDTO = await getBackendSrv().get('/api/dashboards/home');
 

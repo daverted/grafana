@@ -86,15 +86,6 @@ export class VariableSrv {
         const urlValue = queryParams['var-' + variable.name];
         if (urlValue !== void 0) {
           return variable.setValueFromUrl(urlValue).then(variable.initLock.resolve);
-        } else if (variable.name === 'environments') {
-          // special case custom for overops - save var-environments in localStorage
-          try {
-            // localStorage returns a string. split on comma to convert to an array
-            const envs = localStorage.getItem('overops-var-environments').split(',');
-            return variable.setValueFromUrl(envs).then(variable.initLock.resolve);
-          } catch (e) {
-            console.error('unable to load environment from localStorage');
-          }
         }
 
         if (variable.refresh === 1 || variable.refresh === 2) {

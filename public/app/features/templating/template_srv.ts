@@ -310,15 +310,14 @@ export class TemplateSrv {
         }
         params['var-' + variable.name] = variable.getValueForUrl();
       }
-      // special case custom for overops - save var-environments in localStorage
-      if (variable.name === 'environments') {
-        try {
-          localStorage.setItem('overops-var-environments', variable.getValueForUrl());
-        } catch (e) {
-          console.error('unable to store environment in localStorage');
-        }
-      }
     });
+
+    // save path in localStorage
+    try {
+      localStorage.setItem('path', window.location.pathname + window.location.search);
+    } catch (e) {
+      console.warn('unable save path in localStorage');
+    }
   }
 
   distributeVariable(value: any, variable: any) {
