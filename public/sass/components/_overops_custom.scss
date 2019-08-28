@@ -90,10 +90,22 @@
   }
 }
 
+tr:hover {
+  .cex {
+    background-image: url('/public/img/grid/28_caught_white.svg');
+  }
+}
+
 .swl {
   background-image: url('/public/img/grid/08_swallowed.svg');
 
   &:hover {
+    background-image: url('/public/img/grid/26_swallowed_white.svg');
+  }
+}
+
+tr:hover {
+  .swl {
     background-image: url('/public/img/grid/26_swallowed_white.svg');
   }
 }
@@ -106,10 +118,22 @@
   }
 }
 
+tr:hover {
+  .http {
+    background-image: url('/public/img/grid/24_http_error_white.svg');
+  }
+}
+
 .wrn {
   background-image: url('/public/img/grid/14_log_warning_grey.svg');
 
   &:hover {
+    background-image: url('/public/img/grid/23_log_warning_white.svg');
+  }
+}
+
+tr:hover {
+  .wrn {
     background-image: url('/public/img/grid/23_log_warning_white.svg');
   }
 }
@@ -122,6 +146,12 @@
   }
 }
 
+tr:hover {
+  .tmr {
+    background-image: url('/public/img/grid/25_timer_white.svg');
+  }
+}
+
 .unc {
   background-image: url('/public/img/grid/10_uncaught_grey.svg');
 
@@ -130,10 +160,22 @@
   }
 }
 
+tr:hover {
+  .unc {
+    background-image: url('/public/img/grid/21_uncaught_white.svg');
+  }
+}
+
 .err {
   background-image: url('/public/img/grid/12_log_error_grey.svg');
 
   &:hover {
+    background-image: url('/public/img/grid/22_log_error_white.svg');
+  }
+}
+
+tr:hover {
+  .err {
     background-image: url('/public/img/grid/22_log_error_white.svg');
   }
 }
@@ -381,6 +423,15 @@ tr.strike {
       .ellipsis {
         opacity: 0.5;
       }
+    }
+  }
+}
+
+.table-panel-table {
+  tr:hover {
+    background-color: rgba(0, 0, 0, 0.125);
+    td {
+      color: #fff;
     }
   }
 }
