@@ -52,7 +52,7 @@
   display: none; // none by default, but block on "open" of the menu
   float: left;
   min-width: 140px;
-  margin: 2px 0 0; // override default ul
+  margin: 0; // override default ul
   list-style: none;
   background-color: $dropdownBackground;
   border: 1px solid #ccc; // Fallback for IE7-8
