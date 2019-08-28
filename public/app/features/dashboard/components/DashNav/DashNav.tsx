@@ -1,6 +1,7 @@
 // Libaries
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 // Utils & Services
 import { appEvents } from 'app/core/app_events';
@@ -177,6 +178,109 @@ export class DashNav extends PureComponent<Props> {
     return <EnvMenu dashboard={dashboard} />;
   }
 
+  renderOverOpsLinks() {
+    const user = this.props.$injector.get('contextSrv').user;
+    const variables = this.props.$injector.get('variableSrv').variables;
+    let host = '';
+    let port = '443';
+    let proto = 'http://';
+
+    _.each(variables, variable => {
+      if (variable.name === 'apiHost') {
+        host = variable.current.value;
+      }
+      if (variable.name === 'apiPort') {
+        port = variable.current.value;
+        if (port === '443' || port === '8443') {
+          proto = 'https://';
+        }
+      }
+    });
+
+    const logout = () => {
+      $.post(proto + host + '/app/account/logout', { is_full_logout: true }, (data: any, textStatus: string) => {
+        console.log('logout data: ', data);
+        console.log('textStatus: ', textStatus);
+      }).fail(() => {
+        console.warn('fallback to grafana logout');
+        window.location.assign('/logout');
+      });
+    };
+
+    return (
+      <div className="oo-links">
+        <div className="menu-item">
+          <div className="variable-link-wrapper">
+            <a
+              className="variable-value-link no-border"
+              href="https://doc.overops.com/docs/install-collector"
+              target="_blank"
+            >
+              <i className="oo-svg install" />
+              Install
+            </a>
+          </div>
+        </div>
+        <div className="menu-item">
+          <div className="variable-link-wrapper">
+            <a className="variable-value-link no-border" href="/d/mTGNNTfiz/settings" target="_blank">
+              <i className="oo-svg settings" />
+              Settings
+            </a>
+          </div>
+        </div>
+        <div className="menu-item">
+          <div className="variable-link-wrapper dropdown">
+            <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
+              <i className="oo-svg user" />
+              {user.name}
+            </a>
+            <ul className="dropdown-menu pull-left" role="menu">
+              <li>
+                <a href="#" onClick={logout}>
+                  <i className="far fa-power-off" />
+                  Log out
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="menu-item">
+          {/* <Tooltip content="What's New"> */}
+          <div className="variable-link-wrapper">
+            <a
+              className="variable-value-link no-border no-margin"
+              href="https://doc.overops.com/docs/whats-new"
+              target="_blank"
+            >
+              <i className="oo-svg whats-new" />
+            </a>
+          </div>
+          {/* </Tooltip> */}
+        </div>
+        <div className="menu-item">
+          <div className="variable-link-wrapper dropdown">
+            <a className="variable-value-link no-border no-margin dropdown-toggle" data-toggle="dropdown" href="#">
+              <i className="oo-svg help" />
+            </a>
+            <ul className="dropdown-menu pull-right" role="menu">
+              <li>
+                <a href="https://support.overops.com/hc/en-us" target="_blank">
+                  Visit the OverOps Support Center
+                </a>
+              </li>
+              <li>
+                <a href="https://support.overops.com/hc/en-us/community/topics" target="_blank">
+                  Find an Answer in OverOps Community
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   get isInFullscreenOrSettings() {
     return this.props.editview || this.props.isFullscreen;
   }
@@ -277,7 +381,7 @@ export class DashNav extends PureComponent<Props> {
             <DashNavButton
               tooltip="Dashboard settings"
               classSuffix="settings"
-              icon="gicon gicon-cog"
+              icon="fa fa-cog"
               onClick={this.onOpenSettings}
             />
           )}
@@ -303,6 +407,8 @@ export class DashNav extends PureComponent<Props> {
             />
           </div>
         )}
+
+        {this.renderOverOpsLinks()}
       </div>
     );
   }

@@ -18,8 +18,15 @@
 
   .menu-item {
     margin: 0;
+    display: inline-block;
 
     .variable-link-wrapper {
+      &.dropdown.open {
+        .variable-value-link {
+          background-color: #000;
+        }
+      }
+
       .variable-value-link {
         padding: 15px 17px;
         background-color: inherit;
@@ -32,6 +39,22 @@
         color: $headings-color;
         &:hover {
           background-color: #000;
+        }
+        &.no-border {
+          border-right: none;
+        }
+      }
+
+      .oo-svg {
+        height: 28px;
+        width: 28px;
+        margin-right: 7px;
+      }
+
+      .no-margin {
+        padding: 15px 10px 15px 15px;
+        .oo-svg {
+          margin-right: 0;
         }
       }
 
@@ -47,6 +70,23 @@
         border-radius: 0;
         height: auto;
         color: $headings-color;
+      }
+
+      .dropdown-menu {
+        margin: 0;
+        & > li {
+          & > a {
+            padding: 5px 20px 5px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.125);
+            & > i {
+              color: inherit;
+              top: 1px;
+            }
+          }
+          &:last-child > a {
+            border-bottom: none;
+          }
+        }
       }
     }
   }
@@ -240,7 +280,7 @@ i.navbar-page-btn__search {
     .fa {
       font-size: 14px;
       position: relative;
-      top: 5px;
+      top: 3px;
     }
   }
 
@@ -291,4 +331,13 @@ i.navbar-page-btn__search {
   font-size: $font-size-lg;
   min-height: $navbarHeight;
   line-height: $navbarHeight;
+}
+
+body.view-mode--tv,
+body.view-mode--inactive {
+  .navbar {
+    .oo-links {
+      display: none;
+    }
+  }
 }

@@ -10,7 +10,6 @@ export class EnvMenuCtrl {
   constructor(private variableSrv: VariableSrv, private $location: ILocationService) {
     _.each(this.variableSrv.variables, variable => {
       if (variable.name === 'environments') {
-        console.log('environments: ', variable);
         this.variables = [variable];
       }
     });
