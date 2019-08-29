@@ -199,8 +199,7 @@ export class DashNav extends PureComponent<Props> {
 
     const logout = () => {
       $.post(proto + host + '/app/account/logout', { is_full_logout: true }, (data: any, textStatus: string) => {
-        console.log('logout data: ', data);
-        console.log('textStatus: ', textStatus);
+        window.location.reload();
       }).fail(() => {
         console.warn('fallback to grafana logout');
         window.location.assign('/logout');
