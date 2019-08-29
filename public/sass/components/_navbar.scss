@@ -48,7 +48,17 @@
       .oo-svg {
         height: 28px;
         width: 28px;
+      }
+
+      .fa,
+      .far,
+      .fal,
+      .fas {
+        font-size: 24px;
         margin-right: 7px;
+        margin-top: -6px;
+        top: 2px;
+        position: relative;
       }
 
       .no-margin {

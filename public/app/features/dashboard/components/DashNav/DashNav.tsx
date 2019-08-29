@@ -210,6 +210,14 @@ export class DashNav extends PureComponent<Props> {
       <div className="oo-links">
         <div className="menu-item">
           <div className="variable-link-wrapper">
+            <a className="variable-value-link no-border" href={proto + host + '/'} target="_blank">
+              <i className="far fa-browser" />
+              Event Explorer
+            </a>
+          </div>
+        </div>
+        <div className="menu-item">
+          <div className="variable-link-wrapper">
             <a
               className="variable-value-link no-border"
               href="https://doc.overops.com/docs/install-collector"
