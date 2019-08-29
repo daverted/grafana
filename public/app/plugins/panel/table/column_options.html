@@ -20,6 +20,12 @@
     <gf-form-switch ng-if="style.type !== 'html'" class="gf-form"
       label-class="width-12" label="Mouseover Tooltip (beta)" checked="style.mouseoverTooltip" on-change="editor.render()">
     </gf-form-switch>
+    <div class="gf-form">
+      <label class="gf-form-label width-12">Column Width</label>
+      <div class="gf-form-select-wrapper width-6">
+        <select class="gf-form-input" ng-model="style.width" ng-options="c as c for c in editor.columnWidths" ng-change="editor.render()"></select>
+      </div>
+    </div>
   </div>
 
   <div class="section gf-form-group">

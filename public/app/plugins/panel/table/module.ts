@@ -23,6 +23,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     transform: 'timeseries_to_columns',
     pageSize: null,
     showHeader: true,
+    fixedWidth: false,
     styles: [
       {
         type: 'date',

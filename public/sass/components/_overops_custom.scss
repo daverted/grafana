@@ -428,10 +428,19 @@ tr.strike {
 }
 
 .table-panel-table {
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   tr:hover {
     background-color: rgba(0, 0, 0, 0.125);
     td {
       color: #fff;
+      a {
+        color: #fff;
+      }
     }
   }
 }

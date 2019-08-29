@@ -38,6 +38,9 @@
         </label>
       </div>
     </div>
+    <div class="gf-form" ng-if="editor.panel.transform == 'table'">
+      <gf-form-switch class="gf-form" label-class="width-10" label="Fixed Width" checked="editor.panel.fixedWidth" on-change="editor.render()"></gf-form-switch>
+    </div>
   </div>
 
   <div class="section gf-form-group">
