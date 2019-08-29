@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { css, cx } from 'emotion';
-import { Themeable, withTheme, GrafanaTheme, selectThemeVariant, LinkButton } from '@grafana/ui';
+import { Themeable, withTheme, GrafanaTheme, selectThemeVariant, LinkButton, getLogRowStyles } from '@grafana/ui';
 
 import { LogsModel, LogRowModel, TimeZone } from '@grafana/data';
 
@@ -40,28 +40,10 @@ export interface Props extends Themeable {
   stopLive: () => void;
 }
 
-export interface State {
-  renderCount: number;
-}
-
-class LiveLogs extends PureComponent<Props, State> {
+class LiveLogs extends PureComponent<Props> {
   private liveEndDiv: HTMLDivElement = null;
 
-  constructor(props: Props) {
-    super(props);
-    this.state = { renderCount: 0 };
-  }
-
   componentDidUpdate(prevProps: Props) {
-    const prevRows: LogRowModel[] = prevProps.logsResult ? prevProps.logsResult.rows : [];
-    const rows: LogRowModel[] = this.props.logsResult ? this.props.logsResult.rows : [];
-
-    if (prevRows !== rows) {
-      this.setState({
-        renderCount: this.state.renderCount + 1,
-      });
-    }
-
     if (this.liveEndDiv) {
       this.liveEndDiv.scrollIntoView(false);
     }
@@ -69,10 +51,10 @@ class LiveLogs extends PureComponent<Props, State> {
 
   render() {
     const { theme, timeZone } = this.props;
-    const { renderCount } = this.state;
     const styles = getStyles(theme);
     const rowsToRender: LogRowModel[] = this.props.logsResult ? this.props.logsResult.rows : [];
     const showUtc = timeZone === 'utc';
+    const { logsRow, logsRowLocalTime, logsRowMessage } = getLogRowStyles(theme);
 
     return (
       <>
@@ -80,20 +62,20 @@ class LiveLogs extends PureComponent<Props, State> {
           {rowsToRender.map((row: any, index) => {
             return (
               <div
-                className={row.fresh ? cx(['logs-row', styles.logsRowFresh]) : cx(['logs-row', styles.logsRowOld])}
+                className={row.fresh ? cx([logsRow, styles.logsRowFresh]) : cx([logsRow, styles.logsRowOld])}
                 key={`${row.timeEpochMs}-${index}`}
               >
                 {showUtc && (
-                  <div className="logs-row__localtime" title={`Local: ${row.timeLocal} (${row.timeFromNow})`}>
+                  <div className={cx([logsRowLocalTime])} title={`Local: ${row.timeLocal} (${row.timeFromNow})`}>
                     {row.timeUtc}
                   </div>
                 )}
                 {!showUtc && (
-                  <div className="logs-row__localtime" title={`${row.timeUtc} (${row.timeFromNow})`}>
+                  <div className={cx([logsRowLocalTime])} title={`${row.timeUtc} (${row.timeFromNow})`}>
                     {row.timeLocal}
                   </div>
                 )}
-                <div className="logs-row__message">{row.entry}</div>
+                <div className={cx([logsRowMessage])}>{row.entry}</div>
               </div>
             );
           })}
@@ -108,7 +90,7 @@ class LiveLogs extends PureComponent<Props, State> {
         </div>
         <div className={cx([styles.logsRowsIndicator])}>
           <span>
-            Last line received: <ElapsedTime renderCount={renderCount} humanize={true} /> ago
+            Last line received: <ElapsedTime resetKey={this.props.logsResult} humanize={true} /> ago
           </span>
           <LinkButton
             onClick={this.props.stopLive}
