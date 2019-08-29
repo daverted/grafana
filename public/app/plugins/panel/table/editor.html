@@ -41,6 +41,20 @@
     <div class="gf-form" ng-if="editor.panel.transform == 'table'">
       <gf-form-switch class="gf-form" label-class="width-10" label="Fixed Width" checked="editor.panel.fixedWidth" on-change="editor.render()"></gf-form-switch>
     </div>
+    <gf-form-switch class="gf-form" label-class="width-10" label="Link Row" checked="editor.panel.linkRow" on-change="editor.render()"></gf-form-switch>
+    <div class="gf-form" ng-if="editor.panel.linkRow">
+      <label class="gf-form-label width-10">Link URL</label>
+      <input
+        type="text"
+        class="gf-form-input width-12"
+        ng-model="editor.panel.linkUrl"
+        ng-change="editor.render()"
+        ng-model-onblur
+      />
+    </div>
+    <div class="gf-form" ng-if="editor.panel.linkRow">
+      <gf-form-switch class="gf-form" label-class="width-10" label="Open in new tab" checked="editor.panel.linkNewTab" on-change="editor.render()"></gf-form-switch>
+    </div>
   </div>
 
   <div class="section gf-form-group">

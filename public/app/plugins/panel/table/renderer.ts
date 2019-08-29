@@ -11,7 +11,14 @@ export class TableRenderer {
   colorState: any;
 
   constructor(
-    private panel: { styles: ColumnStyle[]; pageSize: number; fixedWidth: boolean },
+    private panel: {
+      styles: ColumnStyle[];
+      pageSize: number;
+      fixedWidth: boolean;
+      linkRow: boolean;
+      linkUrl: string;
+      linkNewTab: boolean;
+    },
     private table: TableRenderModel,
     private isUtc: boolean,
     private sanitize: (v: any) => any,
@@ -501,11 +508,27 @@ export class TableRenderer {
         this.colorState.row = null;
       }
 
+      // make the row clickable
+      let onClick = '';
+      if (this.panel && this.panel.linkRow) {
+        rowClasses.push('pointer');
+        onClick += " onclick=\"if(event.target.tagName === 'TD'){";
+
+        const scopedVars = this.renderRowVariables(y);
+        const rowLink = this.templateSrv.replace(this.panel.linkUrl, scopedVars, encodeURIComponent);
+
+        onClick += this.panel.linkNewTab
+          ? "window.open('" + rowLink + "', '_blank')"
+          : "window.location.href = '" + rowLink + "'";
+
+        onClick += '}" ';
+      }
+
       if (rowClasses.length) {
         rowClass = ' class="' + rowClasses.join(' ') + '"';
       }
 
-      html += '<tr ' + rowClass + rowStyle + '>' + cellHtml + '</tr>';
+      html += '<tr ' + rowClass + rowStyle + onClick + '>' + cellHtml + '</tr>';
     }
 
     // add bottom whitespace for actions dropdown menu
