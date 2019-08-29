@@ -428,7 +428,7 @@ tr.strike {
 }
 
 .table-panel-table {
-  td {
+  td.fixed-width {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

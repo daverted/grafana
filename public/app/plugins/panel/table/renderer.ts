@@ -11,7 +11,7 @@ export class TableRenderer {
   colorState: any;
 
   constructor(
-    private panel: { styles: ColumnStyle[]; pageSize: number },
+    private panel: { styles: ColumnStyle[]; pageSize: number; fixedWidth: boolean },
     private table: TableRenderModel,
     private isUtc: boolean,
     private sanitize: (v: any) => any,
@@ -331,6 +331,10 @@ export class TableRenderer {
 
       if (column.style && column.style.eventActions) {
         cellClasses.push('actions-wrapper');
+      }
+
+      if (this.panel && this.panel.fixedWidth) {
+        cellClasses.push('fixed-width');
       }
 
       const dataLinkTooltip =
