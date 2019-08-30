@@ -28,3 +28,6 @@ RUN yum install -y nodejs
 RUN npm install -g yarn
 
 WORKDIR /opt
+
+# go get throws a warning that's safe to ignore. exit 0 to allow docker to continue
+RUN go get github.com/grafana/grafana; exit 0

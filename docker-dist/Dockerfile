@@ -1,8 +1,5 @@
 FROM grafana-fork-base
 
-# go get throws a warning that's safe to ignore. exit 0 to allow docker to continue
-RUN go get github.com/grafana/grafana; exit 0
-
 # switch to forked grafana
 WORKDIR /opt/src/github.com/grafana/grafana
 RUN git remote set-url origin https://github.com/daverted/grafana
