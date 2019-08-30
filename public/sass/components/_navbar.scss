@@ -39,6 +39,9 @@
         color: $headings-color;
         &:hover {
           background-color: #000;
+          .oo-svg.unc {
+            background-image: url('/public/img/grid/10_uncaught_grey.svg');
+          }
         }
         &.no-border {
           border-right: none;

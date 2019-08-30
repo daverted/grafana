@@ -211,7 +211,7 @@ export class DashNav extends PureComponent<Props> {
         <div className="menu-item">
           <div className="variable-link-wrapper">
             <a className="variable-value-link no-border" href={proto + host + '/'} target="_blank">
-              <i className="far fa-browser" />
+              <i className="oo-svg unc" />
               Event Explorer
             </a>
           </div>
