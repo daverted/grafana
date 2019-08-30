@@ -13,6 +13,7 @@ export class ValueSelectDropdownCtrl {
   selectedValues: any;
   tags: any;
   variable: any;
+  multivariable: any;
 
   hide: any;
   onUpdated: any;
@@ -47,6 +48,10 @@ export class ValueSelectDropdownCtrl {
 
   updateLinkText() {
     const current = this.variable.current;
+
+    if (current.value.length > 1 && this.multivariable) {
+      current.text = this.multivariable + ' (' + current.value.length + ')';
+    }
 
     if (current.tags && current.tags.length) {
       // filer out values that are in selected tags
@@ -199,7 +204,10 @@ export class ValueSelectDropdownCtrl {
 
     this.selectedTags = _.filter(this.tags, { selected: true });
     this.variable.current.value = _.map(this.selectedValues, 'value');
-    this.variable.current.text = _.map(this.selectedValues, 'text').join(' + ');
+    this.variable.current.text =
+      this.multivariable && this.selectedValues.lenght > 1
+        ? this.multivariable + ' (' + this.selectedValues.length + ')'
+        : _.map(this.selectedValues, 'text').join(' + ');
     this.variable.current.tags = this.selectedTags;
 
     if (!this.variable.multi) {
@@ -247,7 +255,7 @@ export class ValueSelectDropdownCtrl {
 /** @ngInject */
 export function valueSelectDropdown($compile: any, $window: any, $timeout: any, $rootScope: any) {
   return {
-    scope: { dashboard: '=', variable: '=', onUpdated: '&' },
+    scope: { dashboard: '=', variable: '=', multivariable: '=', onUpdated: '&' },
     templateUrl: 'public/app/partials/valueSelectDropdown.html',
     controller: 'ValueSelectDropdownCtrl',
     controllerAs: 'vm',
