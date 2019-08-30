@@ -288,6 +288,11 @@ export class TableRenderer {
       textStyle = ' style="color:' + this.colorState.value + '"';
       this.colorState.value = null;
     }
+
+    if (this.panel && this.panel.fixedWidth) {
+      cellClasses.push('fixed-width');
+    }
+
     // because of the fixed table headers css only solution
     // there is an issue if header cell is wider the cell
     // this hack adds header content to cell (not visible)
@@ -338,10 +343,6 @@ export class TableRenderer {
 
       if (column.style && column.style.eventActions) {
         cellClasses.push('actions-wrapper');
-      }
-
-      if (this.panel && this.panel.fixedWidth) {
-        cellClasses.push('fixed-width');
       }
 
       const dataLinkTooltip =

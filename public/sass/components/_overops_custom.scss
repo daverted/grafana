@@ -433,6 +433,14 @@ tr.strike {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    & > a {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    &.actions-wrapper {
+      overflow: visible; // enable tooltips and dropdown menu
+    }
   }
 
   tr:hover {

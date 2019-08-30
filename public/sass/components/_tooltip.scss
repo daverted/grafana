@@ -4,6 +4,7 @@
 
 // Base class
 .tooltip {
+  white-space: normal;
   position: absolute;
   z-index: $zindex-tooltip;
   display: block;
