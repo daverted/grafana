@@ -716,12 +716,11 @@
     var style
       , parent
 
-    // get first parent element where overflow is hidden
+    // get last parent element where overflow is hidden
     element.parents().each((ndx, el) => {
       style = window.getComputedStyle(el);
       if (style.overflow === 'hidden') {
         parent = el;
-        return false; // break jquery each() loop
       }
     });
 
