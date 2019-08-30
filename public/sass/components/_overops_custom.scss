@@ -344,6 +344,20 @@ tr:hover {
 }
 
 .actions-wrapper {
+  &:hover,
+  &.open {
+    & > a {
+      margin-right: -8em; // 11em for all
+      .ellipsis {
+        max-width: calc(100% - 8em);
+      }
+    }
+
+    .oo-actions {
+      display: inline-block;
+    }
+  }
+
   & > a {
     width: 100%;
     vertical-align: middle;
@@ -359,19 +373,6 @@ tr:hover {
 
   .oo-actions-strike {
     display: none;
-  }
-}
-
-.actions-wrapper:hover {
-  & > a {
-    margin-right: -8em; // 11em for all
-    .ellipsis {
-      max-width: calc(100% - 8em);
-    }
-  }
-
-  .oo-actions {
-    display: inline-block;
   }
 }
 

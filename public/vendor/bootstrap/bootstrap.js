@@ -119,11 +119,13 @@
   , toggle: function (e) {
       var $this = $(this)
         , $parent
+        , $trueParent
         , isActive
 
       if ($this.is('.disabled, :disabled')) return
 
       $parent = getParent($this)
+      $trueParent = trueParent($this)
 
       isActive = $parent.hasClass('open')
 
@@ -135,6 +137,7 @@
           $('<div class="dropdown-backdrop"/>').insertBefore($(this)).on('click', clearMenus)
         }
         $parent.toggleClass('open')
+        $trueParent.toggleClass('open')
       }
 
       $this.focus()
@@ -189,6 +192,7 @@
     $('.dropdown-backdrop').remove()
     $(toggle).each(function () {
       getParent($(this)).removeClass('open')
+      trueParent($(this)).removeClass('open')
     })
   }
 
@@ -209,6 +213,20 @@
     return $parent
   }
 
+  // for overops dashboard dropdowns
+  function trueParent($this) {
+    var selector = $this.attr('data-parent')
+      , $parent = {
+        toggleClass: () => {},
+        removeClass: () => {}
+      }
+
+    if (selector) {
+      $parent = $this.parents(selector);
+    }
+
+    return $parent;
+  }
 
   /* DROPDOWN PLUGIN DEFINITION
    * ========================== */

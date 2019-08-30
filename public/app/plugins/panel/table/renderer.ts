@@ -417,7 +417,7 @@ export class TableRenderer {
 
       columnHtml +=
         '<div class="dropdown">' +
-        '<a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">' +
+        '<a class="dropdown-toggle" role="button" data-toggle="dropdown" data-parent=".actions-wrapper" href="#">' +
         '<i class="oo-svg more" data-link-tooltip data-placement="right" ' +
         'data-original-title="More&nbsp;Actions"></i>' +
         '</a>' +
