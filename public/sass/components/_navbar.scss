@@ -340,12 +340,3 @@ i.navbar-page-btn__search {
   min-height: $navbarHeight;
   line-height: $navbarHeight;
 }
-
-body.view-mode--tv,
-body.view-mode--inactive {
-  .navbar {
-    .oo-links {
-      display: none;
-    }
-  }
-}

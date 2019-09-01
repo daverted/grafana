@@ -226,6 +226,13 @@ export class DashNav extends PureComponent<Props> {
               </li>
               <li className="divider" />
               <li>
+                <a href="#" onClick={this.onToggleTVMode}>
+                  <i className="fa fa-desktop" />
+                  Cycle view mode
+                </a>
+              </li>
+              <li className="divider" />
+              <li>
                 <span className="header">Platform</span>
               </li>
               <li>
@@ -357,15 +364,6 @@ export class DashNav extends PureComponent<Props> {
               onClick={this.onOpenSettings}
             />
           )}
-        </div>
-
-        <div className="navbar-buttons navbar-buttons--tv">
-          <DashNavButton
-            tooltip="Cycle view mode"
-            classSuffix="tv"
-            icon="fa fa-desktop"
-            onClick={this.onToggleTVMode}
-          />
         </div>
 
         {!dashboard.timepicker.hidden && (
