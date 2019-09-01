@@ -208,77 +208,65 @@ export class DashNav extends PureComponent<Props> {
 
     return (
       <div className="oo-links">
-        <div className="menu-item">
-          <div className="variable-link-wrapper">
-            <a className="variable-value-link no-border" href={proto + host + '/'} target="_blank">
-              <i className="oo-svg unc" />
-              Event Explorer
-            </a>
-          </div>
-        </div>
-        <div className="menu-item">
-          <div className="variable-link-wrapper">
-            <a
-              className="variable-value-link no-border"
-              href="https://doc.overops.com/docs/install-collector"
-              target="_blank"
-            >
-              <i className="oo-svg install" />
-              Install
-            </a>
-          </div>
-        </div>
-        <div className="menu-item">
-          <div className="variable-link-wrapper">
-            <a className="variable-value-link no-border" href="/d/mTGNNTfiz/settings" target="_blank">
-              <i className="oo-svg settings" />
-              Settings
-            </a>
-          </div>
-        </div>
+        {/* <Tooltip content="What's New"></Tooltip> */}
         <div className="menu-item">
           <div className="variable-link-wrapper dropdown">
             <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
-              <i className="oo-svg user" />
-              {user.name}
-            </a>
-            <ul className="dropdown-menu pull-left" role="menu">
-              <li>
-                <a href="#" onClick={logout}>
-                  <i className="far fa-power-off" />
-                  Log out
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="menu-item">
-          {/* <Tooltip content="What's New"> */}
-          <div className="variable-link-wrapper">
-            <a
-              className="variable-value-link no-border no-margin"
-              href="https://doc.overops.com/docs/whats-new"
-              target="_blank"
-            >
-              <i className="oo-svg whats-new" />
-            </a>
-          </div>
-          {/* </Tooltip> */}
-        </div>
-        <div className="menu-item">
-          <div className="variable-link-wrapper dropdown">
-            <a className="variable-value-link no-border no-margin dropdown-toggle" data-toggle="dropdown" href="#">
-              <i className="oo-svg help" />
+              <i className="fas fa-ellipsis-v" />
             </a>
             <ul className="dropdown-menu pull-right" role="menu">
               <li>
+                <span className="user name">{user.name}</span>
+              </li>
+              <li>
+                <span className="user email">{user.email}</span>
+              </li>
+              <li>
+                <a href="/profile">Profile</a>
+              </li>
+              <li className="divider" />
+              <li>
+                <span className="header">Platform</span>
+              </li>
+              <li>
+                <a href={proto + host + '/'} target="_blank">
+                  Event Explorer
+                </a>
+              </li>
+              <li>
+                <a href="/d/mTGNNTfiz/settings" target="_blank">
+                  Settings
+                </a>
+              </li>
+              <li className="disabled">
+                <a href="#">Alerts</a>
+              </li>
+              <li className="divider" />
+              <li>
+                <span className="header">Help</span>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/whats-new">What's New</a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/install-collector" target="_blank">
+                  Install Guide
+                </a>
+              </li>
+              <li>
                 <a href="https://support.overops.com/hc/en-us" target="_blank">
-                  Visit the OverOps Support Center
+                  Support Center
                 </a>
               </li>
               <li>
                 <a href="https://support.overops.com/hc/en-us/community/topics" target="_blank">
-                  Find an Answer in OverOps Community
+                  OverOps Community
+                </a>
+              </li>
+              <li className="divider" />
+              <li>
+                <a href="#" onClick={logout}>
+                  Log out
                 </a>
               </li>
             </ul>
@@ -319,29 +307,6 @@ export class DashNav extends PureComponent<Props> {
         {this.renderEnv()}
         {this.isInFullscreenOrSettings && this.renderBackButton()}
         {this.renderDashboardTitleSearchButton()}
-
-        {this.playlistSrv.isPlaying && (
-          <div className="navbar-buttons navbar-buttons--playlist">
-            <DashNavButton
-              tooltip="Go to previous dashboard"
-              classSuffix="tight"
-              icon="fa fa-step-backward"
-              onClick={this.onPlaylistPrev}
-            />
-            <DashNavButton
-              tooltip="Stop playlist"
-              classSuffix="tight"
-              icon="fa fa-stop"
-              onClick={this.onPlaylistStop}
-            />
-            <DashNavButton
-              tooltip="Go to next dashboard"
-              classSuffix="tight"
-              icon="fa fa-forward"
-              onClick={this.onPlaylistNext}
-            />
-          </div>
-        )}
 
         <div className="navbar-buttons navbar-buttons--actions">
           {canSave && (
