@@ -2,15 +2,18 @@ import angular, { ILocationService } from 'angular';
 import _ from 'lodash';
 import { VariableSrv } from 'app/features/templating/all';
 
-export class EnvMenuCtrl {
+export class VarMenuCtrl {
   variables: any;
   dashboard: any;
+  variableName: any;
+  label: any;
 
   /** @ngInject */
   constructor(private variableSrv: VariableSrv, private $location: ILocationService) {
     _.each(this.variableSrv.variables, variable => {
-      if (variable.name === 'environments') {
+      if (variable.name === this.variableName) {
         this.variables = [variable];
+        this.label = variable.label;
       }
     });
   }
@@ -29,17 +32,18 @@ export class EnvMenuCtrl {
   }
 }
 
-export function envmenuDirective() {
+export function varmenuDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app/features/dashboard/components/EnvMenu/template.html',
-    controller: EnvMenuCtrl,
+    templateUrl: 'public/app/features/dashboard/components/VarMenu/template.html',
+    controller: VarMenuCtrl,
     bindToController: true,
     controllerAs: 'ctrl',
     scope: {
       dashboard: '=',
+      variableName: '=',
     },
   };
 }
 
-angular.module('grafana.directives').directive('dashboardEnvmenu', envmenuDirective);
+angular.module('grafana.directives').directive('dashboardVarmenu', varmenuDirective);

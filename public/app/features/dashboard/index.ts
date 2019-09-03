@@ -20,7 +20,7 @@ import './components/RowOptions';
 
 // Custom Components
 import './components/ManageLabelsModal';
-import './components/EnvMenu';
+import './components/VarMenu';
 
 import DashboardPermissions from './components/DashboardPermissions/DashboardPermissions';
 

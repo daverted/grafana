@@ -11,7 +11,7 @@ import { PlaylistSrv } from 'app/features/playlist/playlist_srv';
 import { DashNavButton } from './DashNavButton';
 import { DashNavTimeControls } from './DashNavTimeControls';
 import { Tooltip } from '@grafana/ui';
-import { EnvMenu } from '../../components/EnvMenu';
+import { VarMenu } from '../../components/VarMenu';
 
 // State
 import { updateLocation } from 'app/core/actions';
@@ -172,10 +172,14 @@ export class DashNav extends PureComponent<Props> {
     );
   }
 
-  renderEnv() {
+  renderVarMenus() {
     const { dashboard } = this.props;
-
-    return <EnvMenu dashboard={dashboard} />;
+    return [
+      <VarMenu key="1" variableName="environments" dashboard={dashboard} />,
+      <VarMenu key="2" variableName="applications" dashboard={dashboard} />,
+      <VarMenu key="3" variableName="deployments" dashboard={dashboard} />,
+      <VarMenu key="4" variableName="servers" dashboard={dashboard} />,
+    ];
   }
 
   renderOverOpsLinks() {
@@ -311,7 +315,7 @@ export class DashNav extends PureComponent<Props> {
     return (
       <div className="navbar">
         {this.renderLogo()}
-        {this.renderEnv()}
+        {this.renderVarMenus()}
         {this.isInFullscreenOrSettings && this.renderBackButton()}
         {this.renderDashboardTitleSearchButton()}
 

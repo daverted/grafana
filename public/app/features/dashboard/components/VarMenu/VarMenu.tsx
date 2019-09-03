@@ -9,17 +9,21 @@ import { DashboardModel } from '../../state/DashboardModel';
 
 export interface Props {
   dashboard: DashboardModel | null;
+  variableName: string | '';
 }
 
-export class EnvMenu extends PureComponent<Props> {
+export class VarMenu extends PureComponent<Props> {
   element: HTMLElement;
   angularCmp: AngularComponent;
 
   componentDidMount() {
     const loader = getAngularLoader();
 
-    const template = '<dashboard-envmenu dashboard="dashboard" />';
-    const scopeProps = { dashboard: this.props.dashboard };
+    const template = '<dashboard-varmenu dashboard="dashboard" variable-name="variableName" />';
+    const scopeProps = {
+      dashboard: this.props.dashboard,
+      variableName: this.props.variableName,
+    };
 
     this.angularCmp = loader.load(this.element, scopeProps, template);
   }
