@@ -13,7 +13,7 @@ export class ValueSelectDropdownCtrl {
   selectedValues: any;
   tags: any;
   variable: any;
-  multivariable: any;
+  label: any;
 
   hide: any;
   onUpdated: any;
@@ -49,8 +49,17 @@ export class ValueSelectDropdownCtrl {
   updateLinkText() {
     const current = this.variable.current;
 
-    if (current.value.length > 1 && this.multivariable) {
-      current.text = this.multivariable + ' (' + current.value.length + ')';
+    if (!current.value) {
+      return;
+    }
+
+    if (Array.isArray(current.value) && this.label) {
+      const length = current.value.length;
+      if (length === 1 && current.value[0] === '$__all') {
+        current.text = this.label;
+      } else if (length > 1) {
+        current.text = this.label + ' (' + current.value.length + ')';
+      }
     }
 
     if (current.tags && current.tags.length) {
@@ -77,7 +86,11 @@ export class ValueSelectDropdownCtrl {
         this.linkText += ' + ';
       }
     } else {
-      this.linkText = this.variable.current.text;
+      if (this.label) {
+        this.linkText = this.variable.current.text === 'All' ? this.label : this.variable.current.text;
+      } else {
+        this.linkText = this.variable.current.text;
+      }
     }
   }
 
@@ -205,8 +218,8 @@ export class ValueSelectDropdownCtrl {
     this.selectedTags = _.filter(this.tags, { selected: true });
     this.variable.current.value = _.map(this.selectedValues, 'value');
     this.variable.current.text =
-      this.multivariable && this.selectedValues.lenght > 1
-        ? this.multivariable + ' (' + this.selectedValues.length + ')'
+      this.label && this.selectedValues.length > 1
+        ? this.label + ' (' + this.selectedValues.length + ')'
         : _.map(this.selectedValues, 'text').join(' + ');
     this.variable.current.tags = this.selectedTags;
 
@@ -255,7 +268,12 @@ export class ValueSelectDropdownCtrl {
 /** @ngInject */
 export function valueSelectDropdown($compile: any, $window: any, $timeout: any, $rootScope: any) {
   return {
-    scope: { dashboard: '=', variable: '=', multivariable: '=', onUpdated: '&' },
+    scope: {
+      dashboard: '=',
+      variable: '=',
+      label: '=',
+      onUpdated: '&',
+    },
     templateUrl: 'public/app/partials/valueSelectDropdown.html',
     controller: 'ValueSelectDropdownCtrl',
     controllerAs: 'vm',

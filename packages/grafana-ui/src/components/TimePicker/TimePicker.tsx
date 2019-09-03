@@ -3,7 +3,7 @@ import React, { PureComponent, createRef } from 'react';
 
 // Components
 import { ButtonSelect } from '../Select/ButtonSelect';
-import { Tooltip } from '../Tooltip/Tooltip';
+// import { Tooltip } from '../Tooltip/Tooltip';
 import { TimePickerPopover } from './TimePickerPopover';
 import { ClickOutsideWrapper } from '../ClickOutsideWrapper/ClickOutsideWrapper';
 
@@ -59,9 +59,9 @@ export const defaultSelectOptions: TimeOption[] = [
   { from: 'now/y', to: 'now', display: 'This year so far', section: 3 },
 ];
 
-const defaultZoomOutTooltip = () => {
-  return <>Time range zoom out</>;
-};
+// const defaultZoomOutTooltip = () => {
+//   return <>Time range zoom out</>;
+// };
 
 export interface State {
   isCustomOpen: boolean;
@@ -116,7 +116,7 @@ export class TimePicker extends PureComponent<Props, State> {
   };
 
   render() {
-    const { selectOptions: selectTimeOptions, value, onMoveBackward, onMoveForward, onZoom, timeZone } = this.props;
+    const { selectOptions: selectTimeOptions, value, onMoveBackward, onMoveForward, timeZone } = this.props;
     const { isCustomOpen } = this.state;
     const options = this.mapTimeOptionsToSelectableValues(selectTimeOptions);
     const currentOption = options.find(item => isTimeOptionEqualToTimeRange(item.value, value));
@@ -163,11 +163,11 @@ export class TimePicker extends PureComponent<Props, State> {
             </button>
           )}
 
-          <Tooltip content={defaultZoomOutTooltip} placement="bottom">
+          {/* <Tooltip content={defaultZoomOutTooltip} placement="bottom">
             <button className="btn navbar-button navbar-button--zoom" onClick={onZoom}>
               <i className="fa fa-search-minus" />
             </button>
-          </Tooltip>
+          </Tooltip> */}
 
           {isCustomOpen && (
             <ClickOutsideWrapper onClick={this.onCloseCustom}>

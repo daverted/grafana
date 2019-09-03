@@ -27,6 +27,8 @@
         }
       }
 
+      white-space: nowrap;
+
       .variable-value-link {
         padding: 15px 17px;
         background-color: inherit;
@@ -39,39 +41,14 @@
         color: $headings-color;
         &:hover {
           background-color: #000;
-          .oo-svg.unc {
-            background-image: url('/public/img/grid/10_uncaught_grey.svg');
-          }
         }
         &.no-border {
           border-right: none;
         }
       }
 
-      .oo-svg {
-        height: 28px;
-        width: 28px;
-      }
-
-      .fa,
-      .far,
-      .fal,
-      .fas {
-        font-size: 23px;
-        margin-right: 7px;
-        margin-top: -6px;
-        top: 2px;
-        position: relative;
-      }
-
-      .no-margin {
-        padding: 15px 10px 15px 15px;
-        .oo-svg {
-          margin-right: 0;
-        }
-      }
-
       .gf-form-input {
+        min-width: 8rem;
         padding: 15px 17px;
         font-size: inherit;
         line-height: inherit;
@@ -88,16 +65,36 @@
       .dropdown-menu {
         margin: 0;
         & > li {
-          & > a {
+          & > a,
+          & > span {
+            display: block;
             padding: 5px 20px 5px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.125);
+            // border-bottom: 1px solid rgba(255, 255, 255, 0.125);
             & > i {
               color: inherit;
               top: 1px;
               font-size: 1em;
             }
+            &.user {
+              &.name {
+                padding-bottom: 0;
+                font-weight: bold;
+                font-size: 1.25em;
+              }
+              &.email {
+                padding-top: 0;
+                padding-bottom: 15px;
+                font-weight: 300;
+              }
+            }
+            &.header {
+              font-weight: bold;
+              font-size: 11px;
+              color: hsl(212, 100%, 72%);
+            }
           }
-          &:last-child > a {
+          &:last-child > a,
+          &:last-child > span {
             border-bottom: none;
           }
         }
@@ -109,6 +106,14 @@
     .gf-form-input {
       background-color: transparent;
       box-shadow: none;
+    }
+    .time-picker {
+      margin-top: 3px;
+      margin-right: 10px;
+      .select-button-icon.fa.fa-clock-o.fa-fw {
+        top: 4px;
+        margin-right: 3px;
+      }
     }
   }
 }
@@ -268,8 +273,8 @@ i.navbar-page-btn__search {
   }
 
   &--refresh {
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 5px;
+    padding-right: 5px;
   }
 
   &--attached {
@@ -289,7 +294,7 @@ i.navbar-page-btn__search {
   }
 
   &--tight {
-    padding: 7px 4px;
+    padding: 6px 0;
 
     .fa {
       font-size: 14px;
@@ -345,13 +350,4 @@ i.navbar-page-btn__search {
   font-size: $font-size-lg;
   min-height: $navbarHeight;
   line-height: $navbarHeight;
-}
-
-body.view-mode--tv,
-body.view-mode--inactive {
-  .navbar {
-    .oo-links {
-      display: none;
-    }
-  }
 }
