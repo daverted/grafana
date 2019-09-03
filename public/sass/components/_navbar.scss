@@ -107,6 +107,14 @@
       background-color: transparent;
       box-shadow: none;
     }
+    .time-picker {
+      margin-top: 3px;
+      margin-right: 10px;
+      .select-button-icon.fa.fa-clock-o.fa-fw {
+        top: 4px;
+        margin-right: 3px;
+      }
+    }
   }
 }
 
