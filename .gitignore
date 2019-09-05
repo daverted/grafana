@@ -97,3 +97,6 @@ theOutput/
 
 # archives
 *.tar.gz
+
+# Ignore compilation stats from `yarn stats`
+compilation-stats.json
