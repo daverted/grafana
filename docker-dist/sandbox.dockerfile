@@ -3,7 +3,8 @@ FROM grafana-fork-base:6.3.5
 # switch to forked grafana
 WORKDIR /opt/src/github.com/grafana/grafana
 RUN git remote set-url origin https://github.com/daverted/grafana
-RUN git fetch; git pull
+RUN git fetch
+RUN git checkout ds/nav-panels
 
 # build grafana
 RUN go run build.go setup
