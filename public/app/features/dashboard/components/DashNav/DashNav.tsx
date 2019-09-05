@@ -213,6 +213,117 @@ export class DashNav extends PureComponent<Props> {
         <div className="menu-item">
           <div className="variable-link-wrapper dropdown">
             <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
+              Integrations <i className="fa fa-caret-down" />
+            </a>
+            <ul className="dropdown-menu pull-right" role="menu">
+              <li>
+                <a href="https://doc.overops.com/docs/cicd-pipeline" target="_blank">
+                  CI/CD Pipeline
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/log-management-integrations" target="_blank">
+                  Log Management
+                </a>
+              </li>
+              <li className="divider" />
+              <li>
+                <a href="https://doc.overops.com/docs/appdynamics-integrations" target="_blank">
+                  AppDynamics
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/aws-cloudwatch" target="_blank">
+                  AWS CloudWatch
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/cicd-pipeline" target="_blank">
+                  Bamboo
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/cicd-pipeline" target="_blank">
+                  Concourse
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/datadog" target="_blank">
+                  Datadog
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/dynatrace" target="_blank">
+                  Dynatrace
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/grafana" target="_blank">
+                  Grafana
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/graphite" target="_blank">
+                  Graphite
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/hosted-graphite" target="_blank">
+                  Hosted Graphite
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/influxdb" target="_blank">
+                  InfluxDB
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/jenkins-integration" target="_blank">
+                  Jenkins
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/jira" target="_blank">
+                  Jira
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/pagerduty" target="_blank">
+                  PagerDuty
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/new-relic-integration" target="_blank">
+                  New Relic
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/servicenow" target="_blank">
+                  ServiceNow
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/slack" target="_blank">
+                  Slack
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/splunk-application" target="_blank">
+                  Splunk App
+                </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/cicd-pipeline" target="_blank">
+                  TeamCity
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="menu-item">
+          <div className="variable-link-wrapper dropdown">
+            <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
               <i className="fas fa-ellipsis-v" />
             </a>
             <ul className="dropdown-menu pull-right" role="menu">
@@ -246,9 +357,6 @@ export class DashNav extends PureComponent<Props> {
                   Settings
                 </a>
               </li>
-              <li className="disabled">
-                <a href="#">Alerts</a>
-              </li>
               <li className="divider" />
               <li>
                 <span className="header">Help</span>
@@ -268,7 +376,7 @@ export class DashNav extends PureComponent<Props> {
               </li>
               <li>
                 <a href="https://support.overops.com/hc/en-us/community/topics" target="_blank">
-                  OverOps Community
+                  Community
                 </a>
               </li>
               <li className="divider" />
