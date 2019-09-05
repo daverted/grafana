@@ -198,7 +198,7 @@ export class ValueSelectDropdownCtrl {
     this.selectedValues = _.filter(this.options, { selected: true });
 
     if (this.selectedValues.length > 1) {
-      if (this.selectedValues[0].text === 'All') {
+      if (this.selectedValues[0].text === 'All' || this.selectedValues[0].text === 'None') {
         this.selectedValues[0].selected = false;
         this.selectedValues = this.selectedValues.slice(1, this.selectedValues.length);
       }
