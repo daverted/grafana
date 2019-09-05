@@ -4,15 +4,16 @@ const theme: GrafanaThemeCommons = {
   name: 'Grafana Default',
   typography: {
     fontFamily: {
-      sansSerif: "'Roboto', 'Helvetica Neue', Arial, sans-serif",
+      // sansSerif: "'Roboto', 'Helvetica Neue', Arial, sans-serif",
+      sansSerif: "'Inter', sans-serif",
       monospace: "Menlo, Monaco, Consolas, 'Courier New', monospace",
     },
     size: {
       root: '14px',
-      base: '13px',
+      base: '14px',
       xs: '10px',
       sm: '12px',
-      md: '14px',
+      md: '16px',
       lg: '18px',
     },
     heading: {

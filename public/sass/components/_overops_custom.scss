@@ -442,21 +442,12 @@ tr.strike {
       overflow: visible; // enable tooltips and dropdown menu
     }
   }
-
-  tr:hover {
-    background-color: rgba(0, 0, 0, 0.125);
-    td {
-      color: #fff;
-      .dropdown-menu .disabled a {
-        color: #8e8e8e;
-      }
-      a {
-        color: #fff;
-      }
-    }
-  }
 }
 
 .pointer {
   cursor: pointer;
+}
+
+.d-none {
+  display: none;
 }

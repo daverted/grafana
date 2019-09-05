@@ -10,10 +10,31 @@
   transition-timing-function: ease-in-out;
   transition-property: box-shadow, border-bottom;
   background-color: #22272c;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
 
   @include media-breakpoint-up(md) {
     padding-left: $dashboard-padding;
     margin-left: 0;
+  }
+
+  & + .navbar {
+    height: 72px;
+    z-index: ($zindex-navbar-fixed - 1);
+    border-bottom: 2px solid #323a41;
+    background-color: $body-bg;
+    box-shadow: none;
+    margin-top: 15px;
+    .react-grid-layout.layout {
+      width: 100%;
+    }
+    .nav-panel {
+      .panel-container:hover {
+        background-color: #000;
+      }
+      &.selected .panel-container {
+        background-color: #22272c;
+      }
+    }
   }
 
   .menu-item {
@@ -30,7 +51,7 @@
       white-space: nowrap;
 
       .variable-value-link {
-        padding: 15px 17px;
+        padding: 14px 17px;
         background-color: inherit;
         border-top: none;
         border-right: 1px solid #323a41;
@@ -64,6 +85,7 @@
 
       .dropdown-menu {
         margin: 0;
+        box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.5);
         & > li {
           & > a,
           & > span {
@@ -350,4 +372,8 @@ i.navbar-page-btn__search {
   font-size: $font-size-lg;
   min-height: $navbarHeight;
   line-height: $navbarHeight;
+}
+
+.view-mode--kiosk .navbar + .navbar {
+  display: block;
 }

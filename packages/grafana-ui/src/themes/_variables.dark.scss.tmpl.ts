@@ -116,8 +116,8 @@ $hr-border-color: $dark-9;
 
 // Panel
 // -------------------------
-$panel-bg: $dark-4;
-$panel-border: solid 1px $dark-1;
+$panel-bg: transparent; //$dark-4;
+$panel-border: none; //solid 1px $dark-1;
 $panel-header-hover-bg: $dark-9;
 $panel-corner: $panel-bg;
 

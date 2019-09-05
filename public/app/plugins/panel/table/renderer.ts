@@ -533,9 +533,9 @@ export class TableRenderer {
     }
 
     // add bottom whitespace for actions dropdown menu
-    html += `<tr style="background-color:#212124!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
-       <tr style="background-color:#212124!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
-       <tr style="background-color:#212124!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>`;
+    html += `<tr style="background-color:transparent!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
+       <tr style="background-color:transparent!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
+       <tr style="background-color:transparent!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>`;
 
     return html;
   }

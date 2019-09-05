@@ -2,6 +2,10 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import ReactGridLayout, { ItemCallback } from 'react-grid-layout';
+import classNames from 'classnames';
+// @ts-ignore
+import sizeMe from 'react-sizeme';
 
 // Utils & Services
 import { appEvents } from 'app/core/app_events';
@@ -17,8 +21,79 @@ import { VarMenu } from '../../components/VarMenu';
 import { updateLocation } from 'app/core/actions';
 
 // Types
-import { DashboardModel } from '../../state';
+import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from 'app/core/constants';
+import { DashboardModel, PanelModel } from '../../state';
+import { DashboardPanel } from '../../dashgrid/DashboardPanel';
 import { StoreState } from 'app/types';
+
+let lastGridWidth = 1400;
+let ignoreNextWidthChange = false;
+
+interface GridWrapperProps {
+  size: { width: number };
+  layout: ReactGridLayout.Layout[];
+  onLayoutChange: (layout: ReactGridLayout.Layout[]) => void;
+  children: JSX.Element | JSX.Element[];
+  onDragStop: ItemCallback;
+  onResize: ItemCallback;
+  onResizeStop: ItemCallback;
+  onWidthChange: () => void;
+  className: string;
+  isResizable?: boolean;
+  isDraggable?: boolean;
+  isFullscreen?: boolean;
+}
+
+function GridWrapper({
+  size,
+  layout,
+  onLayoutChange,
+  children,
+  onDragStop,
+  onResize,
+  onResizeStop,
+  onWidthChange,
+  className,
+  isResizable,
+  isDraggable,
+  isFullscreen,
+}: GridWrapperProps) {
+  const width = size.width > 0 ? size.width : lastGridWidth;
+
+  // logic to ignore width changes (optimization)
+  if (width !== lastGridWidth) {
+    if (ignoreNextWidthChange) {
+      ignoreNextWidthChange = false;
+    } else if (!isFullscreen && Math.abs(width - lastGridWidth) > 8) {
+      onWidthChange();
+      lastGridWidth = width;
+    }
+  }
+
+  return (
+    <ReactGridLayout
+      width={lastGridWidth}
+      className={className}
+      isDraggable={isDraggable}
+      isResizable={isResizable}
+      containerPadding={[0, 0]}
+      useCSSTransforms={false}
+      margin={[GRID_CELL_VMARGIN, GRID_CELL_VMARGIN]}
+      cols={GRID_COLUMN_COUNT}
+      rowHeight={GRID_CELL_HEIGHT}
+      draggableHandle=".grid-drag-handle"
+      layout={layout}
+      onResize={onResize}
+      onResizeStop={onResizeStop}
+      onDragStop={onDragStop}
+      onLayoutChange={onLayoutChange}
+    >
+      {children}
+    </ReactGridLayout>
+  );
+}
+
+const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
 
 export interface OwnProps {
   dashboard: DashboardModel;
@@ -38,11 +113,54 @@ type Props = StateProps & OwnProps;
 
 export class DashNav extends PureComponent<Props> {
   playlistSrv: PlaylistSrv;
+  panelMap: { [id: string]: PanelModel };
 
   constructor(props: Props) {
     super(props);
     this.playlistSrv = this.props.$injector.get('playlistSrv');
   }
+
+  buildLayout() {
+    const layout = [];
+    this.panelMap = {};
+
+    for (const panel of this.props.dashboard.panels) {
+      const stringId = panel.id.toString();
+      this.panelMap[stringId] = panel;
+
+      if (!panel.gridPos) {
+        console.log('panel without gridpos');
+        continue;
+      }
+
+      const panelPos: any = {
+        i: stringId,
+        x: panel.gridPos.x,
+        y: panel.gridPos.y,
+        w: panel.gridPos.w,
+        h: panel.gridPos.h,
+      };
+
+      if (panel.type === 'row') {
+        panelPos.w = GRID_COLUMN_COUNT;
+        panelPos.h = 1;
+        panelPos.isResizable = false;
+        panelPos.isDraggable = panel.collapsed;
+      }
+
+      layout.push(panelPos);
+    }
+
+    return layout;
+  }
+
+  updateGridPos = (item: ReactGridLayout.Layout, layout: ReactGridLayout.Layout[]) => {
+    this.panelMap[item.i].updateGridPos(item);
+
+    // react-grid-layout has a bug (#670), and onLayoutChange() is only called when the component is mounted.
+    // So it's required to call it explicitly when panel resized or moved to save layout changes.
+    this.onLayoutChange(layout);
+  };
 
   onDahboardNameClick = () => {
     appEvents.emit('show-dash-search');
@@ -118,6 +236,37 @@ export class DashNav extends PureComponent<Props> {
       src: 'public/app/features/dashboard/components/ShareModal/template.html',
       scope: modalScope,
     });
+  };
+
+  onLayoutChange = (newLayout: ReactGridLayout.Layout[]) => {
+    for (const newPos of newLayout) {
+      this.panelMap[newPos.i].updateGridPos(newPos);
+    }
+
+    this.props.dashboard.sortPanelsByGridPos();
+
+    // Call render() after any changes.  This is called when the layout loads
+    this.forceUpdate();
+  };
+
+  onWidthChange = () => {
+    for (const panel of this.props.dashboard.panels) {
+      panel.resizeDone();
+    }
+    this.forceUpdate();
+  };
+
+  onResize: ItemCallback = (layout, oldItem, newItem) => {
+    this.panelMap[newItem.i].updateGridPos(newItem);
+  };
+
+  onResizeStop: ItemCallback = (layout, oldItem, newItem) => {
+    this.updateGridPos(newItem, layout);
+    this.panelMap[newItem.i].resizeDone();
+  };
+
+  onDragStop: ItemCallback = (layout, oldItem, newItem) => {
+    this.updateGridPos(newItem, layout);
   };
 
   renderDashboardTitleSearchButton() {
@@ -284,6 +433,51 @@ export class DashNav extends PureComponent<Props> {
     );
   }
 
+  renderNavPanels() {
+    const panelElements = [];
+
+    for (const panel of this.props.dashboard.panels) {
+      if (panel.navPanel) {
+        const className = panel.navPanelSelected ? 'nav-panel selected' : 'nav-panel';
+        const id = panel.id.toString();
+        panelElements.push(
+          <div key={id} id={'nav-panel-' + id} className={className}>
+            <DashboardPanel
+              panel={panel}
+              dashboard={this.props.dashboard}
+              isEditing={false}
+              isFullscreen={panel.fullscreen}
+              isInView={true}
+            />
+          </div>
+        );
+      }
+    }
+
+    return panelElements;
+  }
+
+  renderNavPanelGrid() {
+    const { dashboard, isFullscreen } = this.props;
+
+    return (
+      <SizedReactLayoutGrid
+        className={classNames({ layout: true })}
+        layout={this.buildLayout()}
+        isResizable={dashboard.meta.canEdit}
+        isDraggable={dashboard.meta.canEdit}
+        onLayoutChange={this.onLayoutChange}
+        onWidthChange={this.onWidthChange}
+        onDragStop={this.onDragStop}
+        onResize={this.onResize}
+        onResizeStop={this.onResizeStop}
+        isFullscreen={isFullscreen}
+      >
+        {this.renderNavPanels()}
+      </SizedReactLayoutGrid>
+    );
+  }
+
   get isInFullscreenOrSettings() {
     return this.props.editview || this.props.isFullscreen;
   }
@@ -309,8 +503,8 @@ export class DashNav extends PureComponent<Props> {
     const { canStar, canSave, canShare, showSettings, isStarred } = dashboard.meta;
     const { snapshot } = dashboard;
     const snapshotUrl = snapshot && snapshot.originalUrl;
-    return (
-      <div className="navbar">
+    return [
+      <div key="1" className="navbar">
         {this.renderLogo()}
         {this.renderVarMenus()}
         {this.isInFullscreenOrSettings && this.renderBackButton()}
@@ -380,8 +574,11 @@ export class DashNav extends PureComponent<Props> {
         )}
 
         {this.renderOverOpsLinks()}
-      </div>
-    );
+      </div>,
+      <div key="2" className={dashboard.hasNavPanel ? 'navbar nav-panels' : 'd-none'}>
+        {this.renderNavPanelGrid()}
+      </div>,
+    ];
   }
 }
 
