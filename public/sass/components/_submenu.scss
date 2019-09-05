@@ -136,6 +136,13 @@
   &.highlighted {
     background-color: $variable-option-bg;
   }
+  &.disabled {
+    cursor: default;
+    color: $gray-2;
+    &:hover {
+      background-color: transparent;
+    }
+  }
 }
 
 .dash-nav-link {
