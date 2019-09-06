@@ -2,35 +2,19 @@ import coreModule from 'app/core/core_module';
 
 export class AboutModalCtrl {
   modalTitle: string;
-  title: string;
+  aboutTitle: string;
   subTitle: string;
   text: string;
-  videoURL: string;
-  screenshotURL: string;
-  installURL: string;
-  learnMoreURL: string;
-  demoURL: string;
+  videoUrl: string;
+  screenshotUrl: string;
+  installUrl: string;
+  learnMoreUrl: string;
+  demoUrl: string;
 
   dismiss: () => void;
 
   /** @ngInject */
-  constructor(private templateSrv: any) {
-    // values exist as page variables
-    const templateService = this.templateSrv.index;
-
-    console.log(templateService);
-
-    this.title = templateService.aboutTitle ? templateService.aboutTitle.current.value || '' : '';
-    this.subTitle = templateService.aboutSubTitle ? templateService.aboutSubTitle.current.value || '' : '';
-    this.text = templateService.aboutText ? templateService.aboutText.current.value || '' : '';
-    this.videoURL = templateService.aboutVideoURL ? templateService.aboutVideoURL.current.value || '' : '';
-    this.screenshotURL = templateService.aboutScreenshotURL
-      ? templateService.aboutScreenshotURL.current.value || ''
-      : '';
-    this.installURL = templateService.aboutInstallURL ? templateService.aboutInstallURL.current.value || '' : '';
-    this.learnMoreURL = templateService.aboutLearnMoreURL ? templateService.aboutLearnMoreURL.current.value || '' : '';
-    this.demoURL = templateService.aboutDemoURL ? templateService.aboutDemoURL.current.value || '' : '';
-  }
+  constructor() {}
 }
 
 export function aboutModalDirective() {
@@ -42,6 +26,14 @@ export function aboutModalDirective() {
     scope: {
       dismiss: '&',
       modalTitle: '<',
+      aboutTitle: '<',
+      subTitle: '<',
+      text: '<',
+      videoUrl: '<',
+      screenshotUrl: '<',
+      installUrl: '<',
+      learnMoreUrl: '<',
+      demoUrl: '<',
     },
     bindToController: true,
   };

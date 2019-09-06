@@ -10,18 +10,18 @@
   </div>
 
   <div class="modal-content">
-    <h4 ng-if="ctrl.title" class="p-b-2">{{ctrl.title}}</h4>
-    <h6 ng-if="ctrl.subTitle" class="p-b-2">{{ctrl.subTitle}}</h6>
-    <p ng-if="ctrl.text">{{ctrl.text}}</p>
+    <h4 ng-if="ctrl.aboutTitle">{{ctrl.aboutTitle}}</h4>
+    <h6 ng-if="ctrl.subTitle">{{ctrl.subTitle}}</h6>
+    <p ng-if="ctrl.text" class="p-t-1">{{ctrl.text}}</p>
 
-    <a ng-if="ctrl.videoURL" href="{{ctrl.videoURL}}" target="_blank">
-      <img ng-if="ctrl.screenshotURL" src="{{ctrl.screenshotURL}}" class="m-b-2" alt="" style="width: 100%; height: auto; box-shadow: -1px 3px 7px rgba(0,0,0,0.5);">
+    <a ng-if="ctrl.videoUrl" href="{{ctrl.videoUrl}}" target="_blank">
+      <img ng-if="ctrl.screenshotUrl" src="{{ctrl.screenshotUrl}}" class="m-b-2" alt="" style="width: 100%; height: auto;">
     </a>
 
     <div class="gf-form-button-row text-right">
-      <a class="btn btn-inverse pull-left" ng-if="ctrl.installURL" href="{{ctrl.installURL}}" target="_blank">Install</a>
-      <a class="btn btn-inverse pull-left" ng-if="ctrl.learnMoreURL" href="{{ctrl.learnMoreURL}}" target="_blank">Learn More</button>
-      <a class="btn btn-inverse pull-left" ng-if="ctrl.demoURL" href="{{ctrl.demoURL}}">Demo</button>
+      <a class="btn btn-inverse pull-left" ng-if="ctrl.installUrl" href="{{ctrl.installUrl}}" target="_blank">Install</a>
+      <a class="btn btn-inverse pull-left" ng-if="ctrl.learnMoreUrl" href="{{ctrl.learnMoreUrl}}" target="_blank">Learn More</button>
+      <a class="btn btn-inverse pull-left" ng-if="ctrl.demoUrl" href="{{ctrl.demoUrl}}">Demo</button>
       <a class="btn btn-inverse m-r-0" ng-click="ctrl.dismiss();">Got it</button>
     </div>
   </div>

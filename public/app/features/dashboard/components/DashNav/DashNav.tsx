@@ -121,15 +121,38 @@ export class DashNav extends PureComponent<Props> {
   };
 
   onOpenAbout = () => {
+    const templateService = this.props.$injector.get('templateSrv').index;
     const modalTitle = this.props.dashboard.title + ' Dashboard';
 
-    const template = '<about-modal modal-title="model.modalTitle" dismiss="dismiss()"></about-modal>';
+    const title = templateService.aboutTitle ? templateService.aboutTitle.current.value || '' : '';
+    const subTitle = templateService.aboutSubTitle ? templateService.aboutSubTitle.current.value || '' : '';
+    const text = templateService.aboutText ? templateService.aboutText.current.value || '' : '';
+    const videoURL = templateService.aboutVideoURL ? templateService.aboutVideoURL.current.value || '' : '';
+    const screenshotURL = templateService.aboutScreenshotURL
+      ? templateService.aboutScreenshotURL.current.value || ''
+      : '';
+    const installURL = templateService.aboutInstallURL ? templateService.aboutInstallURL.current.value || '' : '';
+    const learnMoreURL = templateService.aboutLearnMoreURL ? templateService.aboutLearnMoreURL.current.value || '' : '';
+    const demoURL = templateService.aboutDemoURL ? templateService.aboutDemoURL.current.value || '' : '';
+
+    const template = `<about-modal dismiss="dismiss()" modal-title="model.modalTitle" about-title="model.title"
+      sub-title="model.subTitle" text="model.text" video-url="model.videoURL"
+      screenshot-url="model.screenshotURL" install-url="model.installURL"
+      learn-more-url="model.learnMoreURL" demo-url="model.demoURL"></about-modal>`;
 
     appEvents.emit('show-modal', {
       templateHtml: template,
       modalClass: 'modal--narrow',
       model: {
         modalTitle: modalTitle,
+        title: title,
+        subTitle: subTitle,
+        text: text,
+        videoURL: videoURL,
+        screenshotURL: screenshotURL,
+        installURL: installURL,
+        learnMoreURL: learnMoreURL,
+        demoURL: demoURL,
       },
     });
   };
@@ -193,6 +216,72 @@ export class DashNav extends PureComponent<Props> {
     ];
   }
 
+  integrationsModal = (e: any, data: any) => {
+    const modalTitle = 'Integrations';
+
+    const title = data.title ? data.title : '';
+    const subTitle = data.subTitle ? data.subTitle : '';
+    const text = data.text ? data.text : '';
+    const videoURL = data.videoURL ? data.videoURL : '';
+    const screenshotURL = data.screenshotURL ? data.screenshotURL : '';
+    const installURL = data.installURL ? data.installURL : '';
+    const learnMoreURL = data.learnMoreURL ? data.learnMoreURL : '';
+    const demoURL = data.demoURL ? data.demoURL : '';
+
+    const template = `<about-modal dismiss="dismiss()" modal-title="model.modalTitle" about-title="model.title"
+      sub-title="model.subTitle" text="model.text" video-url="model.videoURL"
+      screenshot-url="model.screenshotURL" install-url="model.installURL"
+      learn-more-url="model.learnMoreURL" demo-url="model.demoURL"></about-modal>`;
+
+    appEvents.emit('show-modal', {
+      templateHtml: template,
+      modalClass: 'modal--narrow',
+      model: {
+        modalTitle: modalTitle,
+        title: title,
+        subTitle: subTitle,
+        text: text,
+        videoURL: videoURL,
+        screenshotURL: screenshotURL,
+        installURL: installURL,
+        learnMoreURL: learnMoreURL,
+        demoURL: demoURL,
+      },
+    });
+  };
+
+  renderIntegrations() {
+    const templateService = this.props.$injector.get('templateSrv').index;
+    const featureFields = templateService.featureFields;
+
+    return (
+      <div className="menu-item">
+        <div className="variable-link-wrapper dropdown">
+          <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
+            Integrations <i className="fa fa-caret-down" />
+          </a>
+          <ul className="dropdown-menu pull-right" role="menu">
+            {featureFields.options.map((option: any, index: any) => {
+              try {
+                const opt = JSON.parse(option.value);
+                return (
+                  <li key={index}>
+                    <a href="#" onClick={e => this.integrationsModal(e, opt)}>
+                      {opt.name}
+                    </a>
+                  </li>
+                );
+              } catch (e) {
+                console.error('unable to parse featureField JSON');
+                return '';
+              }
+            })}
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
   renderOverOpsLinks() {
     const user = this.props.$injector.get('contextSrv').user;
     const variables = this.props.$injector.get('variableSrv').variables;
@@ -224,117 +313,7 @@ export class DashNav extends PureComponent<Props> {
     return (
       <div className="oo-links">
         {/* <Tooltip content="What's New"></Tooltip> */}
-        <div className="menu-item">
-          <div className="variable-link-wrapper dropdown">
-            <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
-              Integrations <i className="fa fa-caret-down" />
-            </a>
-            <ul className="dropdown-menu pull-right" role="menu">
-              <li>
-                <a href="https://doc.overops.com/docs/cicd-pipeline" target="_blank">
-                  CI/CD Pipeline
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/log-management-integrations" target="_blank">
-                  Log Management
-                </a>
-              </li>
-              <li className="divider" />
-              <li>
-                <a href="https://doc.overops.com/docs/appdynamics-integrations" target="_blank">
-                  AppDynamics
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/aws-cloudwatch" target="_blank">
-                  AWS CloudWatch
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/cicd-pipeline" target="_blank">
-                  Bamboo
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/cicd-pipeline" target="_blank">
-                  Concourse
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/datadog" target="_blank">
-                  Datadog
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/dynatrace" target="_blank">
-                  Dynatrace
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/grafana" target="_blank">
-                  Grafana
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/graphite" target="_blank">
-                  Graphite
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/hosted-graphite" target="_blank">
-                  Hosted Graphite
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/influxdb" target="_blank">
-                  InfluxDB
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/jenkins-integration" target="_blank">
-                  Jenkins
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/jira" target="_blank">
-                  Jira
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/pagerduty" target="_blank">
-                  PagerDuty
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/new-relic-integration" target="_blank">
-                  New Relic
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/servicenow" target="_blank">
-                  ServiceNow
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/slack" target="_blank">
-                  Slack
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/splunk-application" target="_blank">
-                  Splunk App
-                </a>
-              </li>
-              <li>
-                <a href="https://doc.overops.com/docs/cicd-pipeline" target="_blank">
-                  TeamCity
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
+        {this.renderIntegrations()}
         <div className="menu-item">
           <div className="variable-link-wrapper dropdown">
             <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
