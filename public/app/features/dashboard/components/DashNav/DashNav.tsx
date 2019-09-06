@@ -120,6 +120,20 @@ export class DashNav extends PureComponent<Props> {
     });
   };
 
+  onOpenAbout = () => {
+    const modalTitle = this.props.dashboard.title + ' Dashboard';
+
+    const template = '<about-modal modal-title="model.modalTitle" dismiss="dismiss()"></about-modal>';
+
+    appEvents.emit('show-modal', {
+      templateHtml: template,
+      modalClass: 'modal--narrow',
+      model: {
+        modalTitle: modalTitle,
+      },
+    });
+  };
+
   renderDashboardTitleSearchButton() {
     const { dashboard } = this.props;
 
@@ -333,10 +347,10 @@ export class DashNav extends PureComponent<Props> {
               <li>
                 <span className="user email">{user.email}</span>
               </li>
-              <li>
-                <a href="/profile">Profile</a>
-              </li>
-              <li className="divider" />
+              {/* <li className="disabled">
+                <a href="#">Dark theme</a>
+              </li> */}
+              {/* <li className="divider" /> */}
               <li>
                 <a href="#" onClick={this.onToggleTVMode}>
                   <i className="fa fa-desktop" />
@@ -360,6 +374,11 @@ export class DashNav extends PureComponent<Props> {
               <li className="divider" />
               <li>
                 <span className="header">Help</span>
+              </li>
+              <li>
+                <a href="#" onClick={this.onOpenAbout}>
+                  About this screen
+                </a>
               </li>
               <li>
                 <a href="https://doc.overops.com/docs/whats-new">What's New</a>
