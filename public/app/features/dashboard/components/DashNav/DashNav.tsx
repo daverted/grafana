@@ -254,6 +254,10 @@ export class DashNav extends PureComponent<Props> {
     const templateService = this.props.$injector.get('templateSrv').index;
     const featureFields = templateService.featureFields;
 
+    if (!featureFields || !featureFields.options) {
+      return '';
+    }
+
     return (
       <div className="menu-item">
         <div className="variable-link-wrapper dropdown">
