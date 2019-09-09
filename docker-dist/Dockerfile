@@ -17,5 +17,5 @@ RUN /bin/bash -l -c "/etc/profile.d/rvm.sh; go run build.go build package"
 
 CMD [ "echo 'docker cp container:src_path dest_path'" ]
 
-## copy the dist file out with:
-## docker cp container:src_path dest_path
+### copy the dist file out with:
+### docker cp container:src_path dest_path
