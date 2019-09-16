@@ -42,13 +42,13 @@
     display: inline-block;
 
     .variable-link-wrapper {
+      white-space: nowrap;
+
       &.dropdown.open {
         .variable-value-link {
           background-color: #000;
         }
       }
-
-      white-space: nowrap;
 
       .variable-value-link {
         padding: 14px 17px;

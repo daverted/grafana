@@ -23,7 +23,8 @@ export class TableRenderer {
     private isUtc: boolean,
     private sanitize: (v: any) => any,
     private templateSrv: TemplateSrv,
-    private theme?: GrafanaThemeType
+    private theme: GrafanaThemeType,
+    private isEventActions?: boolean
   ) {
     this.initColumns();
   }
@@ -342,6 +343,7 @@ export class TableRenderer {
       cellClasses.push('table-panel-cell-link');
 
       if (column.style && column.style.eventActions) {
+        this.isEventActions = true;
         cellClasses.push('actions-wrapper');
       }
 
@@ -532,10 +534,12 @@ export class TableRenderer {
       html += '<tr ' + rowClass + rowStyle + onClick + '>' + cellHtml + '</tr>';
     }
 
-    // add bottom whitespace for actions dropdown menu
-    html += `<tr style="background-color:transparent!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
-       <tr style="background-color:transparent!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
-       <tr style="background-color:transparent!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>`;
+    if (this.isEventActions) {
+      // add bottom whitespace for actions dropdown menu
+      html += `<tr style="background-color:transparent;!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
+        <tr style="background-color:transparent!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>
+        <tr style="background-color:transparent!important"><td colspan="${renderedColumns}" style="border:none">&nbsp;</td></tr>`;
+    }
 
     return html;
   }
