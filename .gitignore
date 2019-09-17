@@ -100,3 +100,7 @@ theOutput/
 
 # Ignore compilation stats from `yarn stats`
 compilation-stats.json
+
+# Ignore generated scss files
+_variables.dark.generated.scss
+_variables.light.generated.scss
