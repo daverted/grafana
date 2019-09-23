@@ -1,0 +1,17 @@
+{
+  "type": "panel",
+  "name": "App Card",
+  "id": "appcard",
+
+  "info": {
+    "description": "OverOps App Card Panel for Grafana",
+    "author": {
+      "name": "OverOps",
+      "url": "https://overops.com"
+    },
+    "logos": {
+      "small": "img/icn-table-panel.svg",
+      "large": "img/icn-table-panel.svg"
+    }
+  }
+}

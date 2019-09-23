@@ -51,6 +51,9 @@ import * as pieChartPanel from 'app/plugins/panel/piechart/module';
 import * as barGaugePanel from 'app/plugins/panel/bargauge/module';
 import * as logsPanel from 'app/plugins/panel/logs/module';
 
+// custom overops plugins
+import * as appCardPanel from 'app/plugins/panel/appcard/module';
+
 const exampleApp = async () => await import(/* webpackChunkName: "exampleApp" */ 'app/plugins/app/example-app/module');
 
 const builtInPlugins: any = {
@@ -92,6 +95,8 @@ const builtInPlugins: any = {
   'app/plugins/panel/logs/module': logsPanel,
 
   'app/plugins/app/example-app/module': exampleApp,
+
+  'app/plugins/panel/appcard/module': appCardPanel,
 };
 
 export default builtInPlugins;
