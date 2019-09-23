@@ -359,9 +359,9 @@ export class DashNav extends PureComponent<Props> {
     const { dashboard } = this.props;
     return [
       <VarMenu key="1" variableName="environments" dashboard={dashboard} />,
-      <VarMenu key="2" variableName="applications" dashboard={dashboard} />,
-      <VarMenu key="3" variableName="deployments" dashboard={dashboard} />,
-      <VarMenu key="4" variableName="servers" dashboard={dashboard} />,
+      // <VarMenu key="2" variableName="applications" dashboard={dashboard} />,
+      // <VarMenu key="3" variableName="deployments" dashboard={dashboard} />,
+      // <VarMenu key="4" variableName="servers" dashboard={dashboard} />,
     ];
   }
 
@@ -411,7 +411,7 @@ export class DashNav extends PureComponent<Props> {
       <div className="menu-item">
         <div className="variable-link-wrapper dropdown">
           <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
-            Integrations <i className="fa fa-caret-down" />
+            Integrations <i className="fas fa-angle-down" />
           </a>
           <ul className="dropdown-menu pull-right" role="menu">
             {featureFields.options.map((option: any, index: any) => {
@@ -466,7 +466,7 @@ export class DashNav extends PureComponent<Props> {
     return (
       <div className="oo-links">
         {/* <Tooltip content="What's New"></Tooltip> */}
-        {this.renderIntegrations()}
+        {/* {this.renderIntegrations()} */}
         <div className="menu-item">
           <div className="variable-link-wrapper dropdown">
             <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
@@ -494,14 +494,13 @@ export class DashNav extends PureComponent<Props> {
                 <span className="header">Platform</span>
               </li>
               <li>
-                <a href={proto + host + '/'} target="_blank">
-                  Event Explorer
-                </a>
+                <a href={proto + host + '/'}>Event Explorer</a>
               </li>
               <li>
-                <a href="/d/mTGNNTfiz/settings" target="_blank">
-                  Settings
-                </a>
+                <a href={proto + host + '/grafana/'}>Reliability Dashboards</a>
+              </li>
+              <li>
+                <a href="/d/mTGNNTfiz/settings">Settings</a>
               </li>
               <li className="divider" />
               <li>
@@ -519,6 +518,9 @@ export class DashNav extends PureComponent<Props> {
                 <a href="https://doc.overops.com/docs/install-collector" target="_blank">
                   Install Guide
                 </a>
+              </li>
+              <li>
+                <a href="https://doc.overops.com/docs/configure-your-integrations">Integrations</a>
               </li>
               <li>
                 <a href="https://support.overops.com/hc/en-us" target="_blank">
