@@ -17,7 +17,7 @@
   vertical-align: middle;
   cursor: pointer;
   border: none;
-  height: $height-md;
+  height: auto;
 
   @include button-size($btn-padding-y, $space-md, $font-size-base, $border-radius-sm);
 

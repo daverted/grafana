@@ -27,7 +27,10 @@ $black: ${theme.colors.black};
 
 $dark-1: ${theme.colors.dark1};
 $dark-2: ${theme.colors.dark2};
+$dark-3: ${theme.colors.dark3};
 $dark-4: ${theme.colors.dark4};
+$dark-5: ${theme.colors.dark5};
+$dark-9: ${theme.colors.dark9};
 $dark-10: ${theme.colors.dark10};
 $gray-1: ${theme.colors.gray1};
 $gray-2: ${theme.colors.gray2};

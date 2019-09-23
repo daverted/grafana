@@ -216,7 +216,7 @@ $typeahead-selected-color: $yellow;
 
 // Dropdowns
 // -------------------------
-$dropdownBackground: $dark-6;
+$dropdownBackground: $dark-5;
 $dropdownBorder: rgba(0, 0, 0, 0.2);
 $dropdownDividerTop: transparent;
 $dropdownDividerBottom: #444;

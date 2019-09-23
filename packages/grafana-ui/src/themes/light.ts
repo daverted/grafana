@@ -8,11 +8,11 @@ const basicColors = {
   dark2: '#41444b',
   dark3: '#303133', // not used in light theme
   dark4: '#35373f', // not used in light theme
-  dark5: '#41444b', // not used in light theme
+  dark5: '#41444b',
   dark6: '#41444b', // not used in light theme
   dark7: '#41444b', // not used in light theme
   dark8: '#2f2f32', // not used in light theme
-  dark9: '#343436', // not used in light theme
+  dark9: '#343436',
   dark10: '#424345', // not used in light theme
   gray1: '#52545c',
   gray2: '#767980',

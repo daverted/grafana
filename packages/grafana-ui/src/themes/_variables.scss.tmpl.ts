@@ -109,6 +109,7 @@ $font-size-xs: ${theme.typography.size.xs} !default;
 
 $line-height-base: ${theme.typography.lineHeight.lg} !default;
 
+$font-weight-light: ${theme.typography.weight.light} !default;
 $font-weight-regular: ${theme.typography.weight.regular} !default;
 $font-weight-semi-bold: ${theme.typography.weight.semibold} !default;
 
