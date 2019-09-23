@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames';
 import { SelectableValue } from '@grafana/data';
-import { Tooltip } from '../Tooltip/Tooltip';
-import { ButtonSelect } from '../Select/ButtonSelect';
+// import { Tooltip } from '../Tooltip/Tooltip';
+// import { ButtonSelect } from '../Select/ButtonSelect';
 
 export const offOption = { label: 'Off', value: '' };
 export const liveOption = { label: 'Live', value: 'LIVE' };
@@ -46,7 +46,7 @@ export class RefreshPicker extends PureComponent<Props> {
   };
 
   render() {
-    const { onRefresh, intervals, tooltip, value } = this.props;
+    const { onRefresh, intervals, value } = this.props; // tooltip,
     const options = this.intervalsToOptions(intervals);
     const currentValue = value || '';
     const selectedValue = options.find(item => item.value === currentValue) || offOption;
@@ -60,19 +60,19 @@ export class RefreshPicker extends PureComponent<Props> {
     return (
       <div className={cssClasses}>
         <div className="refresh-picker-buttons">
-          <Tooltip placement="top" content={tooltip}>
-            <button className="btn btn--radius-right-0 navbar-button navbar-button--refresh" onClick={onRefresh}>
-              <i className="fa fa-refresh" />
-            </button>
-          </Tooltip>
-          <ButtonSelect
+          {/* <Tooltip placement="top" content={tooltip}> */}
+          <button className="btn btn--radius-right-0 navbar-button navbar-button--refresh" onClick={onRefresh}>
+            <i className="fas fa-refresh" />
+          </button>
+          {/* </Tooltip> */}
+          {/* <ButtonSelect
             className="navbar-button--attached btn--radius-left-0$"
             value={selectedValue}
             label={selectedValue.label}
             options={options}
             onChange={this.onChangeSelect}
             maxMenuHeight={380}
-          />
+          /> */}
         </div>
       </div>
     );
