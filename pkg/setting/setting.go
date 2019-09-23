@@ -38,7 +38,7 @@ const (
 	DEV                 = "development"
 	PROD                = "production"
 	TEST                = "test"
-	APP_NAME            = "Grafana"
+	APP_NAME            = "OverOps"
 	APP_NAME_ENTERPRISE = "Grafana Enterprise"
 )
 
