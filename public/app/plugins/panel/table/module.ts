@@ -543,6 +543,25 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       });
     }
 
+    function iFrameModal(e: JQueryEventObject) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const el = $(e.currentTarget);
+
+      const url = el.prop('href') || 'href??';
+
+      const template = `<i-frame-modal dismiss="dismiss()" url="model.url"></i-frame-modal>`;
+
+      appEvents.emit('show-modal', {
+        templateHtml: template,
+        modalClass: 'modal--iframe',
+        model: {
+          url: url,
+        },
+      });
+    }
+
     // hook up link tooltips
     elem.tooltip({
       selector: '[data-link-tooltip]',
@@ -599,6 +618,9 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     elem.on('click', '.oo-action-inbox', ooActionInbox);
     elem.on('click', '.oo-action-snapshot', ooActionForceSnapshot);
     elem.on('click', '.oo-action-manage-labels', ooActionManageLabels);
+
+    // wire up iframe modal
+    elem.on('click', '[data-iframe]', iFrameModal);
 
     const unbindDestroy = scope.$on('$destroy', () => {
       elem.off('click', '.table-panel-page-link');

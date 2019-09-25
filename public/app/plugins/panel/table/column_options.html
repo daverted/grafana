@@ -248,7 +248,10 @@
       <input type="text" class="gf-form-input width-29" ng-model="style.linkTooltip" ng-blur="editor.render()" ng-model-onblur
           data-placement="right">
     </div>
-    <gf-form-switch class="gf-form" label-class="width-9" label="Open in new tab" checked="style.linkTargetBlank"></gf-form-switch>
+    <div class="gf-form">
+      <gf-form-switch class="" label-class="width-9" label="Open in new tab" checked="style.linkTargetBlank"></gf-form-switch>
+      <gf-form-switch class="" label-class="width-9" label="Open in iFrame" checked="style.linkiFrame"></gf-form-switch>
+    </div>
   </div>
 
   <div class="clearfix"></div>

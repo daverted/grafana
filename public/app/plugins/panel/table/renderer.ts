@@ -335,7 +335,6 @@ export class TableRenderer {
 
     if (column.style && column.style.link) {
       // Render cell as link
-
       const cellLink = this.templateSrv.replace(column.style.linkUrl, scopedVars, encodeURIComponent);
       const cellLinkTooltip = this.templateSrv.replace(column.style.linkTooltip, scopedVars);
       const cellTarget = column.style.linkTargetBlank ? '_blank' : '';
@@ -350,6 +349,8 @@ export class TableRenderer {
       const dataLinkTooltip =
         column.style && column.style.mouseoverTooltip ? 'data-link-tooltip-mouseover' : 'data-link-tooltip';
 
+      const dataiFrame = column.style && column.style.linkiFrame ? 'data-iframe' : '';
+
       if (value !== '') {
         if (column.style && column.style.eventActions) {
           columnHtml += `
@@ -360,7 +361,7 @@ export class TableRenderer {
             </a> `;
         } else {
           columnHtml +=
-            ` <a href="${cellLink}" target="${cellTarget}" ${dataLinkTooltip} ` +
+            ` <a href="${cellLink}" target="${cellTarget}" ${dataiFrame} ${dataLinkTooltip} ` +
             `data-original-title="${cellLinkTooltip}" data-placement="right"${textStyle}> ${value} </a> `;
         }
       }

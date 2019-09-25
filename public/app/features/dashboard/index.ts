@@ -21,6 +21,7 @@ import './components/RowOptions';
 // Custom Components
 import './components/ManageLabelsModal';
 import './components/AboutModal';
+import './components/IFrameModal';
 import './components/VarMenu';
 
 import DashboardPermissions from './components/DashboardPermissions/DashboardPermissions';

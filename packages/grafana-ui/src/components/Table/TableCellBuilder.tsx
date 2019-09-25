@@ -65,6 +65,7 @@ export interface ColumnStyle {
   linkUrl?: any;
   linkTooltip?: any;
   linkTargetBlank?: boolean;
+  linkiFrame?: boolean;
 
   preserveFormat?: boolean;
 
