@@ -493,7 +493,7 @@ tr.strike {
     margin: 1rem;
     padding-bottom: 10rem;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, calc(25vw - 2.5rem));
     grid-auto-rows: 1fr;
     grid-column-gap: 2rem;
     grid-row-gap: 3rem;
