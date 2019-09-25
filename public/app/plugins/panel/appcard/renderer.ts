@@ -576,7 +576,12 @@ export class AppCardRenderer {
           ${appName.text}
         </a>
       </h2>
-      <span class="pull-right control">${alertStatus.text}</span>
+      <span class="pull-right control">
+        <a href="${alertStatus.link}" data-iframe ${alertStatus.dataLinkTooltip}
+          data-original-title="${alertStatus.linkTooltip}" data-placement="right">
+          ${alertStatus.text}
+        </a>
+      </span>
       <hr class="clear">
       <ul class="card-content">
         <li class="value-${newIssues.value}">

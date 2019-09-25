@@ -8,6 +8,7 @@ import { columnOptionsTab } from './column_options';
 import { AppCardRenderer } from './renderer';
 import { isTableData } from '@grafana/data';
 import { TemplateSrv } from 'app/features/templating/template_srv';
+import { appEvents } from 'app/core/core';
 
 class AppCardPanelCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -322,6 +323,28 @@ class AppCardPanelCtrl extends MetricsPanelCtrl {
 
       rootElem.css({ 'max-height': getTableHeight() });
     }
+
+    function iFrameModal(e: JQueryEventObject) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const el = $(e.currentTarget);
+
+      const url = el.prop('href') || 'href??';
+
+      const template = `<i-frame-modal dismiss="dismiss()" url="model.url"></i-frame-modal>`;
+
+      appEvents.emit('show-modal', {
+        templateHtml: template,
+        modalClass: 'modal--iframe',
+        model: {
+          url: url,
+        },
+      });
+    }
+
+    // wire up iframe modal
+    elem.on('click', '[data-iframe]', iFrameModal);
 
     // hook up link tooltips
     elem.tooltip({
