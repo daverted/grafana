@@ -457,10 +457,9 @@ tr.strike {
   display: inline-block;
 }
 
-// .app-card-panel-scroll {
-//   // overflow: visible;
-//   max-height: auto !important;
-// }
+.app-card-panel-scroll {
+  max-height: none !important;
+}
 
 .app-card-nav {
   margin: 0 1rem 3rem 1rem;
