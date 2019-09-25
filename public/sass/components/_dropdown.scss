@@ -89,6 +89,11 @@
       &.header {
         font-weight: 700;
         color: $gray-2;
+        &:hover,
+        &:focus {
+          color: $gray-2;
+          background-color: $dropdownBackground;
+        }
       }
 
       i {

@@ -94,6 +94,10 @@
               font-size: 1em;
             }
             &.user {
+              &:hover {
+                color: $dropdownLinkColor;
+                background-color: $dropdownBackground;
+              }
               &.name {
                 padding-bottom: 0;
                 font-weight: 700;
@@ -103,6 +107,7 @@
                 padding-top: 0;
                 padding-bottom: 15px;
                 font-weight: 300;
+                font-size: 0.9rem;
               }
             }
           }
