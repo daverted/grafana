@@ -485,8 +485,8 @@ export class DashNav extends PureComponent<Props> {
               {/* <li className="divider" /> */}
               <li>
                 <a href="#" onClick={this.onToggleTVMode}>
-                  <i className="fa fa-desktop" />
-                  Cycle view mode
+                  <i className="far fa-desktop" />
+                  Full screen
                 </a>
               </li>
               <li className="divider" />
