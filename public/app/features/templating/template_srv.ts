@@ -319,13 +319,6 @@ export class TemplateSrv {
         }
       }
     });
-
-    // save path in localStorage
-    try {
-      localStorage.setItem('path', window.location.pathname + window.location.search);
-    } catch (e) {
-      console.warn('unable save path in localStorage');
-    }
   }
 
   distributeVariable(value: any, variable: any) {
