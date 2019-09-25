@@ -1,0 +1,1 @@
+export { IFrameModalCtrl } from './IFrameModalCtrl';
