@@ -321,7 +321,7 @@ export class DashNav extends PureComponent<Props> {
   }
 
   renderLogo() {
-    const homeUrl = '/d/lg0U4qriz/home';
+    const homeUrl = '/d/lg0U4qriz';
 
     return (
       <a href={homeUrl} className="navbar__logo" key="logo">

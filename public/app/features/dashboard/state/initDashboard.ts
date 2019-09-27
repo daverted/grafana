@@ -85,7 +85,8 @@ async function fetchDashboard(
         const loaderSrv: DashboardLoaderSrv = args.$injector.get('dashboardLoaderSrv');
         const dashDTO: DashboardDTO = await loaderSrv.loadDashboard(args.urlType, args.urlSlug, args.urlUid);
 
-        if (args.fixUrl && dashDTO.meta.url) {
+        // INTG-116: don't redirect most dashboards to /d/:uid/:slug
+        if (args.fixUrl && args.urlType === 'script' && dashDTO.meta.url) {
           // check if the current url is correct (might be old slug)
           const dashboardUrl = locationUtil.stripBaseFromUrl(dashDTO.meta.url);
           const currentPath = getState().location.path;
