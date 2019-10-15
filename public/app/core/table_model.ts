@@ -46,8 +46,52 @@ export default class TableModel implements TableData {
     this.rows.sort((a, b) => {
       a = a[options.col];
       b = b[options.col];
-      // Sort null or undefined separately from comparable values
-      return +(a == null) - +(b == null) || +(a > b) || -(a < b);
+
+      const aIsString = typeof a === 'string';
+      const bIsString = typeof b === 'string';
+
+      // account for "3.7K" style numbers
+      if (aIsString) {
+        const aMatch = a.match(/\d+\.\dK/g);
+        if (aMatch !== null && a === aMatch[0]) {
+          a = a.replace('.', '').replace('K', '000');
+        }
+      }
+
+      if (bIsString) {
+        const bMatch = b.match(/\d+\.\dK/g);
+        if (bMatch !== null && b === bMatch[0]) {
+          b = b.replace('.', '').replace('K', '000');
+        }
+      }
+
+      const intA = parseInt(a, 10);
+      const intB = parseInt(b, 10);
+
+      // by default, sort as int
+      let retval = +isNaN(intB) - +isNaN(intA) || +(intA > intB) || -(intA < intB);
+
+      if (aIsString && bIsString) {
+        // if string that doesn't start with a number, sort as lower case string (e.g. app name)
+        if (isNaN(intA) && isNaN(intB)) {
+          retval = a === b ? 0 : a.toLowerCase() < b.toLowerCase() ? 1 : -1;
+        }
+
+        if (!isNaN(intA) && !isNaN(intB)) {
+          if (intA === intB) {
+            // account for "1 (1 p1)"
+            const aMatch = a.match(/^\d+\s+\(\d+\sp1\)$/g);
+            const bMatch = b.match(/^\d+\s+\(\d+\sp1\)$/g);
+            if (aMatch !== null && aMatch[0] === a && bMatch !== null && bMatch[0] === b) {
+              const ap1 = parseInt(a.replace(/^\d+\s+\(/g, '').replace(/\sp1\)/g, ''), 10);
+              const bp1 = parseInt(b.replace(/^\d+\s+\(/g, '').replace(/\sp1\)/g, ''), 10);
+              retval = ap1 === bp1 ? 0 : ap1 < bp1 ? -1 : 1;
+            }
+          }
+        }
+      }
+
+      return retval;
     });
 
     if (options.desc) {
