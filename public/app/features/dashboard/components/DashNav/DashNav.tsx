@@ -20,6 +20,10 @@ import { updateLocation } from 'app/core/actions';
 import { DashboardModel } from '../../state';
 import { StoreState } from 'app/types';
 
+// Mixpanel
+import { MixpanelWindow } from 'app/features/mixpanel/Mixpanel';
+declare let window: MixpanelWindow;
+
 export interface OwnProps {
   dashboard: DashboardModel;
   editview: string;
@@ -248,6 +252,9 @@ export class DashNav extends PureComponent<Props> {
         demoURL: demoURL,
       },
     });
+
+    // track event in mixpanel
+    window.mixpanel.track('Integration clicked', { name: data.name });
   };
 
   renderIntegrations() {

@@ -31,6 +31,10 @@ import { LinkSrv } from 'app/features/panel/panellinks/link_srv';
 import { PanelQueryRunnerFormat } from 'app/features/dashboard/state/PanelQueryRunner';
 import { getProcessedDataFrames } from 'app/features/dashboard/state/PanelQueryState';
 
+// Mixpanel
+import { MixpanelWindow } from 'app/features/mixpanel/Mixpanel';
+declare let window: MixpanelWindow;
+
 const BASE_FONT_SIZE = 38;
 
 export interface ShowData {
@@ -629,6 +633,9 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         if ($(evt).parents('.panel-header').length > 0) {
           return;
         }
+
+        // track event in mixpanel
+        window.mixpanel.track('Highlight clicked', { name: panel.title });
 
         if (linkInfo.target === '_blank') {
           window.open(linkInfo.href, '_blank');

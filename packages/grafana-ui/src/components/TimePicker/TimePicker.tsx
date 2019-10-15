@@ -16,6 +16,10 @@ import { rawToTimeRange } from './time';
 import { TimeRange, TimeOption, TimeZone, TIME_FORMAT, SelectableValue } from '@grafana/data';
 import { dateMath } from '@grafana/data';
 
+// Mixpanel
+import { MixpanelWindow } from 'app/features/mixpanel/Mixpanel';
+declare let window: MixpanelWindow;
+
 export interface Props {
   value: TimeRange;
   selectOptions: TimeOption[];
@@ -93,6 +97,9 @@ export class TimePicker extends PureComponent<Props, State> {
     const { onChange, timeZone } = this.props;
 
     if (item.value && item.value.from === 'custom') {
+      // Mixpanel
+      window.mixpanel.track('Timeframe selector changed', { value: 'custom' });
+
       // this is to prevent the ClickOutsideWrapper from directly closing the popover
       setTimeout(() => {
         this.setState({ isCustomOpen: true });
@@ -101,8 +108,16 @@ export class TimePicker extends PureComponent<Props, State> {
     }
 
     if (item.value) {
+      // Mixpanel
+      window.mixpanel.track('Timeframe selector changed', { value: item.value.from.replace('now-', '') });
+
       onChange(rawToTimeRange({ from: item.value.from, to: item.value.to }, timeZone));
     }
+  };
+
+  onOpenMenu = () => {
+    // Mixpanel
+    window.mixpanel.track('Timeframe selector clicked');
   };
 
   onCustomChange = (timeRange: TimeRange) => {
@@ -154,6 +169,7 @@ export class TimePicker extends PureComponent<Props, State> {
             options={options}
             maxMenuHeight={600}
             onChange={this.onSelectChanged}
+            onOpenMenu={this.onOpenMenu}
             iconClass={'fa fa-clock-o fa-fw'}
             tooltipContent={<TimePickerTooltipContent timeRange={value} />}
           />
