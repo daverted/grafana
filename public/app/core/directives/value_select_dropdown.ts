@@ -2,6 +2,10 @@ import angular from 'angular';
 import _ from 'lodash';
 import coreModule from '../core_module';
 
+// Mixpanel
+import { MixpanelWindow } from 'app/features/mixpanel/Mixpanel';
+declare let window: MixpanelWindow;
+
 export class ValueSelectDropdownCtrl {
   dropdownVisible: any;
   highlightIndex: any;
@@ -284,6 +288,15 @@ export function valueSelectDropdown($compile: any, $window: any, $timeout: any, 
       const inputEl = elem.find('input');
 
       function openDropdown() {
+        // Mixpanel
+        if (
+          scope.vm.label === 'Applications' ||
+          scope.vm.label === 'Deployments' ||
+          scope.vm.label === 'Server Groups'
+        ) {
+          window.mixpanel.track(scope.vm.label + ' dropdown clicked');
+        }
+
         inputEl.css('width', linkEl.outerWidth() + 'px');
 
         inputEl.show();
