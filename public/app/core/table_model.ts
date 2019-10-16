@@ -59,7 +59,7 @@ export default class TableModel implements TableData {
       }
 
       if (bIsString) {
-        const bMatch = b.match(/\d+\.\dK/g);
+        const bMatch = b.match(/\d+\.?\d?K/g);
         if (bMatch !== null && b === bMatch[0]) {
           b = b.replace('.', '').replace('K', '000');
         }
