@@ -52,7 +52,7 @@ export default class TableModel implements TableData {
 
       // account for "3.7K" style numbers
       if (aIsString) {
-        const aMatch = a.match(/\d+\.\dK/g);
+        const aMatch = a.match(/\d+\.?\d?K/g);
         if (aMatch !== null && a === aMatch[0]) {
           a = a.replace('.', '').replace('K', '000');
         }
