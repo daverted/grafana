@@ -26,6 +26,10 @@ import { DashboardModel, PanelModel } from '../../state';
 import { DashboardPanel } from '../../dashgrid/DashboardPanel';
 import { StoreState } from 'app/types';
 
+// Mixpanel
+import { MixpanelWindow } from 'app/features/mixpanel/Mixpanel';
+declare let window: MixpanelWindow;
+
 let lastGridWidth = 1400;
 let ignoreNextWidthChange = false;
 
@@ -397,6 +401,9 @@ export class DashNav extends PureComponent<Props> {
         demoURL: demoURL,
       },
     });
+
+    // track event in mixpanel
+    window.mixpanel.track('Integration clicked', { name: data.name });
   };
 
   renderIntegrations() {
