@@ -83,106 +83,106 @@
 }
 
 .cex {
-  background-image: url('/public/img/grid/27_caught_grey.svg');
+  background-image: url('../img/grid/27_caught_grey.svg');
 
   &:hover {
-    background-image: url('/public/img/grid/28_caught_white.svg');
+    background-image: url('../img/grid/28_caught_white.svg');
   }
 }
 
 tr:hover {
   .cex {
-    background-image: url('/public/img/grid/28_caught_white.svg');
+    background-image: url('../img/grid/28_caught_white.svg');
   }
 }
 
 .swl {
-  background-image: url('/public/img/grid/08_swallowed.svg');
+  background-image: url('../img/grid/08_swallowed.svg');
 
   &:hover {
-    background-image: url('/public/img/grid/26_swallowed_white.svg');
+    background-image: url('../img/grid/26_swallowed_white.svg');
   }
 }
 
 tr:hover {
   .swl {
-    background-image: url('/public/img/grid/26_swallowed_white.svg');
+    background-image: url('../img/grid/26_swallowed_white.svg');
   }
 }
 
 .http {
-  background-image: url('/public/img/grid/16_http_error_grey.svg');
+  background-image: url('../img/grid/16_http_error_grey.svg');
 
   &:hover {
-    background-image: url('/public/img/grid/24_http_error_white.svg');
+    background-image: url('../img/grid/24_http_error_white.svg');
   }
 }
 
 tr:hover {
   .http {
-    background-image: url('/public/img/grid/24_http_error_white.svg');
+    background-image: url('../img/grid/24_http_error_white.svg');
   }
 }
 
 .wrn {
-  background-image: url('/public/img/grid/14_log_warning_grey.svg');
+  background-image: url('../img/grid/14_log_warning_grey.svg');
 
   &:hover {
-    background-image: url('/public/img/grid/23_log_warning_white.svg');
+    background-image: url('../img/grid/23_log_warning_white.svg');
   }
 }
 
 tr:hover {
   .wrn {
-    background-image: url('/public/img/grid/23_log_warning_white.svg');
+    background-image: url('../img/grid/23_log_warning_white.svg');
   }
 }
 
 .tmr {
-  background-image: url('/public/img/grid/07_chronos.svg');
+  background-image: url('../img/grid/07_chronos.svg');
 
   &:hover {
-    background-image: url('/public/img/grid/25_timer_white.svg');
+    background-image: url('../img/grid/25_timer_white.svg');
   }
 }
 
 tr:hover {
   .tmr {
-    background-image: url('/public/img/grid/25_timer_white.svg');
+    background-image: url('../img/grid/25_timer_white.svg');
   }
 }
 
 .unc {
-  background-image: url('/public/img/grid/10_uncaught_grey.svg');
+  background-image: url('../img/grid/10_uncaught_grey.svg');
 
   &:hover {
-    background-image: url('/public/img/grid/21_uncaught_white.svg');
+    background-image: url('../img/grid/21_uncaught_white.svg');
   }
 }
 
 tr:hover {
   .unc {
-    background-image: url('/public/img/grid/21_uncaught_white.svg');
+    background-image: url('../img/grid/21_uncaught_white.svg');
   }
 }
 
 .err {
-  background-image: url('/public/img/grid/12_log_error_grey.svg');
+  background-image: url('../img/grid/12_log_error_grey.svg');
 
   &:hover {
-    background-image: url('/public/img/grid/22_log_error_white.svg');
+    background-image: url('../img/grid/22_log_error_white.svg');
   }
 }
 
 tr:hover {
   .err {
-    background-image: url('/public/img/grid/22_log_error_white.svg');
+    background-image: url('../img/grid/22_log_error_white.svg');
   }
 }
 
 // TODO refactor
 .graph {
-  background-image: url('/public/img/grid/01_graph.svg');
+  background-image: url('../img/grid/01_graph.svg');
 
   &:hover {
     opacity: 0.6;
@@ -190,7 +190,7 @@ tr:hover {
 }
 
 .timer {
-  background-image: url('/public/img/grid/02_timer.svg');
+  background-image: url('../img/grid/02_timer.svg');
 
   &:hover {
     opacity: 0.6;
@@ -198,7 +198,7 @@ tr:hover {
 }
 
 .resolve {
-  background-image: url('/public/img/grid/03_resolve.svg');
+  background-image: url('../img/grid/03_resolve.svg');
 
   &:hover {
     opacity: 0.6;
@@ -206,7 +206,7 @@ tr:hover {
 }
 
 .archive {
-  background-image: url('/public/img/grid/10_autoHideTrash.svg');
+  background-image: url('../img/grid/10_autoHideTrash.svg');
 
   &:hover {
     opacity: 0.6;
@@ -214,7 +214,7 @@ tr:hover {
 }
 
 .inbox {
-  background-image: url('/public/img/grid/11_restore.svg');
+  background-image: url('../img/grid/11_restore.svg');
 
   &:hover {
     opacity: 0.6;
@@ -222,7 +222,7 @@ tr:hover {
 }
 
 .more {
-  background-image: url('/public/img/grid/06_more_dots.svg');
+  background-image: url('../img/grid/06_more_dots.svg');
 
   &:hover {
     opacity: 0.6;
@@ -230,7 +230,7 @@ tr:hover {
 }
 
 .snapshot {
-  background-image: url('/public/img/grid/13_reset_snapshot_blue.svg');
+  background-image: url('../img/grid/13_reset_snapshot_blue.svg');
 
   &:hover {
     opacity: 0.6;
@@ -238,7 +238,7 @@ tr:hover {
 }
 
 .manage-labels {
-  background-image: url('/public/img/grid/08_label.svg');
+  background-image: url('../img/grid/08_label.svg');
 
   &:hover {
     opacity: 0.6;
@@ -246,23 +246,23 @@ tr:hover {
 }
 
 .install {
-  background-image: url('/public/img/grid/27_servers.svg');
+  background-image: url('../img/grid/27_servers.svg');
 }
 
 .settings {
-  background-image: url('/public/img/grid/28_settings.svg');
+  background-image: url('../img/grid/28_settings.svg');
 }
 
 .user-icon {
-  background-image: url('/public/img/grid/38_personal-settings.svg');
+  background-image: url('../img/grid/38_personal-settings.svg');
 }
 
 .whats-new {
-  background-image: url('/public/img/grid/40_whats_new.svg');
+  background-image: url('../img/grid/40_whats_new.svg');
 }
 
 .help {
-  background-image: url('/public/img/grid/30_help.svg');
+  background-image: url('../img/grid/30_help.svg');
 }
 
 .oo-actions {
@@ -395,7 +395,7 @@ tr:hover {
     vertical-align: top;
     margin-top: -0.2em;
     background-image: none;
-    mask-image: url(/public/img/grid/08_label.svg);
+    mask-image: url(public/img/grid/08_label.svg);
     mask-repeat: no-repeat;
     background-color: #ddd;
   }
