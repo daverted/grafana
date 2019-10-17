@@ -9,8 +9,8 @@ const theme: GrafanaThemeCommons = {
       monospace: "Menlo, Monaco, Consolas, 'Courier New', monospace",
     },
     size: {
-      root: '16px',
-      base: '16px',
+      root: '13px',
+      base: '13px',
       xs: '12px',
       sm: '14px',
       md: '18px',
