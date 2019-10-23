@@ -275,39 +275,42 @@ export class DashNav extends PureComponent<Props> {
 
   onOpenAbout = () => {
     const templateService = this.props.$injector.get('templateSrv').index;
+    const aboutFields = templateService.aboutFields;
+
     const modalTitle = this.props.dashboard.title + ' Dashboard';
 
-    const title = templateService.aboutTitle ? templateService.aboutTitle.current.value || '' : '';
-    const subTitle = templateService.aboutSubTitle ? templateService.aboutSubTitle.current.value || '' : '';
-    const text = templateService.aboutText ? templateService.aboutText.current.value || '' : '';
-    const videoURL = templateService.aboutVideoURL ? templateService.aboutVideoURL.current.value || '' : '';
-    const screenshotURL = templateService.aboutScreenshotURL
-      ? templateService.aboutScreenshotURL.current.value || ''
-      : '';
-    const installURL = templateService.aboutInstallURL ? templateService.aboutInstallURL.current.value || '' : '';
-    const learnMoreURL = templateService.aboutLearnMoreURL ? templateService.aboutLearnMoreURL.current.value || '' : '';
-    const demoURL = templateService.aboutDemoURL ? templateService.aboutDemoURL.current.value || '' : '';
+    if (!aboutFields || !aboutFields.current) {
+      appEvents.emit('alert-error', ['Not Found', 'About "' + modalTitle + '" content not found']);
+      return;
+    }
 
-    const template = `<about-modal dismiss="dismiss()" modal-title="model.modalTitle" about-title="model.title"
-      sub-title="model.subTitle" text="model.text" video-url="model.videoURL"
-      screenshot-url="model.screenshotURL" install-url="model.installURL"
-      learn-more-url="model.learnMoreURL" demo-url="model.demoURL"></about-modal>`;
+    try {
+      const about = JSON.parse(aboutFields.current.value);
 
-    appEvents.emit('show-modal', {
-      templateHtml: template,
-      modalClass: 'modal--narrow',
-      model: {
-        modalTitle: modalTitle,
-        title: title,
-        subTitle: subTitle,
-        text: text,
-        videoURL: videoURL,
-        screenshotURL: screenshotURL,
-        installURL: installURL,
-        learnMoreURL: learnMoreURL,
-        demoURL: demoURL,
-      },
-    });
+      const template = `<about-modal dismiss="dismiss()" modal-title="model.modalTitle" about-title="model.title"
+        sub-title="model.subTitle" text="model.text" video-url="model.videoURL"
+        screenshot-url="model.screenshotURL" install-url="model.installURL"
+        learn-more-url="model.learnMoreURL" demo-url="model.demoURL"></about-modal>`;
+
+      appEvents.emit('show-modal', {
+        templateHtml: template,
+        modalClass: 'modal--narrow',
+        model: {
+          modalTitle: modalTitle,
+          title: about.title,
+          subTitle: about.subTitle,
+          text: about.text,
+          videoURL: about.videoURL,
+          screenshotURL: about.screenshotURL,
+          installURL: about.installURL,
+          learnMoreURL: about.learnMoreURL,
+          demoURL: about.demoURL,
+        },
+      });
+    } catch (e) {
+      appEvents.emit('alert-error', ['Parse Error', 'Unable to parse "' + modalTitle + '" JSON']);
+      return;
+    }
   };
 
   renderDashboardTitleSearchButton() {
