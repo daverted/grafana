@@ -364,12 +364,14 @@ export class DashNav extends PureComponent<Props> {
 
   renderVarMenus() {
     const { dashboard } = this.props;
-    return [
-      <VarMenu key="1" variableName="environments" dashboard={dashboard} />,
-      // <VarMenu key="2" variableName="applications" dashboard={dashboard} />,
-      // <VarMenu key="3" variableName="deployments" dashboard={dashboard} />,
-      // <VarMenu key="4" variableName="servers" dashboard={dashboard} />,
-    ];
+    return dashboard.title === 'Home'
+      ? [<VarMenu key="1" variableName="environments" dashboard={dashboard} />]
+      : [
+          <VarMenu key="1" variableName="environments" dashboard={dashboard} />,
+          <VarMenu key="2" variableName="applications" dashboard={dashboard} />,
+          // <VarMenu key="3" variableName="deployments" dashboard={dashboard} />,
+          // <VarMenu key="4" variableName="servers" dashboard={dashboard} />,
+        ];
   }
 
   integrationsModal = (e: any, data: any) => {
