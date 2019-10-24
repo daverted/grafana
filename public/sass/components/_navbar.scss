@@ -51,7 +51,7 @@
       }
 
       .variable-value-link {
-        padding: 12px 17px;
+        padding: 15px 17px;
         background-color: inherit;
         border-top: none;
         border-right: 1px solid $dark-9;
@@ -117,12 +117,14 @@
   }
 
   .dashboard-timepicker-wrapper {
+    margin-top: 5px;
+
     .gf-form-input {
       background-color: transparent;
       box-shadow: none;
     }
     .time-picker {
-      margin-top: 3px;
+      // margin-top: 3px;
       margin-right: 10px;
       .select-button-icon.fa.fa-clock-o.fa-fw {
         top: 4px;
