@@ -15,15 +15,15 @@ const ButtonComponent = (buttonProps: ButtonComponentProps) => (props: any) => {
   return (
     <button
       ref={props.innerRef}
-      className={`btn navbar-button navbar-button--tight ${className}`}
+      className={`btn navbar-button ${className}`}
       onClick={props.selectProps.menuIsOpen ? props.selectProps.onMenuClose : props.selectProps.onMenuOpen}
       onBlur={props.selectProps.onMenuClose}
     >
       <div className="select-button">
         {iconClass && <i className={`select-button-icon ${iconClass}`} />}
         <span className="select-button-value">{label ? label : ''}</span>
-        {!props.menuIsOpen && <i className="fa fa-caret-down fa-fw" />}
-        {props.menuIsOpen && <i className="fa fa-caret-up fa-fw" />}
+        {!props.menuIsOpen && <i className="select-button-indicator fas fa-angle-down" />}
+        {props.menuIsOpen && <i className="select-button-indicator fas fa-angle-up" />}
       </div>
     </button>
   );

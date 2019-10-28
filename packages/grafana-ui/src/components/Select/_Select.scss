@@ -50,8 +50,8 @@ $select-input-bg-disabled: $input-bg-disabled;
 }
 
 .gf-form-select-box__menu {
-  background: $menu-dropdown-bg;
-  box-shadow: $menu-dropdown-shadow;
+  background: $dropdownBackground;
+  box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.5);
   position: absolute;
   z-index: $zindex-dropdown;
   min-width: 100%;
@@ -96,18 +96,23 @@ $select-input-bg-disabled: $input-bg-disabled;
 .gf-form-select-box__option {
   border-left: 2px solid transparent;
   white-space: nowrap;
-  background-color: $input-bg;
+  background-color: transparent;
 
   &.gf-form-select-box__option--is-focused {
-    color: $dropdownLinkColorHover;
-    background: $menu-dropdown-hover-bg;
-    @include left-brand-border-gradient();
+    color: inherit;
+    background: inherit;
   }
 
   &.gf-form-select-box__option--is-selected {
+    font-weight: $font-weight-semi-bold;
     .fa {
       color: $input-color-select-arrow;
     }
+  }
+
+  &:hover {
+    color: $dropdownLinkColorHover;
+    background-color: $dropdownLinkBackgroundHover;
   }
 }
 
@@ -168,7 +173,7 @@ $select-input-bg-disabled: $input-bg-disabled;
   justify-content: flex-start;
   justify-items: center;
   cursor: pointer;
-  padding: 7px 10px;
+  padding: 5px 20px 5px 15px;
   width: 100%;
 }
 
@@ -177,7 +182,7 @@ $select-input-bg-disabled: $input-bg-disabled;
   flex-direction: column;
   flex-grow: 1;
   padding-right: 10px;
-  font-weight: $font-weight-semi-bold;
+  font-weight: $font-weight-regular;
 }
 
 .gf-form-select-box__desc-option__desc {

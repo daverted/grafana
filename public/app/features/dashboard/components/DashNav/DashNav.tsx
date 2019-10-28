@@ -481,7 +481,7 @@ export class DashNav extends PureComponent<Props> {
         {/* {this.renderIntegrations()} */}
         <div className="menu-item">
           <div className="variable-link-wrapper dropdown">
-            <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
+            <a className="variable-value-link left-border dropdown-toggle" data-toggle="dropdown" href="#">
               <i className="fas fa-ellipsis-v" />
             </a>
             <ul className="dropdown-menu pull-right" role="menu">

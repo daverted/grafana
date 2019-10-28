@@ -5,7 +5,7 @@
   padding: 0 20px 0 50px;
   display: flex;
   flex-grow: 1;
-  border-bottom: 1px solid transparent;
+  border-bottom: none;
   transition-duration: 350ms;
   transition-timing-function: ease-in-out;
   transition-property: box-shadow, border-bottom;
@@ -66,6 +66,10 @@
         &.no-border {
           border-right: none;
         }
+        &.left-border {
+          border-right: none;
+          border-left: 1px solid $dark-9;
+        }
       }
 
       .gf-form-input {
@@ -117,18 +121,18 @@
   }
 
   .dashboard-timepicker-wrapper {
-    margin-top: 5px;
-
     .gf-form-input {
       background-color: transparent;
       box-shadow: none;
+      font-size: $font-size-base;
     }
-    .time-picker {
-      // margin-top: 3px;
-      margin-right: 10px;
-      .select-button-icon.fa.fa-clock-o.fa-fw {
-        top: 4px;
-        margin-right: 3px;
+    .time-picker-button-select,
+    .navbar-button--refresh {
+      padding: 18px 17px;
+      border-left: 1px solid $dark-9;
+
+      &:hover {
+        background-color: $black;
       }
     }
   }
@@ -231,7 +235,6 @@ i.navbar-page-btn__search {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-left: 10px;
 
   &--close {
     display: none;
@@ -256,6 +259,10 @@ i.navbar-page-btn__search {
     width: 61px;
     border-right: 1px solid $dark-9;
   }
+
+  &:hover {
+    background-color: $black;
+  }
 }
 
 .navbar-button {
@@ -264,9 +271,9 @@ i.navbar-page-btn__search {
   background-color: transparent;
   display: flex;
   align-items: center;
-  font-weight: $btn-font-weight;
+  font-weight: $font-weight-regular; //$btn-font-weight;
   // padding: 6px $space-sm;
-  line-height: 24px;
+  // line-height: 24px;
   color: $headings-color;
   // border: 1px solid $navbar-button-border;
   // margin-left: $space-xs;
