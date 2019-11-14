@@ -279,7 +279,7 @@ export class DashNav extends PureComponent<Props> {
 
     const modalTitle = this.props.dashboard.title + ' Dashboard';
 
-    if (!aboutFields || !aboutFields.current) {
+    if (!aboutFields || !aboutFields.current || aboutFields.current.isNone) {
       appEvents.emit('alert-error', ['Not Found', 'About "' + modalTitle + '" content not found']);
       return;
     }
@@ -296,8 +296,8 @@ export class DashNav extends PureComponent<Props> {
         templateHtml: template,
         modalClass: 'modal--narrow',
         model: {
-          modalTitle: modalTitle,
-          title: about.title,
+          modalTitle: about.title,
+          title: '',
           subTitle: about.subTitle,
           text: about.text,
           videoURL: about.videoURL,
@@ -309,6 +309,7 @@ export class DashNav extends PureComponent<Props> {
       });
     } catch (e) {
       appEvents.emit('alert-error', ['Parse Error', 'Unable to parse "' + modalTitle + '" JSON']);
+      console.error(e);
       return;
     }
   };
@@ -328,7 +329,7 @@ export class DashNav extends PureComponent<Props> {
   }
 
   renderLogo() {
-    const homeUrl = '/d/lg0U4qriz';
+    const homeUrl = '/';
 
     return (
       <a href={homeUrl} className="navbar__logo" key="logo">
@@ -478,7 +479,7 @@ export class DashNav extends PureComponent<Props> {
     return (
       <div className="oo-links">
         {/* <Tooltip content="What's New"></Tooltip> */}
-        {/* {this.renderIntegrations()} */}
+        {this.renderIntegrations()}
         <div className="menu-item">
           <div className="variable-link-wrapper dropdown">
             <a className="variable-value-link left-border dropdown-toggle" data-toggle="dropdown" href="#">
@@ -531,9 +532,7 @@ export class DashNav extends PureComponent<Props> {
                   Install Guide
                 </a>
               </li>
-              <li>
-                <a href="https://doc.overops.com/docs/configure-your-integrations">Integrations</a>
-              </li>
+              {/* <li>i */}
               <li>
                 <a href="https://support.overops.com/hc/en-us" target="_blank">
                   Support Center
