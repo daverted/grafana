@@ -365,7 +365,7 @@ export class DashNav extends PureComponent<Props> {
 
   renderVarMenus() {
     const { dashboard } = this.props;
-    return dashboard.title === 'Home'
+    return dashboard.title === 'Applications'
       ? [<VarMenu key="1" variableName="environments" dashboard={dashboard} />]
       : [
           <VarMenu key="1" variableName="environments" dashboard={dashboard} />,
@@ -479,7 +479,7 @@ export class DashNav extends PureComponent<Props> {
     return (
       <div className="oo-links">
         {/* <Tooltip content="What's New"></Tooltip> */}
-        {this.renderIntegrations()}
+        {/*this.renderIntegrations()*/}
         <div className="menu-item">
           <div className="variable-link-wrapper dropdown">
             <a className="variable-value-link left-border dropdown-toggle" data-toggle="dropdown" href="#">
