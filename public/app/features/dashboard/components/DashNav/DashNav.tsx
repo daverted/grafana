@@ -479,7 +479,7 @@ export class DashNav extends PureComponent<Props> {
     return (
       <div className="oo-links">
         {/* <Tooltip content="What's New"></Tooltip> */}
-        {/*this.renderIntegrations()*/}
+        {/* this.renderIntegrations() */}
         <div className="menu-item">
           <div className="variable-link-wrapper dropdown">
             <a className="variable-value-link left-border dropdown-toggle" data-toggle="dropdown" href="#">
@@ -532,7 +532,9 @@ export class DashNav extends PureComponent<Props> {
                   Install Guide
                 </a>
               </li>
-              {/* <li>i */}
+              <li>
+                <a href="https://doc.overops.com/docs/configure-your-integrations">Integrations</a>
+              </li>
               <li>
                 <a href="https://support.overops.com/hc/en-us" target="_blank">
                   Support Center
