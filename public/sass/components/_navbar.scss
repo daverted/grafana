@@ -130,6 +130,7 @@
     .navbar-button--refresh {
       padding: 18px 17px;
       border-left: 1px solid $dark-9;
+      height: $navbarHeight;
 
       &:hover {
         background-color: $black;
