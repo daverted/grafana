@@ -23,50 +23,55 @@
   position: fixed;
   z-index: $zindex-modal;
   width: 100%;
-  background: $page-bg;
-  @include box-shadow(0 3px 7px rgba(0, 0, 0, 0.3));
+  background: #323a41; //$page-bg;
+  @include box-shadow(0 2px 10px 7px rgba(0, 0, 0, 0.2));
   @include background-clip(padding-box);
   outline: none;
-
+  border-radius: 3px;
   max-width: 750px;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
   top: 10%;
-}
 
-.modal-header {
-  background: $page-header-bg;
-  box-shadow: $page-header-shadow;
-  border-bottom: 1px solid $page-header-border-color;
-  @include clearfix();
-}
-
-.modal-header-title {
-  font-size: $font-size-h3;
-  float: left;
-  padding-top: $spacer * 0.75;
-  margin: 0 $spacer * 3 0 $spacer * 1.5;
-
-  .gicon {
-    position: relative;
-    top: -2px;
+  .btn + .btn {
+    margin-left: 8px;
   }
 }
 
+.modal-header {
+  margin-bottom: 24px;
+}
+
+.modal-header-title {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  color: #fff;
+}
+
 .modal-header-close {
-  float: right;
-  padding: 9px $spacer;
+  position: absolute;
+  top: 0px;
+  right: 11px;
+  font-size: 26px;
+  opacity: 0.5;
 }
 
 // Body (where all modal content resides)
 .modal-body {
   position: relative;
+  padding: 30px 35px;
 }
 
 .modal-content {
-  padding: $spacer * 2;
+  color: #fff;
+
+  p {
+    margin-top: 16px;
+    margin-bottom: 32px;
+  }
 
   &--has-scroll {
     max-height: calc(100vh - 400px);
@@ -89,7 +94,7 @@
 }
 
 .modal--narrow {
-  max-width: 500px;
+  max-width: 640px;
 }
 
 .modal--iframe {

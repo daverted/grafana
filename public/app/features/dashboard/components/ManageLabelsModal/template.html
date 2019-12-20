@@ -6,24 +6,24 @@
     </h2>
 
     <a class="modal-header-close" ng-click="ctrl.dismiss();">
-      <i class="fa fa-remove"></i>
+      <i class="far fa-remove"></i>
     </a>
   </div>
 
   <div class="modal-content">
-    <h4 class="p-b-2">
+    <strong>
       <span ng-if="ctrl.isNew">Create a New Label</span>
       <span ng-if="!ctrl.isNew">
         {{ctrl.eventName}}
       </span>
-    </h4>
+    </strong>
 
-    <div ng-if="ctrl.isLoading">
+    <div ng-if="ctrl.isLoading" class="p-t-2">
       <i class="fa fa-spinner fa-spin"></i>
       <em>Loading&hellip;</em>
     </div>
 
-    <div ng-if="!ctrl.isLoading && !ctrl.isNew">
+    <div ng-if="!ctrl.isLoading && !ctrl.isNew" class="p-t-2">
       <div class="gf-form-group table-panel-scroll" style="max-height: 300px">
         <table class="filter-table">
           <thead>
@@ -32,7 +32,7 @@
                 <gf-form-checkbox switch-class="gf-form-switch--table-cell" checked="ctrl.allCheck" on-change="ctrl.checkAll()">
                 </gf-form-checkbox>
               </td>
-              <td class="p-x-0">
+              <td class="p-0">
                 <input
                   type="text"
                   name="filter"
@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <div ng-if="ctrl.isNew">
+    <div ng-if="ctrl.isNew" class="p-t-2 p-b-3">
       <input
         type="text"
         name="newLabel"
@@ -73,7 +73,7 @@
     </div>
 
 
-    <div class="gf-form-button-row text-right">
+    <div class="text-right">
       <button class="btn btn-inverse pull-left" ng-if="!ctrl.isNew" ng-click="ctrl.createNew();">
         <i class="fas fa-plus"></i> &nbsp; New
       </button>

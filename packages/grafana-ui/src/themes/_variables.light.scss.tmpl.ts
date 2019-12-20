@@ -154,8 +154,8 @@ $table-bg-hover: $gray-5;
 
 // Buttons
 // -------------------------
-$btn-primary-bg: $green-base;
-$btn-primary-bg-hl: $green-shade;
+$btn-primary-bg: $blue;
+$btn-primary-bg-hl: $blue;
 
 $btn-secondary-bg: $blue-base;
 $btn-secondary-bg-hl: $blue-shade;
