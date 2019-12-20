@@ -30,7 +30,7 @@ const basicColors = {
   redShade: '#c4162a',
   greenBase: '#299c46',
   greenShade: '#23843b',
-  blue: 'hsl(202, 78%, 62%)', // '#51b2e9', // or maybe hsl(212, 100%, 72%);
+  blue: '#51b2e9', // 'hsl(202, 78%, 62%)' , // or maybe hsl(212, 100%, 72%);
   red: '#d44a3a',
   yellow: '#ecbb13',
   purple: '#9933cc',

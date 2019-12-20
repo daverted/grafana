@@ -176,8 +176,8 @@ $zindex-typeahead: ${theme.zIndex.typeahead};
 // Buttons
 //
 
-$btn-padding-x: 14px !default;
-$btn-padding-y: 10px !default;
+$btn-padding-x: 31px !default;
+$btn-padding-y: 7px !default;
 $btn-line-height: 1 !default;
 $btn-font-weight: ${theme.typography.weight.semibold} !default;
 

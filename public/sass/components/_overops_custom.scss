@@ -394,8 +394,10 @@ tr:hover {
     height: 1.3em;
     vertical-align: top;
     margin-top: -0.2em;
+    margin-left: 0;
+    margin-right: -0.3em;
     background-image: none;
-    mask-image: url(public/img/grid/08_label.svg);
+    mask-image: url(../img/grid/08_label.svg);
     mask-repeat: no-repeat;
     background-color: #ddd;
   }
@@ -950,4 +952,8 @@ tr.strike {
 
 .oo-links {
   margin-right: -($dashboard-padding + 4px);
+
+  .menu-item > .variable-link-wrapper.dropdown {
+    height: $navbarHeight;
+  }
 }

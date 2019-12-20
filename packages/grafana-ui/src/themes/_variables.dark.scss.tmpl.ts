@@ -127,7 +127,7 @@ $divider-border-color: $gray-1;
 $tight-form-func-bg: $dark-9;
 $tight-form-func-highlight-bg: $dark-10;
 
-$modal-backdrop-bg: #353c42;
+$modal-backdrop-bg: #858585; //#353c42;
 $code-tag-bg: $dark-1;
 $code-tag-border: $dark-9;
 
@@ -159,11 +159,11 @@ $table-bg-hover: $dark-6;
 
 // Buttons
 // -------------------------
+$btn-primary-bg: $blue;
+$btn-primary-bg-hl: $blue;
+
 $btn-secondary-bg: $blue-base;
 $btn-secondary-bg-hl: $blue-shade;
-
-$btn-primary-bg: $green-base;
-$btn-primary-bg-hl: $green-shade;
 
 $btn-success-bg: $green-base;
 $btn-success-bg-hl: $green-shade;
@@ -172,7 +172,7 @@ $btn-danger-bg: $red-base;
 $btn-danger-bg-hl: $red-shade;
 
 $btn-inverse-bg: $dark-6;
-$btn-inverse-bg-hl: lighten($dark-6, 4%);
+$btn-inverse-bg-hl: $dark-6; //lighten($dark-6, 4%);
 $btn-inverse-text-color: $link-color;
 $btn-inverse-text-shadow: 0px 1px 0 rgba(0, 0, 0, 0.1);
 
