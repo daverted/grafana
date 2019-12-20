@@ -510,16 +510,6 @@ tr.strike {
     border: 1px solid rgba($black, 0.125);
     border-radius: $border-radius-sm;
     box-shadow: 0px 10px 10px rgba($black, 0.5);
-    opacity: 0.85;
-
-    &:hover {
-      opacity: 1;
-      // .card-body {
-      //   h2 a {
-      //     color: $white;
-      //   }
-      // }
-    }
 
     // &.border-success {
     //   border-top: 2px solid transparent;
