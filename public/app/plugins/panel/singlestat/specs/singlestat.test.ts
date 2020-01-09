@@ -45,7 +45,7 @@ describe('SingleStatCtrl', () => {
           // @ts-ignore
           ctx.ctrl = new SingleStatCtrl($scope, $injector, {} as LinkSrv, $sanitize);
           setupFunc();
-          ctx.ctrl.onDataReceived(ctx.input);
+          ctx.ctrl.onSnapshotLoad(ctx.input);
           ctx.data = ctx.ctrl.data;
         });
       };
@@ -202,6 +202,21 @@ describe('SingleStatCtrl', () => {
 
     it('Should replace value with text', () => {
       expect(ctx.data.display.text).toBe('OK');
+    });
+  });
+
+  singleStatScenario('When mapping null values and no data', (ctx: TestContext) => {
+    ctx.setup(() => {
+      ctx.input = []; // No data
+      ctx.ctrl.panel.valueMaps = [{ value: 'null', text: 'XYZ' }];
+    });
+
+    it('value should be null', () => {
+      expect(ctx.data.value).toBe(null);
+    });
+
+    it('Should replace value with text', () => {
+      expect(ctx.data.display.text).toBe('XYZ');
     });
   });
 

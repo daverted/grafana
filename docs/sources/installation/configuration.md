@@ -548,6 +548,9 @@ If set configures the username to use for basic authentication on the metrics en
 ### basic_auth_password
 If set configures the password to use for basic authentication on the metrics endpoint.
 
+### disable_total_stats
+If set to `true`, then total stats generation (`stat_totals_*` metrics) is disabled. The default is `false`.
+
 ### interval_seconds
 
 Flush/Write interval when sending metrics to external TSDB. Defaults to 10s.
@@ -698,6 +701,11 @@ is false. This settings was introduced in Grafana v6.0.
 ### enable_alpha
 
 Set to true if you want to test alpha plugins that are not yet ready for general usage.
+
+## [feature_toggles]
+### enable
+
+Keys of alpha features to enable, separated by space. Available alpha features are: `transformations`
 
 <hr />
 

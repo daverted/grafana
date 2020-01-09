@@ -48,33 +48,49 @@ export class GaugePanelEditor extends PureComponent<PanelEditorProps<GaugeOption
     });
   };
 
-  onDisplayOptionsChanged = (fieldOptions: FieldDisplayOptions) =>
-    this.props.onOptionsChange({
-      ...this.props.options,
-      fieldOptions,
-    });
+  onDisplayOptionsChanged = (
+    fieldOptions: FieldDisplayOptions,
+    event?: React.SyntheticEvent<HTMLElement>,
+    callback?: () => void
+  ) =>
+    this.props.onOptionsChange(
+      {
+        ...this.props.options,
+        fieldOptions,
+      },
+      callback
+    );
 
-  onDefaultsChange = (field: FieldConfig) => {
-    this.onDisplayOptionsChanged({
-      ...this.props.options.fieldOptions,
-      defaults: field,
-    });
+  onDefaultsChange = (field: FieldConfig, event?: React.SyntheticEvent<HTMLElement>, callback?: () => void) => {
+    this.onDisplayOptionsChanged(
+      {
+        ...this.props.options.fieldOptions,
+        defaults: field,
+      },
+      event,
+      callback
+    );
   };
 
-  onDataLinksChanged = (links: DataLink[]) => {
-    this.onDefaultsChange({
-      ...this.props.options.fieldOptions.defaults,
-      links,
-    });
+  onDataLinksChanged = (links: DataLink[], callback?: () => void) => {
+    this.onDefaultsChange(
+      {
+        ...this.props.options.fieldOptions.defaults,
+        links,
+      },
+      undefined,
+      callback
+    );
   };
 
   render() {
     const { options } = this.props;
     const { fieldOptions, showThresholdLabels, showThresholdMarkers } = options;
     const { defaults } = fieldOptions;
+
     const suggestions = fieldOptions.values
-      ? getDataLinksVariableSuggestions()
-      : getCalculationValueDataLinksVariableSuggestions();
+      ? getDataLinksVariableSuggestions(this.props.data.series)
+      : getCalculationValueDataLinksVariableSuggestions(this.props.data.series);
 
     return (
       <>
