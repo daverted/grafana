@@ -454,6 +454,7 @@ export class DashNav extends PureComponent<Props> {
     let host = '';
     let port = '443';
     let proto = 'http://';
+    let environment = '';
 
     _.each(variables, variable => {
       if (variable.name === 'apiHost') {
@@ -465,6 +466,9 @@ export class DashNav extends PureComponent<Props> {
           proto = 'https://';
         }
       }
+      if (variable.name === 'environments') {
+        environment = variable.current.value;
+      }
     });
 
     const logout = () => {
@@ -474,6 +478,26 @@ export class DashNav extends PureComponent<Props> {
         console.warn('fallback to grafana logout');
         window.location.assign('/logout');
       });
+    };
+
+    const settings = () => {
+      const settingsUrl = proto + host + '/environments';
+
+      // if multiple, select the first
+      if (Array.isArray(environment)) {
+        environment = environment[0];
+      }
+
+      // no env selected
+      if (environment === '' || environment === 'None') {
+        return window.location.assign(settingsUrl);
+      }
+
+      // trim to get env key
+      const keyIndex = environment.indexOf(': S') + 2; // +2 to remove ': '
+      environment = environment.substring(keyIndex);
+
+      return window.location.assign(settingsUrl + '/' + environment + '/settings');
     };
 
     return (
@@ -513,7 +537,9 @@ export class DashNav extends PureComponent<Props> {
                 <a href={proto + host + '/grafana/'}>Reliability Dashboards</a>
               </li>
               <li>
-                <a href="/d/mTGNNTfiz/settings">Settings</a>
+                <a href="#" onClick={settings}>
+                  Settings
+                </a>
               </li>
               <li className="divider" />
               <li>
