@@ -515,17 +515,18 @@ export class TableRenderer {
       // make the row clickable
       let onClick = '';
       if (this.panel && this.panel.linkRow) {
-        rowClasses.push('pointer');
-        onClick += " onclick=\"if(event.target.tagName === 'TD'){";
-
         const scopedVars = this.renderRowVariables(y);
         const rowLink = this.templateSrv.replace(this.panel.linkUrl, scopedVars, encodeURIComponent);
 
-        onClick += this.panel.linkNewTab
-          ? "window.open('" + rowLink + "', '_blank')"
-          : "window.location.href = '" + rowLink + "'";
-
-        onClick += '}" ';
+        // INTG-223 fix empty link
+        if (rowLink.indexOf('No%20data') === -1) {
+          rowClasses.push('pointer');
+          onClick += " onclick=\"if(event.target.tagName === 'TD'){";
+          onClick += this.panel.linkNewTab
+            ? "window.open('" + rowLink + "', '_blank')"
+            : "window.location.href = '" + rowLink + "'";
+          onClick += '}" ';
+        }
       }
 
       if (rowClasses.length) {

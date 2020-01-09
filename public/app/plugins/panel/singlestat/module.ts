@@ -116,6 +116,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       thresholdLabels: false,
     },
     tableColumn: '',
+    navPanel: false,
+    navPanelSelected: false,
   };
 
   /** @ngInject */
@@ -366,6 +368,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     function getBigValueHtml() {
       const data: ShowData = ctrl.data;
       let body = '<div class="singlestat-panel-value-container">';
+
+      if (ctrl.data.display === undefined) {
+        return '';
+      }
 
       if (panel.prefix) {
         body += getSpan('singlestat-panel-prefix', panel.prefixFontSize, panel.colorPrefix, panel.prefix);

@@ -5,7 +5,8 @@ ENV GOPATH="/opt"
 # install curl, git, build tools
 RUN yum -y update
 RUN yum -y groupinstall "Development Tools"
-# RUN yum install -y ruby ruby-devel rubygems-devel
+RUN yum -y install centos-release-scl
+RUN yum -y install devtoolset-7
 RUN yum -y install readline-devel zlib-devel libyaml-devel libffi-devel openssl-devel sqlite-devel
 RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import -
 RUN gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB

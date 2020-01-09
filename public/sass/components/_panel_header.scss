@@ -11,7 +11,7 @@ $panel-header-no-title-zindex: 1;
   .panel-header {
     &:hover {
       transition: none;
-      background-color: $panel-bg;
+      background-color: transparent;
     }
     .panel-title-container {
       cursor: default;
@@ -163,7 +163,7 @@ $panel-header-no-title-zindex: 1;
   }
 
   &--info {
-    display: block;
+    display: none;
     @include panel-corner-color(lighten($panel-corner, 6%));
 
     .fa:before {
@@ -215,4 +215,10 @@ $panel-header-no-title-zindex: 1;
   font-size: 85%;
   position: absolute;
   right: 0;
+}
+
+.panel-container:hover {
+  .panel-info-corner--info {
+    display: block;
+  }
 }

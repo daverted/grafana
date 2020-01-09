@@ -109,6 +109,7 @@ $font-size-xs: ${theme.typography.size.xs} !default;
 
 $line-height-base: ${theme.typography.lineHeight.lg} !default;
 
+$font-weight-light: ${theme.typography.weight.light} !default;
 $font-weight-regular: ${theme.typography.weight.regular} !default;
 $font-weight-semi-bold: ${theme.typography.weight.semibold} !default;
 
@@ -175,8 +176,8 @@ $zindex-typeahead: ${theme.zIndex.typeahead};
 // Buttons
 //
 
-$btn-padding-x: 14px !default;
-$btn-padding-y: 10px !default;
+$btn-padding-x: 31px !default;
+$btn-padding-y: 7px !default;
 $btn-line-height: 1 !default;
 $btn-font-weight: ${theme.typography.weight.semibold} !default;
 

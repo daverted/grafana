@@ -50,6 +50,7 @@ export class DashboardModel {
   gnetId: any;
   panels: PanelModel[];
   refreshOnly: boolean;
+  hasNavPanel: boolean;
 
   // ------------------
   // not persisted
@@ -97,6 +98,7 @@ export class DashboardModel {
     this.links = data.links || [];
     this.gnetId = data.gnetId || null;
     this.panels = _.map(data.panels || [], (panelData: any) => new PanelModel(panelData));
+    this.hasNavPanel = data.hasNavPanel || false;
 
     this.resetOriginalVariables();
     this.resetOriginalTime();

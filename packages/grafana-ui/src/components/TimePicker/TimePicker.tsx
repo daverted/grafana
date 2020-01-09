@@ -8,12 +8,12 @@ import { TimePickerPopover } from './TimePickerPopover';
 import { ClickOutsideWrapper } from '../ClickOutsideWrapper/ClickOutsideWrapper';
 
 // Utils & Services
-import { isDateTime, DateTime } from '@grafana/data';
+import { DateTime } from '@grafana/data'; // isDateTime
 import { rangeUtil } from '@grafana/data';
 import { rawToTimeRange } from './time';
 
 // Types
-import { TimeRange, TimeOption, TimeZone, TIME_FORMAT, SelectableValue } from '@grafana/data';
+import { TimeRange, TimeOption, TimeZone, SelectableValue } from '@grafana/data'; // TIME_FORMAT
 import { dateMath } from '@grafana/data';
 
 // Mixpanel
@@ -131,7 +131,7 @@ export class TimePicker extends PureComponent<Props, State> {
   };
 
   render() {
-    const { selectOptions: selectTimeOptions, value, onMoveBackward, onMoveForward, timeZone } = this.props;
+    const { selectOptions: selectTimeOptions, value, timeZone } = this.props; // onMoveBackward, onMoveForward
     const { isCustomOpen } = this.state;
     const options = this.mapTimeOptionsToSelectableValues(selectTimeOptions);
     const currentOption = options.find(item => isTimeOptionEqualToTimeRange(item.value, value));
@@ -152,16 +152,16 @@ export class TimePicker extends PureComponent<Props, State> {
         {isUTC && <span className="time-picker-utc">UTC</span>}
       </>
     );
-    const isAbsolute = isDateTime(value.raw.to);
+    // const isAbsolute = isDateTime(value.raw.to);
 
     return (
       <div className="time-picker" ref={this.pickerTriggerRef}>
         <div className="time-picker-buttons">
-          {isAbsolute && (
+          {/* {isAbsolute && (
             <button className="btn navbar-button navbar-button--tight" onClick={onMoveBackward}>
               <i className="fa fa-chevron-left" />
             </button>
-          )}
+          )} */}
           <ButtonSelect
             className="time-picker-button-select"
             value={currentOption}
@@ -170,14 +170,14 @@ export class TimePicker extends PureComponent<Props, State> {
             maxMenuHeight={600}
             onChange={this.onSelectChanged}
             onOpenMenu={this.onOpenMenu}
-            iconClass={'fa fa-clock-o fa-fw'}
-            tooltipContent={<TimePickerTooltipContent timeRange={value} />}
+            iconClass={'far fa-calendar-alt'}
+            // tooltipContent={<TimePickerTooltipContent timeRange={value} />}
           />
-          {isAbsolute && (
+          {/* {isAbsolute && (
             <button className="btn navbar-button navbar-button--tight" onClick={onMoveForward}>
               <i className="fa fa-chevron-right" />
             </button>
-          )}
+          )} */}
 
           {/* <Tooltip content={defaultZoomOutTooltip} placement="bottom">
             <button className="btn navbar-button navbar-button--zoom" onClick={onZoom}>
@@ -196,13 +196,13 @@ export class TimePicker extends PureComponent<Props, State> {
   }
 }
 
-const TimePickerTooltipContent = ({ timeRange }: { timeRange: TimeRange }) => (
-  <>
-    {timeRange.from.format(TIME_FORMAT)}
-    <div className="text-center">to</div>
-    {timeRange.to.format(TIME_FORMAT)}
-  </>
-);
+// const TimePickerTooltipContent = ({ timeRange }: { timeRange: TimeRange }) => (
+//   <>
+//     {timeRange.from.format(TIME_FORMAT)}
+//     <div className="text-center">to</div>
+//     {timeRange.to.format(TIME_FORMAT)}
+//   </>
+// );
 
 function isTimeOptionEqualToTimeRange(option: TimeOption, range: TimeRange): boolean {
   return range.raw.from === option.from && range.raw.to === option.to;

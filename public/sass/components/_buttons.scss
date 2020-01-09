@@ -12,14 +12,15 @@
   justify-content: center;
   font-weight: $btn-font-weight;
   line-height: $btn-line-height;
-  font-size: $font-size-base;
+  font-size: 16px; //$font-size-base;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
   border: none;
-  height: $height-md;
+  height: auto;
 
-  @include button-size($btn-padding-y, $space-md, $font-size-base, $border-radius-sm);
+  padding: $btn-padding-y $btn-padding-x;
+  border-radius: $border-radius-sm;
 
   &,
   &:active,
@@ -96,8 +97,12 @@
 
 // Set the backgrounds
 // -------------------------
-.btn-success,
+.btn-success {
+  @include buttonBackground($btn-success-bg, $btn-success-bg-hl);
+}
+
 .btn-primary {
+  color: $white;
   @include buttonBackground($btn-primary-bg, $btn-primary-bg-hl);
 }
 
@@ -118,7 +123,7 @@
 .btn-inverse {
   @include buttonBackground($btn-inverse-bg, $btn-inverse-bg-hl, $btn-inverse-text-color, $btn-inverse-text-shadow);
   //background: $card-background;
-  box-shadow: $card-shadow;
+  // box-shadow: $card-shadow;
   //border: 1px solid $tight-form-func-highlight-bg;
 }
 
@@ -208,7 +213,7 @@ $btn-service-icon-width: 35px;
 
 .btn-service--grafanacom {
   .btn-service-icon {
-    background-image: url(/public/img/grafana_mask_icon_white.svg);
+    background-image: url('../img/grafana_mask_icon_white.svg');
     background-repeat: no-repeat;
     background-position: 50%;
     background-size: 60%;

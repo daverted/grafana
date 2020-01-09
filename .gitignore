@@ -100,3 +100,9 @@ theOutput/
 
 # Ignore compilation stats from `yarn stats`
 compilation-stats.json
+
+# Ignore logs and pid files
+*.log
+*.pid
+
+start.sh

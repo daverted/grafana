@@ -2,6 +2,10 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import ReactGridLayout, { ItemCallback } from 'react-grid-layout';
+import classNames from 'classnames';
+// @ts-ignore
+import sizeMe from 'react-sizeme';
 
 // Utils & Services
 import { appEvents } from 'app/core/app_events';
@@ -17,12 +21,83 @@ import { VarMenu } from '../../components/VarMenu';
 import { updateLocation } from 'app/core/actions';
 
 // Types
-import { DashboardModel } from '../../state';
+import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from 'app/core/constants';
+import { DashboardModel, PanelModel } from '../../state';
+import { DashboardPanel } from '../../dashgrid/DashboardPanel';
 import { StoreState } from 'app/types';
 
 // Mixpanel
 import { MixpanelWindow } from 'app/features/mixpanel/Mixpanel';
 declare let window: MixpanelWindow;
+
+let lastGridWidth = 1400;
+let ignoreNextWidthChange = false;
+
+interface GridWrapperProps {
+  size: { width: number };
+  layout: ReactGridLayout.Layout[];
+  onLayoutChange: (layout: ReactGridLayout.Layout[]) => void;
+  children: JSX.Element | JSX.Element[];
+  onDragStop: ItemCallback;
+  onResize: ItemCallback;
+  onResizeStop: ItemCallback;
+  onWidthChange: () => void;
+  className: string;
+  isResizable?: boolean;
+  isDraggable?: boolean;
+  isFullscreen?: boolean;
+}
+
+function GridWrapper({
+  size,
+  layout,
+  onLayoutChange,
+  children,
+  onDragStop,
+  onResize,
+  onResizeStop,
+  onWidthChange,
+  className,
+  isResizable,
+  isDraggable,
+  isFullscreen,
+}: GridWrapperProps) {
+  const width = size.width > 0 ? size.width : lastGridWidth;
+
+  // logic to ignore width changes (optimization)
+  if (width !== lastGridWidth) {
+    if (ignoreNextWidthChange) {
+      ignoreNextWidthChange = false;
+    } else if (!isFullscreen && Math.abs(width - lastGridWidth) > 8) {
+      onWidthChange();
+      lastGridWidth = width;
+    }
+  }
+
+  return (
+    <ReactGridLayout
+      width={lastGridWidth}
+      className={className}
+      isDraggable={isDraggable}
+      isResizable={isResizable}
+      containerPadding={[0, 0]}
+      useCSSTransforms={false}
+      margin={[GRID_CELL_VMARGIN, GRID_CELL_VMARGIN]}
+      cols={GRID_COLUMN_COUNT}
+      rowHeight={GRID_CELL_HEIGHT}
+      draggableHandle=".grid-drag-handle"
+      layout={layout}
+      onResize={onResize}
+      onResizeStop={onResizeStop}
+      onDragStop={onDragStop}
+      onLayoutChange={onLayoutChange}
+    >
+      {children}
+    </ReactGridLayout>
+  );
+}
+
+const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
 
 export interface OwnProps {
   dashboard: DashboardModel;
@@ -42,11 +117,54 @@ type Props = StateProps & OwnProps;
 
 export class DashNav extends PureComponent<Props> {
   playlistSrv: PlaylistSrv;
+  panelMap: { [id: string]: PanelModel };
 
   constructor(props: Props) {
     super(props);
     this.playlistSrv = this.props.$injector.get('playlistSrv');
   }
+
+  buildLayout() {
+    const layout = [];
+    this.panelMap = {};
+
+    for (const panel of this.props.dashboard.panels) {
+      const stringId = panel.id.toString();
+      this.panelMap[stringId] = panel;
+
+      if (!panel.gridPos) {
+        console.log('panel without gridpos');
+        continue;
+      }
+
+      const panelPos: any = {
+        i: stringId,
+        x: panel.gridPos.x,
+        y: panel.gridPos.y,
+        w: panel.gridPos.w,
+        h: panel.gridPos.h,
+      };
+
+      if (panel.type === 'row') {
+        panelPos.w = GRID_COLUMN_COUNT;
+        panelPos.h = 1;
+        panelPos.isResizable = false;
+        panelPos.isDraggable = panel.collapsed;
+      }
+
+      layout.push(panelPos);
+    }
+
+    return layout;
+  }
+
+  updateGridPos = (item: ReactGridLayout.Layout, layout: ReactGridLayout.Layout[]) => {
+    this.panelMap[item.i].updateGridPos(item);
+
+    // react-grid-layout has a bug (#670), and onLayoutChange() is only called when the component is mounted.
+    // So it's required to call it explicitly when panel resized or moved to save layout changes.
+    this.onLayoutChange(layout);
+  };
 
   onDahboardNameClick = () => {
     appEvents.emit('show-dash-search');
@@ -124,13 +242,44 @@ export class DashNav extends PureComponent<Props> {
     });
   };
 
+  onLayoutChange = (newLayout: ReactGridLayout.Layout[]) => {
+    for (const newPos of newLayout) {
+      this.panelMap[newPos.i].updateGridPos(newPos);
+    }
+
+    this.props.dashboard.sortPanelsByGridPos();
+
+    // Call render() after any changes.  This is called when the layout loads
+    this.forceUpdate();
+  };
+
+  onWidthChange = () => {
+    for (const panel of this.props.dashboard.panels) {
+      panel.resizeDone();
+    }
+    this.forceUpdate();
+  };
+
+  onResize: ItemCallback = (layout, oldItem, newItem) => {
+    this.panelMap[newItem.i].updateGridPos(newItem);
+  };
+
+  onResizeStop: ItemCallback = (layout, oldItem, newItem) => {
+    this.updateGridPos(newItem, layout);
+    this.panelMap[newItem.i].resizeDone();
+  };
+
+  onDragStop: ItemCallback = (layout, oldItem, newItem) => {
+    this.updateGridPos(newItem, layout);
+  };
+
   onOpenAbout = () => {
     const templateService = this.props.$injector.get('templateSrv').index;
     const aboutFields = templateService.aboutFields;
 
     const modalTitle = this.props.dashboard.title + ' Dashboard';
 
-    if (!aboutFields || !aboutFields.current) {
+    if (!aboutFields || !aboutFields.current || aboutFields.current.isNone) {
       appEvents.emit('alert-error', ['Not Found', 'About "' + modalTitle + '" content not found']);
       return;
     }
@@ -147,8 +296,8 @@ export class DashNav extends PureComponent<Props> {
         templateHtml: template,
         modalClass: 'modal--narrow',
         model: {
-          modalTitle: modalTitle,
-          title: about.title,
+          modalTitle: about.title,
+          title: '',
           subTitle: about.subTitle,
           text: about.text,
           videoURL: about.videoURL,
@@ -160,6 +309,7 @@ export class DashNav extends PureComponent<Props> {
       });
     } catch (e) {
       appEvents.emit('alert-error', ['Parse Error', 'Unable to parse "' + modalTitle + '" JSON']);
+      console.error(e);
       return;
     }
   };
@@ -179,7 +329,7 @@ export class DashNav extends PureComponent<Props> {
   }
 
   renderLogo() {
-    const homeUrl = '/d/lg0U4qriz';
+    const homeUrl = '/';
 
     return (
       <a href={homeUrl} className="navbar__logo" key="logo">
@@ -215,12 +365,14 @@ export class DashNav extends PureComponent<Props> {
 
   renderVarMenus() {
     const { dashboard } = this.props;
-    return [
-      <VarMenu key="1" variableName="environments" dashboard={dashboard} />,
-      <VarMenu key="2" variableName="applications" dashboard={dashboard} />,
-      <VarMenu key="3" variableName="deployments" dashboard={dashboard} />,
-      <VarMenu key="4" variableName="servers" dashboard={dashboard} />,
-    ];
+    return dashboard.title === 'Applications'
+      ? [<VarMenu key="1" variableName="environments" dashboard={dashboard} />]
+      : [
+          <VarMenu key="1" variableName="environments" dashboard={dashboard} />,
+          <VarMenu key="2" variableName="applications" dashboard={dashboard} />,
+          // <VarMenu key="3" variableName="deployments" dashboard={dashboard} />,
+          // <VarMenu key="4" variableName="servers" dashboard={dashboard} />,
+        ];
   }
 
   integrationsModal = (e: any, data: any) => {
@@ -272,7 +424,7 @@ export class DashNav extends PureComponent<Props> {
       <div className="menu-item">
         <div className="variable-link-wrapper dropdown">
           <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
-            Integrations <i className="fa fa-caret-down" />
+            Integrations <i className="fas fa-angle-down" />
           </a>
           <ul className="dropdown-menu pull-right" role="menu">
             {featureFields.options.map((option: any, index: any) => {
@@ -302,6 +454,7 @@ export class DashNav extends PureComponent<Props> {
     let host = '';
     let port = '443';
     let proto = 'http://';
+    let environment = '';
 
     _.each(variables, variable => {
       if (variable.name === 'apiHost') {
@@ -312,6 +465,9 @@ export class DashNav extends PureComponent<Props> {
         if (port === '443' || port === '8443') {
           proto = 'https://';
         }
+      }
+      if (variable.name === 'environments') {
+        environment = variable.current.value;
       }
     });
 
@@ -324,13 +480,33 @@ export class DashNav extends PureComponent<Props> {
       });
     };
 
+    const settings = () => {
+      const settingsUrl = proto + host + '/environments';
+
+      // if multiple, select the first
+      if (Array.isArray(environment)) {
+        environment = environment[0];
+      }
+
+      // no env selected
+      if (environment === '' || environment === 'None') {
+        return window.location.assign(settingsUrl);
+      }
+
+      // trim to get env key
+      const keyIndex = environment.indexOf(': S') + 2; // +2 to remove ': '
+      environment = environment.substring(keyIndex);
+
+      return window.location.assign(settingsUrl + '/' + environment + '/settings');
+    };
+
     return (
       <div className="oo-links">
         {/* <Tooltip content="What's New"></Tooltip> */}
-        {this.renderIntegrations()}
+        {/* this.renderIntegrations() */}
         <div className="menu-item">
           <div className="variable-link-wrapper dropdown">
-            <a className="variable-value-link no-border dropdown-toggle" data-toggle="dropdown" href="#">
+            <a className="variable-value-link left-border dropdown-toggle" data-toggle="dropdown" href="#">
               <i className="fas fa-ellipsis-v" />
             </a>
             <ul className="dropdown-menu pull-right" role="menu">
@@ -346,8 +522,8 @@ export class DashNav extends PureComponent<Props> {
               {/* <li className="divider" /> */}
               <li>
                 <a href="#" onClick={this.onToggleTVMode}>
-                  <i className="fa fa-desktop" />
-                  Cycle view mode
+                  <i className="far fa-desktop" />
+                  Full screen
                 </a>
               </li>
               <li className="divider" />
@@ -355,12 +531,13 @@ export class DashNav extends PureComponent<Props> {
                 <span className="header">Platform</span>
               </li>
               <li>
-                <a href={proto + host + '/'} target="_blank">
-                  Event Explorer
-                </a>
+                <a href={proto + host + '/'}>Event Explorer</a>
               </li>
               <li>
-                <a href="/d/mTGNNTfiz/settings" target="_blank">
+                <a href={proto + host + '/grafana/'}>Reliability Dashboards</a>
+              </li>
+              <li>
+                <a href="#" onClick={settings}>
                   Settings
                 </a>
               </li>
@@ -382,6 +559,9 @@ export class DashNav extends PureComponent<Props> {
                 </a>
               </li>
               <li>
+                <a href="https://doc.overops.com/docs/configure-your-integrations">Integrations</a>
+              </li>
+              <li>
                 <a href="https://support.overops.com/hc/en-us" target="_blank">
                   Support Center
                 </a>
@@ -401,6 +581,51 @@ export class DashNav extends PureComponent<Props> {
           </div>
         </div>
       </div>
+    );
+  }
+
+  renderNavPanels() {
+    const panelElements = [];
+
+    for (const panel of this.props.dashboard.panels) {
+      if (panel.navPanel) {
+        const className = panel.navPanelSelected ? 'nav-panel selected' : 'nav-panel';
+        const id = panel.id.toString();
+        panelElements.push(
+          <div key={id} id={'nav-panel-' + id} className={className}>
+            <DashboardPanel
+              panel={panel}
+              dashboard={this.props.dashboard}
+              isEditing={false}
+              isFullscreen={panel.fullscreen}
+              isInView={true}
+            />
+          </div>
+        );
+      }
+    }
+
+    return panelElements;
+  }
+
+  renderNavPanelGrid() {
+    const { dashboard, isFullscreen } = this.props;
+
+    return (
+      <SizedReactLayoutGrid
+        className={classNames({ layout: true })}
+        layout={this.buildLayout()}
+        isResizable={dashboard.meta.canEdit}
+        isDraggable={dashboard.meta.canEdit}
+        onLayoutChange={this.onLayoutChange}
+        onWidthChange={this.onWidthChange}
+        onDragStop={this.onDragStop}
+        onResize={this.onResize}
+        onResizeStop={this.onResizeStop}
+        isFullscreen={isFullscreen}
+      >
+        {this.renderNavPanels()}
+      </SizedReactLayoutGrid>
     );
   }
 
@@ -429,8 +654,8 @@ export class DashNav extends PureComponent<Props> {
     const { canStar, canSave, canShare, showSettings, isStarred } = dashboard.meta;
     const { snapshot } = dashboard;
     const snapshotUrl = snapshot && snapshot.originalUrl;
-    return (
-      <div className="navbar">
+    return [
+      <div key="1" className="navbar">
         {this.renderLogo()}
         {this.renderVarMenus()}
         {this.isInFullscreenOrSettings && this.renderBackButton()}
@@ -500,8 +725,11 @@ export class DashNav extends PureComponent<Props> {
         )}
 
         {this.renderOverOpsLinks()}
-      </div>
-    );
+      </div>,
+      <div key="2" className={dashboard.hasNavPanel ? 'navbar nav-panels' : 'd-none'}>
+        {this.renderNavPanelGrid()}
+      </div>,
+    ];
   }
 }
 

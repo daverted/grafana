@@ -213,6 +213,18 @@ $arrowPadding: $arrowPaddingToBorder * 3;
 }
 
 .time-picker-button-select {
+  .select-button {
+    align-items: center;
+
+    .select-button-icon {
+      padding-right: 0.5em;
+    }
+
+    .select-button-indicator {
+      padding-left: 0.5em;
+    }
+  }
+
   .select-button-value {
     display: none;
 
@@ -255,8 +267,6 @@ $arrowPadding: $arrowPaddingToBorder * 3;
 .dashboard-timepicker-wrapper {
   position: relative;
   display: flex;
-  // this is to align popover position with explore  ( .explore-toolbar-content-item class)
-  padding: 2px 2px;
 
   .gf-form-select-box__menu {
     right: 0;

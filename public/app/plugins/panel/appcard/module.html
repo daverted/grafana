@@ -1,0 +1,121 @@
+<style type="text/css">
+  /* enable real scrolling on this page */
+  .react-grid-layout.layout,
+  .react-grid-layout.layout > .react-grid-item {
+    height: auto !important;
+  }
+  /* make sure edit page still works */
+  .panel-in-fullscreen .react-grid-layout.layout,
+  .panel-in-fullscreen .react-grid-layout.layout > .react-grid-item {
+    height: 100% !important;
+  }
+
+  react-grid-item
+</style>
+<div class="app-card-panel-container {{ctrl.cardMode}}">
+  <div class="app-card-panel-scroll" ng-show="ctrl.table.rows.length">
+    <span ng-if="!col.style.noHeader">{{col.title}}</span>
+    <span class="app-card-panel-table-header-controls" ng-if="col.sort">
+      <i class="fas fa-caret-down" ng-show="col.desc"></i>
+      <i class="fas fa-caret-up" ng-hide="col.desc"></i>
+    </span>
+
+    <div class="app-card-nav">
+      <h1>Applications</h1>
+      <div class="app-card-nav-buttons">
+        <div class="btn-group input-group">
+          <button class="btn-outline-default" disabled="disabled">
+            <i class="fas fa-filter"></i>
+          </button>
+          <input
+            type="text"
+            class="btn-outline-default"
+            placeholder="Filter by name"
+            give-focus="true"
+            ng-model="ctrl.panel.appNameFilter"
+            autocomplete="off"
+            ng-change="ctrl.onFilter()"
+          />
+        </div>
+        <div class="dropdown d-inline-block">
+          <button class="dropdown-toggle btn-outline-default" data-parent=".app-card-panel-container" data-toggle="dropdown">
+            <i class="far fa-calendar-alt"></i>
+            Last {{ctrl.panel.timeRange.title}}
+            <i class="fas fa-angle-down" style="vertical-align: middle"></i>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li ng-repeat="timeRange in ctrl.panel.timeRanges">
+              <span class="pointer" ng-click="ctrl.setTimeRange(timeRange, $index)">
+                Last {{timeRange.title}}
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="dropdown d-inline-block">
+          <button class="dropdown-toggle btn-outline-default" data-parent=".app-card-panel-container" data-toggle="dropdown">
+            <span ng-if="ctrl.panel.sort.col">
+              <i ng-if="!ctrl.panel.sort.desc" class="fad fa-sort-up"></i>
+              <i ng-if="ctrl.panel.sort.desc" class="fad fa-sort-down"></i>
+              Sorted by <span style="text-transform: capitalize">{{ctrl.table.columns[ctrl.panel.sort.col].title}}</span>
+            </span>
+            <span ng-if="!ctrl.panel.sort.col">
+              <i class="fad fa-sort"></i>
+              Sort by
+            </span>
+            <i class="fas fa-angle-down" style="vertical-align: middle"></i>
+          </button>
+          <ul class="dropdown-menu" role="menu" style="text-transform:capitalize">
+            <li ng-repeat="col in ctrl.table.columns" ng-if="!col.hidden">
+              <span class="pointer" ng-click="ctrl.toggleColumnSort(col, $index)">
+                <span ng-if="col.sort">
+                  <i class="fa fa-caret-down" ng-show="col.desc"></i>
+                  <i class="fa fa-caret-up" ng-hide="col.desc"></i>
+                </span>
+                <span ng-if="!col.sort">
+                  <i class="d-inline-block" style="width:10px"></i>
+                </span>
+                <span>{{col.title}}</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="btn-group">
+          <button class="btn-outline-default" ng-click="ctrl.setCardMode('card')">
+            <i class="fas fa-th-large"></i>
+          </button>
+          <button class="btn-outline-default" ng-click="ctrl.setCardMode('panel')">
+            <i class="fas fa-th"></i>
+          </button>
+          <button class="btn-outline-default" ng-click="ctrl.setCardMode('list')">
+            <i class="fas fa-list-ul"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-card-header">
+      <div class="name-header"></div>
+      <div class="alert-header"></div>
+      <ul class="content-header">
+        <li>New</li>
+        <li>Increasing</li>
+        <li>Critical</li>
+        <li>Unique</li>
+      </ul>
+      <ul class="footer-header">
+        <li>Transactions</li>
+        <li>Slow</li>
+        <li>VMs</li>
+      </ul>
+    </div>
+
+    <div class="app-cards"></div>
+  </div>
+</div>
+<div class="datapoints-warning" ng-show="ctrl.table.rows.length===0">
+  <span class="small" >
+    No data to show <tip>Nothing returned by data query</tip>
+  </span>
+</div>
+<div class="app-card-panel-footer">
+</div>

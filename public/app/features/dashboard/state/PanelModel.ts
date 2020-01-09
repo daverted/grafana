@@ -111,6 +111,9 @@ export class PanelModel {
   links?: DataLink[];
   transparent: boolean;
 
+  navPanel: boolean;
+  navPanelSelected: boolean;
+
   // non persisted
   fullscreen: boolean;
   isEditing: boolean;

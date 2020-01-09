@@ -190,18 +190,15 @@ export function grafanaAppDirective(
         }
 
         switch (search.kiosk) {
-          case 'tv': {
-            search.kiosk = true;
-            appEvents.emit('alert-success', ['Press ESC to exit Kiosk mode']);
-            break;
-          }
           case '1':
           case true: {
             delete search.kiosk;
             break;
           }
           default: {
-            search.kiosk = 'tv';
+            search.kiosk = true;
+            appEvents.emit('alert-success', ['Press ESC to exit full screen mode']);
+            break;
           }
         }
 

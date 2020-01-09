@@ -43,6 +43,10 @@
   display: inline-block;
   color: $text-color;
   height: $input-height;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 20vw;
 
   .label-tag {
     margin: 0 5px;

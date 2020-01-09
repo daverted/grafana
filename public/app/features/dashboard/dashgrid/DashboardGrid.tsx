@@ -233,27 +233,29 @@ export class DashboardGrid extends PureComponent<Props> {
   renderPanels() {
     const panelElements = [];
     for (const panel of this.props.dashboard.panels) {
-      const panelClasses = classNames({ 'react-grid-item--fullscreen': panel.fullscreen });
-      const id = panel.id.toString();
-      panel.isInView = this.isInView(panel);
-      panelElements.push(
-        <div
-          key={id}
-          className={panelClasses}
-          id={'panel-' + id}
-          ref={elem => {
-            this.panelRef[id] = elem;
-          }}
-        >
-          <DashboardPanel
-            panel={panel}
-            dashboard={this.props.dashboard}
-            isEditing={panel.isEditing}
-            isFullscreen={panel.fullscreen}
-            isInView={panel.isInView}
-          />
-        </div>
-      );
+      if (panel.navPanel !== true || panel.isEditing) {
+        const panelClasses = classNames({ 'react-grid-item--fullscreen': panel.fullscreen });
+        const id = panel.id.toString();
+        panel.isInView = this.isInView(panel);
+        panelElements.push(
+          <div
+            key={id}
+            className={panelClasses}
+            id={'panel-' + id}
+            ref={elem => {
+              this.panelRef[id] = elem;
+            }}
+          >
+            <DashboardPanel
+              panel={panel}
+              dashboard={this.props.dashboard}
+              isEditing={panel.isEditing}
+              isFullscreen={panel.fullscreen}
+              isInView={panel.isInView}
+            />
+          </div>
+        );
+      }
     }
 
     return panelElements;
