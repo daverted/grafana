@@ -40,11 +40,12 @@ func TestMultiLDAP(t *testing.T) {
 				So(statuses[0].Port, ShouldEqual, 361)
 				So(statuses[0].Available, ShouldBeFalse)
 				So(statuses[0].Error, ShouldEqual, expectedErr)
+				So(mock.closeCalledTimes, ShouldEqual, 0)
 
 				teardown()
 			})
-			Convey("Shoudl get the LDAP server statuses", func() {
-				setup()
+			Convey("Should get the LDAP server statuses", func() {
+				mock := setup()
 
 				multi := New([]*ldap.ServerConfig{
 					{Host: "10.0.0.1", Port: 361},
@@ -57,6 +58,7 @@ func TestMultiLDAP(t *testing.T) {
 				So(statuses[0].Port, ShouldEqual, 361)
 				So(statuses[0].Available, ShouldBeTrue)
 				So(statuses[0].Error, ShouldBeNil)
+				So(mock.closeCalledTimes, ShouldEqual, 1)
 
 				teardown()
 			})
@@ -146,6 +148,43 @@ func TestMultiLDAP(t *testing.T) {
 				So(mock.closeCalledTimes, ShouldEqual, 2)
 
 				So(err, ShouldEqual, ErrInvalidCredentials)
+
+				teardown()
+			})
+
+			Convey("Should still try to auth with the second server after receiving an invalid credentials error from the first", func() {
+				mock := setup()
+
+				mock.loginErrReturn = ErrInvalidCredentials
+
+				multi := New([]*ldap.ServerConfig{
+					{}, {},
+				})
+				_, err := multi.Login(&models.LoginUserQuery{})
+
+				So(mock.dialCalledTimes, ShouldEqual, 2)
+				So(mock.loginCalledTimes, ShouldEqual, 2)
+				So(mock.closeCalledTimes, ShouldEqual, 2)
+
+				So(err, ShouldEqual, ErrInvalidCredentials)
+
+				teardown()
+			})
+
+			Convey("Should still try to auth with the second server after receiving a dial error from the first", func() {
+				mock := setup()
+
+				expectedError := errors.New("Dial error")
+				mock.dialErrReturn = expectedError
+
+				multi := New([]*ldap.ServerConfig{
+					{}, {},
+				})
+				_, err := multi.Login(&models.LoginUserQuery{})
+
+				So(mock.dialCalledTimes, ShouldEqual, 2)
+
+				So(err, ShouldEqual, expectedError)
 
 				teardown()
 			})
@@ -266,9 +305,42 @@ func TestMultiLDAP(t *testing.T) {
 
 				teardown()
 			})
+
+			Convey("Should still try to auth with the second server after receiving a dial error from the first", func() {
+				mock := setup()
+
+				expectedError := errors.New("Dial error")
+				mock.dialErrReturn = expectedError
+
+				multi := New([]*ldap.ServerConfig{
+					{}, {},
+				})
+				_, _, err := multi.User("test")
+
+				So(mock.dialCalledTimes, ShouldEqual, 2)
+				So(err, ShouldEqual, expectedError)
+
+				teardown()
+			})
 		})
 
 		Convey("Users()", func() {
+			Convey("Should still try to auth with the second server after receiving a dial error from the first", func() {
+				mock := setup()
+
+				expectedError := errors.New("Dial error")
+				mock.dialErrReturn = expectedError
+
+				multi := New([]*ldap.ServerConfig{
+					{}, {},
+				})
+				_, err := multi.Users([]string{"test"})
+
+				So(mock.dialCalledTimes, ShouldEqual, 2)
+				So(err, ShouldEqual, expectedError)
+
+				teardown()
+			})
 			Convey("Should return error for absent config list", func() {
 				setup()
 
