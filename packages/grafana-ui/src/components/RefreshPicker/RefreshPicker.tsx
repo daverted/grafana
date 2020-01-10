@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames';
 import { SelectableValue } from '@grafana/data';
-// import { Tooltip } from '../Tooltip/Tooltip';
-// import { ButtonSelect } from '../Select/ButtonSelect';
+import { GrafanaTheme } from '../../types';
+import { withTheme } from '../../themes';
 
 export const offOption = { label: 'Off', value: '' };
 export const liveOption = { label: 'Live', value: 'LIVE' };
@@ -11,14 +11,23 @@ export const isLive = (refreshInterval: string): boolean => refreshInterval === 
 
 export interface Props {
   intervals?: string[];
-  onRefresh: () => any;
+  onRefresh?: () => any;
   onIntervalChanged: (interval: string) => void;
   value?: string;
-  tooltip: string;
+  tooltip?: string;
   hasLiveOption?: boolean;
+  // You can supply your own refresh button element. In that case onRefresh and tooltip are ignored.
+  refreshButton?: React.ReactNode;
+  buttonSelectClassName?: string;
+  theme: GrafanaTheme;
 }
 
-export class RefreshPicker extends PureComponent<Props> {
+export class RefreshPickerBase extends PureComponent<Props> {
+  // Make it exported as static properties to be easier to access. The global exports need to be accessed by direct
+  // import of this source file which won't work if this was installed as package.
+  static offOption = offOption;
+  static liveOption = liveOption;
+
   constructor(props: Props) {
     super(props);
   }
@@ -46,7 +55,7 @@ export class RefreshPicker extends PureComponent<Props> {
   };
 
   render() {
-    const { onRefresh, intervals, value } = this.props; // tooltip,
+    const { onRefresh, intervals, value, refreshButton } = this.props;
     const options = this.intervalsToOptions(intervals);
     const currentValue = value || '';
     const selectedValue = options.find(item => item.value === currentValue) || offOption;
@@ -60,21 +69,23 @@ export class RefreshPicker extends PureComponent<Props> {
     return (
       <div className={cssClasses}>
         <div className="refresh-picker-buttons">
-          {/* <Tooltip placement="top" content={tooltip}> */}
-          <button className="btn btn--radius-right-0 navbar-button navbar-button--refresh" onClick={onRefresh}>
-            <i className="fas fa-refresh" />
-          </button>
-          {/* </Tooltip> */}
-          {/* <ButtonSelect
-            className="navbar-button--attached btn--radius-left-0$"
-            value={selectedValue}
-            label={selectedValue.label}
-            options={options}
-            onChange={this.onChangeSelect}
-            maxMenuHeight={380}
-          /> */}
+          {refreshButton ? (
+            refreshButton
+          ) : (
+            <button className="btn btn--radius-right-0 navbar-button navbar-button--refresh" onClick={onRefresh!}>
+              <i className="fas fa-refresh" />
+            </button>
+          )}
         </div>
       </div>
     );
   }
 }
+
+export const RefreshPicker = withTheme<
+  Props,
+  {
+    offOption: typeof RefreshPickerBase.offOption;
+    liveOption: typeof RefreshPickerBase.liveOption;
+  }
+>(RefreshPickerBase);

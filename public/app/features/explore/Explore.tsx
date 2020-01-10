@@ -1,6 +1,7 @@
 // Libraries
 import React, { ComponentClass } from 'react';
 import { hot } from 'react-hot-loader';
+import { css } from 'emotion';
 // @ts-ignore
 import { connect } from 'react-redux';
 import { AutoSizer } from 'react-virtualized';
@@ -52,6 +53,16 @@ import { ErrorContainer } from './ErrorContainer';
 import { scanStopAction } from './state/actionTypes';
 import { ExploreGraphPanel } from './ExploreGraphPanel';
 
+const getStyles = memoizeOne(() => {
+  return {
+    logsMain: css`
+      label: logsMain;
+      // Is needed for some transition animations to work.
+      position: relative;
+    `,
+  };
+});
+
 interface ExploreProps {
   StartPage?: ComponentClass<ExploreStartPageProps>;
   changeSize: typeof changeSize;
@@ -90,6 +101,7 @@ interface ExploreProps {
   onHiddenSeriesChanged?: (hiddenSeries: string[]) => void;
   toggleGraph: typeof toggleGraph;
   queryResponse: PanelData;
+  originPanelId: number;
 }
 
 /**
@@ -126,7 +138,16 @@ export class Explore extends React.PureComponent<ExploreProps> {
   }
 
   componentDidMount() {
-    const { initialized, exploreId, initialDatasource, initialQueries, initialRange, mode, initialUI } = this.props;
+    const {
+      initialized,
+      exploreId,
+      initialDatasource,
+      initialQueries,
+      initialRange,
+      mode,
+      initialUI,
+      originPanelId,
+    } = this.props;
     const width = this.el ? this.el.offsetWidth : 0;
 
     // initialize the whole explore first time we mount and if browser history contains a change in datasource
@@ -139,7 +160,8 @@ export class Explore extends React.PureComponent<ExploreProps> {
         mode,
         width,
         this.exploreEvents,
-        initialUI
+        initialUI,
+        originPanelId
       );
     }
   }
@@ -246,6 +268,7 @@ export class Explore extends React.PureComponent<ExploreProps> {
       queryResponse,
     } = this.props;
     const exploreClass = split ? 'explore explore-split' : 'explore';
+    const styles = getStyles();
 
     return (
       <div className={exploreClass} ref={this.getRef}>
@@ -273,9 +296,13 @@ export class Explore extends React.PureComponent<ExploreProps> {
                 }
 
                 return (
-                  <main className="m-t-2" style={{ width }}>
+                  <main className={`m-t-2 ${styles.logsMain}`} style={{ width }}>
                     <ErrorBoundaryAlert>
-                      {showingStartPage && <StartPage onClickExample={this.onClickExample} />}
+                      {showingStartPage && (
+                        <div className="grafana-info-box grafana-info-box--max-lg">
+                          <StartPage onClickExample={this.onClickExample} datasource={datasourceInstance} />
+                        </div>
+                      )}
                       {!showingStartPage && (
                         <>
                           {mode === ExploreMode.Metrics && (
@@ -351,7 +378,8 @@ function mapStateToProps(state: StoreState, { exploreId }: ExploreProps) {
     queryResponse,
   } = item;
 
-  const { datasource, queries, range: urlRange, mode: urlMode, ui } = (urlState || {}) as ExploreUrlState;
+  const { datasource, queries, range: urlRange, mode: urlMode, ui, originPanelId } = (urlState ||
+    {}) as ExploreUrlState;
   const initialDatasource = datasource || store.get(lastUsedDatasourceKeyForOrgId(state.user.orgId));
   const initialQueries: DataQuery[] = ensureQueriesMemoized(queries);
   const initialRange = urlRange ? getTimeRangeFromUrlMemoized(urlRange, timeZone).raw : DEFAULT_RANGE;
@@ -397,6 +425,7 @@ function mapStateToProps(state: StoreState, { exploreId }: ExploreProps) {
     showingTable,
     absoluteRange,
     queryResponse,
+    originPanelId,
   };
 }
 

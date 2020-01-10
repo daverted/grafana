@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import _ from 'lodash';
 
 import coreModule from 'app/core/core_module';
@@ -52,6 +51,32 @@ export class KeybindingSrv {
     this.bindGlobal('esc', this.exit);
   }
 
+  globalEsc() {
+    const anyDoc = document as any;
+    const activeElement = anyDoc.activeElement;
+
+    // typehead needs to handle it
+    const typeaheads = document.querySelectorAll('.slate-typeahead--open');
+    if (typeaheads.length > 0) {
+      return;
+    }
+
+    // second check if we are in an input we can blur
+    if (activeElement && activeElement.blur) {
+      if (
+        activeElement.nodeName === 'INPUT' ||
+        activeElement.nodeName === 'TEXTAREA' ||
+        activeElement.hasAttribute('data-slate-editor')
+      ) {
+        anyDoc.activeElement.blur();
+        return;
+      }
+    }
+
+    // ok no focused input or editor that should block this, let exist!
+    this.exit();
+  }
+
   openSearch() {
     appEvents.emit('show-dash-search');
   }
@@ -73,11 +98,6 @@ export class KeybindingSrv {
   }
 
   exit() {
-    const popups = $('.popover.in, .slate-typeahead');
-    if (popups.length > 0) {
-      return;
-    }
-
     appEvents.emit('hide-modal');
 
     if (this.modalOpen) {
@@ -198,7 +218,7 @@ export class KeybindingSrv {
           if (dashboard.meta.focusPanelId) {
             const panel = dashboard.getPanelById(dashboard.meta.focusPanelId);
             const datasource = await this.datasourceSrv.get(panel.datasource);
-            const url = await getExploreUrl(panel.targets, datasource, this.datasourceSrv, this.timeSrv);
+            const url = await getExploreUrl(panel, panel.targets, datasource, this.datasourceSrv, this.timeSrv);
             if (url) {
               this.$timeout(() => this.$location.url(url));
             }
