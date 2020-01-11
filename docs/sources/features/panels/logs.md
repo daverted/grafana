@@ -6,12 +6,12 @@ aliases = ["/reference/logs/"]
 [menu.docs]
 name = "Logs"
 parent = "panels"
-weight = 2
+weight = 4
 +++
 
 # Logs Panel
 
-<img class="screenshot" src="/assets/img/features/logs-panel.png">
+<img class="screenshot" src="/img/docs/v64/logs-panel.png">
 
 > Logs panel is only available in Grafana v6.4+
 

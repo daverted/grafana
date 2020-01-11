@@ -22,9 +22,9 @@ import { updateLocation } from 'app/core/actions';
 
 // Types
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from 'app/core/constants';
-import { DashboardModel, PanelModel } from '../../state';
 import { DashboardPanel } from '../../dashgrid/DashboardPanel';
-import { StoreState } from 'app/types';
+import { DashboardModel } from '../../state';
+import { StoreState, CoreEvents } from 'app/types';
 
 // Mixpanel
 import { MixpanelWindow } from 'app/features/mixpanel/Mixpanel';
@@ -167,11 +167,11 @@ export class DashNav extends PureComponent<Props> {
   };
 
   onDahboardNameClick = () => {
-    appEvents.emit('show-dash-search');
+    appEvents.emit(CoreEvents.showDashSearch);
   };
 
   onFolderNameClick = () => {
-    appEvents.emit('show-dash-search', {
+    appEvents.emit(CoreEvents.showDashSearch, {
       query: 'folder:current',
     });
   };
@@ -191,7 +191,7 @@ export class DashNav extends PureComponent<Props> {
   };
 
   onToggleTVMode = () => {
-    appEvents.emit('toggle-kiosk-mode');
+    appEvents.emit(CoreEvents.toggleKioskMode);
   };
 
   onSave = () => {
@@ -236,7 +236,7 @@ export class DashNav extends PureComponent<Props> {
     modalScope.tabIndex = 0;
     modalScope.dashboard = this.props.dashboard;
 
-    appEvents.emit('show-modal', {
+    appEvents.emit(CoreEvents.showModal, {
       src: 'public/app/features/dashboard/components/ShareModal/template.html',
       scope: modalScope,
     });

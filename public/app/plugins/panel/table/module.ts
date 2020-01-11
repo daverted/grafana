@@ -8,7 +8,8 @@ import { columnOptionsTab } from './column_options';
 import { TableRenderer } from './renderer';
 import { isTableData } from '@grafana/data';
 import { TemplateSrv } from 'app/features/templating/template_srv';
-import { appEvents } from 'app/core/core';
+import { PanelEvents } from '@grafana/data';
+import { CoreEvents } from 'app/types';
 
 class TablePanelCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -70,11 +71,10 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
     _.defaults(this.panel, this.panelDefaults);
 
-    this.events.on('data-received', this.onDataReceived.bind(this));
-    this.events.on('data-error', this.onDataError.bind(this));
-    this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
-    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-    this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
+    this.events.on(PanelEvents.dataReceived, this.onDataReceived.bind(this));
+    this.events.on(PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
+    this.events.on(PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
+    this.events.on(PanelEvents.initPanelActions, this.onInitPanelActions.bind(this));
   }
 
   onInitEditMode() {
@@ -106,11 +106,6 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     }
 
     return super.issueQueries(datasource);
-  }
-
-  onDataError(err: any) {
-    this.dataRaw = [];
-    this.render();
   }
 
   onDataReceived(dataList: any) {
@@ -174,7 +169,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     const scope = this.$scope.$new(true);
     scope.tableData = this.renderer.render_values();
     scope.panel = 'table';
-    this.publishAppEvent('show-modal', {
+    this.publishAppEvent(CoreEvents.showModal, {
       templateHtml: '<export-data-modal panel="panel" data="tableData"></export-data-modal>',
       scope,
       modalClass: 'modal--narrow',
@@ -628,7 +623,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       unbindDestroy();
     });
 
-    ctrl.events.on('render', (renderData: any) => {
+    ctrl.events.on(PanelEvents.render, (renderData: any) => {
       data = renderData || data;
       if (data) {
         renderPanel();

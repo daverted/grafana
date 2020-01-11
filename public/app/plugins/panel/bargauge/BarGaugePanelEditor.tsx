@@ -6,15 +6,13 @@ import {
   ValueMappingsEditor,
   PanelOptionsGrid,
   FieldDisplayEditor,
-  FieldDisplayOptions,
   FieldPropertiesEditor,
   PanelOptionsGroup,
   FormLabel,
-  PanelEditorProps,
   Select,
   DataLinksEditor,
 } from '@grafana/ui';
-import { FieldConfig, DataLink } from '@grafana/data';
+import { FieldDisplayOptions, FieldConfig, DataLink, PanelEditorProps } from '@grafana/data';
 
 import { Threshold, ValueMapping } from '@grafana/data';
 import { BarGaugeOptions, orientationOptions, displayModes } from './types';
@@ -99,7 +97,12 @@ export class BarGaugePanelEditor extends PureComponent<PanelEditorProps<BarGauge
             </div>
           </PanelOptionsGroup>
           <PanelOptionsGroup title="Field">
-            <FieldPropertiesEditor showMinMax={true} onChange={this.onDefaultsChange} value={defaults} />
+            <FieldPropertiesEditor
+              showMinMax={true}
+              showTitle={true}
+              onChange={this.onDefaultsChange}
+              value={defaults}
+            />
           </PanelOptionsGroup>
 
           <ThresholdsEditor onChange={this.onThresholdsChanged} thresholds={defaults.thresholds} />
