@@ -38,7 +38,7 @@ func newMysqlQueryEndpoint(datasource *models.DataSource) (tsdb.TsdbQueryEndpoin
 
 	cnnstr := fmt.Sprintf("%s:%s@%s(%s)/%s?collation=utf8mb4_unicode_ci&parseTime=true&loc=UTC&allowNativePasswords=true",
 		characterEscape(datasource.User, ":"),
-		characterEscape(datasource.DecryptedPassword(), "@"),
+		datasource.DecryptedPassword(),
 		protocol,
 		characterEscape(datasource.Url, ")"),
 		characterEscape(datasource.Database, "?"),
@@ -51,7 +51,9 @@ func newMysqlQueryEndpoint(datasource *models.DataSource) (tsdb.TsdbQueryEndpoin
 
 	if tlsConfig.RootCAs != nil || len(tlsConfig.Certificates) > 0 {
 		tlsConfigString := fmt.Sprintf("ds%d", datasource.Id)
-		mysql.RegisterTLSConfig(tlsConfigString, tlsConfig)
+		if err := mysql.RegisterTLSConfig(tlsConfigString, tlsConfig); err != nil {
+			return nil, err
+		}
 		cnnstr += "&tls=" + tlsConfigString
 	}
 

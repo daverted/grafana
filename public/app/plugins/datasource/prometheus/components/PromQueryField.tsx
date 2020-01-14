@@ -3,33 +3,29 @@ import React from 'react';
 // @ts-ignore
 import Cascader from 'rc-cascader';
 
-import { SlatePrism } from '@grafana/ui';
+import { Plugin } from 'slate';
+import { SlatePrism, TypeaheadInput, TypeaheadOutput, QueryField, BracesPlugin } from '@grafana/ui';
 
 import Prism from 'prismjs';
 
-import { TypeaheadOutput, HistoryItem } from 'app/types/explore';
 // dom also includes Element polyfills
-import BracesPlugin from 'app/features/explore/slate-plugins/braces';
-import QueryField, { TypeaheadInput } from 'app/features/explore/QueryField';
 import { PromQuery, PromContext, PromOptions } from '../types';
 import { CancelablePromise, makePromiseCancelable } from 'app/core/utils/CancelablePromise';
-import { ExploreQueryFieldProps, DataSourceStatus, QueryHint, DOMUtil } from '@grafana/ui';
-import { isDataFrame, toLegacyResponseData } from '@grafana/data';
+import { ExploreQueryFieldProps, QueryHint, isDataFrame, toLegacyResponseData, HistoryItem } from '@grafana/data';
+import { DOMUtil, SuggestionsState } from '@grafana/ui';
 import { PrometheusDatasource } from '../datasource';
 import PromQlLanguageProvider from '../language_provider';
-import { SuggestionsState } from 'app/features/explore/slate-plugins/suggestions';
 
 const HISTOGRAM_GROUP = '__histograms__';
-const METRIC_MARK = 'metric';
 const PRISM_SYNTAX = 'promql';
 export const RECORDING_RULES_GROUP = '__recording_rules__';
 
-function getChooserText(hasSyntax: boolean, datasourceStatus: DataSourceStatus) {
-  if (datasourceStatus === DataSourceStatus.Disconnected) {
-    return '(Disconnected)';
-  }
+function getChooserText(hasSyntax: boolean, metrics: string[]) {
   if (!hasSyntax) {
     return 'Loading metrics...';
+  }
+  if (metrics && metrics.length === 0) {
+    return '(No metrics found)';
   }
   return 'Metrics';
 }
@@ -114,7 +110,7 @@ interface PromQueryFieldState {
 }
 
 class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryFieldState> {
-  plugins: any[];
+  plugins: Plugin[];
   languageProvider: PromQlLanguageProvider;
   languageProviderInitializationPromise: CancelablePromise<any>;
 
@@ -154,39 +150,22 @@ class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryF
   }
 
   componentDidUpdate(prevProps: PromQueryFieldProps) {
-    const { queryResponse } = this.props;
+    const { data } = this.props;
 
-    if (queryResponse && prevProps.queryResponse && prevProps.queryResponse.series !== queryResponse.series) {
+    if (data && prevProps.data && prevProps.data.series !== data.series) {
       this.refreshHint();
-    }
-
-    const reconnected =
-      prevProps.datasourceStatus === DataSourceStatus.Disconnected &&
-      this.props.datasourceStatus === DataSourceStatus.Connected;
-    if (!reconnected) {
-      return;
-    }
-
-    if (this.languageProviderInitializationPromise) {
-      this.languageProviderInitializationPromise.cancel();
-    }
-
-    if (this.languageProvider) {
-      this.refreshMetrics(makePromiseCancelable(this.languageProvider.fetchMetrics()));
     }
   }
 
   refreshHint = () => {
-    const { datasource, query, queryResponse } = this.props;
+    const { datasource, query, data } = this.props;
 
-    if (!queryResponse || queryResponse.series.length === 0) {
+    if (!data || data.series.length === 0) {
       this.setState({ hint: null });
       return;
     }
 
-    const result = isDataFrame(queryResponse.series[0])
-      ? queryResponse.series.map(toLegacyResponseData)
-      : queryResponse.series;
+    const result = isDataFrame(data.series[0]) ? data.series.map(toLegacyResponseData) : data.series;
     const hints = datasource.getQueryHints(query, result);
     const hint = hints && hints.length > 0 ? hints[0] : null;
     this.setState({ hint });
@@ -241,11 +220,11 @@ class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryF
   };
 
   onClickHintFix = () => {
+    const { datasource, query, onChange, onRunQuery } = this.props;
     const { hint } = this.state;
-    const { onHint } = this.props;
-    if (onHint && hint && hint.fix) {
-      onHint(hint.fix.action);
-    }
+
+    onChange(datasource.modifyQuery(query, hint.fix.action));
+    onRunQuery();
   };
 
   onUpdateLanguage = () => {
@@ -255,10 +234,6 @@ class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryF
     }
 
     Prism.languages[PRISM_SYNTAX] = this.languageProvider.syntax;
-    Prism.languages[PRISM_SYNTAX][METRIC_MARK] = {
-      alias: 'variable',
-      pattern: new RegExp(`(?:^|\\s)(${metrics.join('|')})(?:$|\\s)`),
-    };
 
     // Build metrics tree
     const metricsByPrefix = groupMetricsByPrefix(metrics);
@@ -293,12 +268,12 @@ class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryF
   };
 
   render() {
-    const { queryResponse, query, datasourceStatus } = this.props;
+    const { data, query } = this.props;
     const { metricsOptions, syntaxLoaded, hint } = this.state;
     const cleanText = this.languageProvider ? this.languageProvider.cleanText : undefined;
-    const chooserText = getChooserText(syntaxLoaded, datasourceStatus);
-    const buttonDisabled = !syntaxLoaded || datasourceStatus === DataSourceStatus.Disconnected;
-    const showError = queryResponse && queryResponse.error && queryResponse.error.refId === query.refId;
+    const chooserText = getChooserText(syntaxLoaded, metricsOptions);
+    const buttonDisabled = !(syntaxLoaded && metricsOptions && metricsOptions.length > 0);
+    const showError = data && data.error && data.error.refId === query.refId;
 
     return (
       <>
@@ -317,6 +292,7 @@ class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryF
               query={query.expr}
               onTypeahead={this.onTypeahead}
               onWillApplySuggestion={willApplySuggestion}
+              onBlur={this.props.onBlur}
               onChange={this.onChangeQuery}
               onRunQuery={this.props.onRunQuery}
               placeholder="Enter a PromQL query"
@@ -325,7 +301,7 @@ class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryF
             />
           </div>
         </div>
-        {showError ? <div className="prom-query-field-info text-error">{queryResponse.error.message}</div> : null}
+        {showError ? <div className="prom-query-field-info text-error">{data.error.message}</div> : null}
         {hint ? (
           <div className="prom-query-field-info text-warning">
             {hint.label}{' '}

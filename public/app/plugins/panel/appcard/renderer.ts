@@ -1,5 +1,7 @@
 import _ from 'lodash';
-import { getValueFormat, getColorFromHexRgbOrName, GrafanaThemeType } from '@grafana/ui';
+import { GrafanaThemeType } from '@grafana/data/src/types/theme';
+import { getValueFormat } from '@grafana/data/src/valueFormats/valueFormats';
+import { getColorFromHexRgbOrName } from '@grafana/data/src/utils/namedColorsPalette';
 import { stringToJsRegex, ScopedVars } from '@grafana/data';
 import { ColumnStyle } from '@grafana/ui/src/components/Table/TableCellBuilder';
 import { dateTime } from '@grafana/data';

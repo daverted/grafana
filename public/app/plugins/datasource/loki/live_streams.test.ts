@@ -42,7 +42,7 @@ describe('Live Stream Tests', () => {
     const tests = [
       (val: DataFrame[]) => {
         expect(val[0].length).toEqual(7);
-        expect(val[0].labels).toEqual(labels);
+        expect(val[0].fields[1].labels).toEqual(labels);
       },
       (val: DataFrame[]) => {
         expect(val[0].length).toEqual(8);
@@ -50,6 +50,7 @@ describe('Live Stream Tests', () => {
         const last = { ...view.get(view.length - 1) };
         expect(last).toEqual({
           ts: '2019-08-28T20:50:40.118944705Z',
+          id: '2019-08-28T20:50:40.118944705Z_{filename="/var/log/sntpc.log", job="varlogs"}',
           line: 'Kittens',
           labels: { filename: '/var/log/sntpc.log' },
         });

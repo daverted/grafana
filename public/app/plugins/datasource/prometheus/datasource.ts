@@ -3,7 +3,20 @@ import _ from 'lodash';
 import $ from 'jquery';
 // Services & Utils
 import kbn from 'app/core/utils/kbn';
-import { AnnotationEvent, dateMath, DateTime, LoadingState, TimeRange, TimeSeries } from '@grafana/data';
+import {
+  AnnotationEvent,
+  dateMath,
+  DateTime,
+  LoadingState,
+  TimeRange,
+  TimeSeries,
+  DataQueryError,
+  DataQueryRequest,
+  DataQueryResponse,
+  DataQueryResponseData,
+  DataSourceApi,
+  DataSourceInstanceSettings,
+} from '@grafana/data';
 import { from, merge, Observable, of, forkJoin } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 
@@ -16,18 +29,9 @@ import { getQueryHints } from './query_hints';
 import { expandRecordingRules } from './language_utils';
 // Types
 import { PromContext, PromOptions, PromQuery, PromQueryRequest } from './types';
-import {
-  DataQueryError,
-  DataQueryRequest,
-  DataQueryResponse,
-  DataQueryResponseData,
-  DataSourceApi,
-  DataSourceInstanceSettings,
-} from '@grafana/ui';
 import { safeStringifyValue } from 'app/core/utils/explore';
 import { TemplateSrv } from 'app/features/templating/template_srv';
 import { TimeSrv } from 'app/features/dashboard/services/TimeSrv';
-import { ExploreUrlState } from 'app/types';
 import TableModel from 'app/core/table_model';
 
 export interface PromDataQueryResponse {
@@ -56,6 +60,7 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
   httpMethod: string;
   languageProvider: PrometheusLanguageProvider;
   resultTransformer: ResultTransformer;
+  customQueryParameters: any;
 
   /** @ngInject */
   constructor(
@@ -79,6 +84,7 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
     this.resultTransformer = new ResultTransformer(templateSrv);
     this.ruleMappings = {};
     this.languageProvider = new PrometheusLanguageProvider(this);
+    this.customQueryParameters = new URLSearchParams(instanceSettings.jsonData.customQueryParameters);
   }
 
   init = () => {
@@ -403,6 +409,12 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
       data['timeout'] = this.queryTimeout;
     }
 
+    for (const [key, value] of this.customQueryParameters) {
+      if (data[key] == null) {
+        data[key] = value;
+      }
+    }
+
     return this._request(url, data, { requestId: query.requestId, headers: query.headers }).catch((err: any) => {
       if (err.cancelled) {
         return err;
@@ -423,6 +435,12 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
       data['timeout'] = this.queryTimeout;
     }
 
+    for (const [key, value] of this.customQueryParameters) {
+      if (data[key] == null) {
+        data[key] = value;
+      }
+    }
+
     return this._request(url, data, { requestId: query.requestId, headers: query.headers }).catch((err: any) => {
       if (err.cancelled) {
         return err;
@@ -434,7 +452,7 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
 
   handleErrors = (err: any, target: PromQuery) => {
     const error: DataQueryError = {
-      message: 'Unknown error during query transaction. Please check JS console logs.',
+      message: (err && err.statusText) || 'Unknown error during query transaction. Please check JS console logs.',
       refId: target.refId,
     };
 
@@ -611,25 +629,19 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
     });
   }
 
-  getExploreState(queries: PromQuery[]): Partial<ExploreUrlState> {
-    let state: Partial<ExploreUrlState> = { datasource: this.name };
+  interpolateVariablesInQueries(queries: PromQuery[]): PromQuery[] {
+    let expandedQueries = queries;
     if (queries && queries.length > 0) {
-      const expandedQueries = queries.map(query => {
+      expandedQueries = queries.map(query => {
         const expandedQuery = {
           ...query,
+          datasource: this.name,
           expr: this.templateSrv.replace(query.expr, {}, this.interpolateQueryExpr),
-          context: 'explore',
         };
-
         return expandedQuery;
       });
-
-      state = {
-        ...state,
-        queries: expandedQueries,
-      };
     }
-    return state;
+    return expandedQueries;
   }
 
   getQueryHints(query: PromQuery, result: any[]) {

@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 import { NavModel } from '@grafana/data';
+import { Alert } from '@grafana/ui';
 import Page from 'app/core/components/Page/Page';
-import { AlertBox } from 'app/core/components/AlertBox/AlertBox';
 import { getNavModel } from 'app/core/selectors/navModel';
 import {
   AppNotificationSeverity,
@@ -86,6 +86,10 @@ export class LdapUserPage extends PureComponent<Props, State> {
     revokeAllSessions(userId);
   };
 
+  isUserError = (): boolean => {
+    return !!(this.props.userError && this.props.userError.title);
+  };
+
   render() {
     const { user, ldapUser, userError, navModel, sessions, ldapSyncInfo } = this.props;
     const { isLoading } = this.state;
@@ -102,22 +106,25 @@ export class LdapUserPage extends PureComponent<Props, State> {
       <Page navModel={navModel}>
         <Page.Contents isLoading={isLoading}>
           <div className="grafana-info-box">
-            This user is synced via LDAP – all changes must be done in LDAP or mappings.
+            This user is synced via LDAP – All changes must be done in LDAP or mappings.
           </div>
           {userError && userError.title && (
             <div className="gf-form-group">
-              <AlertBox
+              <Alert
                 title={userError.title}
                 severity={AppNotificationSeverity.Error}
-                body={userError.body}
-                onClose={this.onClearUserError}
+                children={userError.body}
+                onRemove={this.onClearUserError}
               />
             </div>
           )}
 
+          {userSyncInfo && (
+            <UserSyncInfo syncInfo={userSyncInfo} onSync={this.onSyncUser} disableSync={this.isUserError()} />
+          )}
+
           {ldapUser && <LdapUserInfo ldapUser={ldapUser} />}
           {!ldapUser && user && <UserInfo user={user} />}
-          {userSyncInfo && <UserSyncInfo syncInfo={userSyncInfo} onSync={this.onSyncUser} />}
 
           {sessions && (
             <UserSessions

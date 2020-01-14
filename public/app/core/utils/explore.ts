@@ -1,30 +1,36 @@
 // Libraries
 import _ from 'lodash';
 import { Unsubscribable } from 'rxjs';
-import { isLive } from '@grafana/ui/src/components/RefreshPicker/RefreshPicker';
 // Services & Utils
 import {
+  DataQuery,
+  DataQueryError,
+  DataQueryRequest,
+  DataSourceApi,
   dateMath,
-  toUtc,
-  TimeRange,
-  RawTimeRange,
-  TimeZone,
-  TimeFragment,
-  LogRowModel,
-  LogsModel,
-  LogsDedupStrategy,
-  IntervalValues,
   DefaultTimeZone,
+  HistoryItem,
+  IntervalValues,
+  LogRowModel,
+  LogsDedupStrategy,
+  LogsModel,
+  PanelModel,
+  RawTimeRange,
+  TimeFragment,
+  TimeRange,
+  TimeZone,
+  toUtc,
 } from '@grafana/data';
 import { renderUrl } from 'app/core/utils/url';
 import store from 'app/core/store';
 import kbn from 'app/core/utils/kbn';
 import { getNextRefIdChar } from './query';
 // Types
-import { DataQuery, DataSourceApi, DataQueryError, DataQueryRequest, PanelModel } from '@grafana/ui';
-import { ExploreUrlState, HistoryItem, QueryTransaction, QueryOptions, ExploreMode } from 'app/types/explore';
+import { RefreshPicker } from '@grafana/ui';
+import { ExploreMode, ExploreUrlState, QueryOptions, QueryTransaction } from 'app/types/explore';
 import { config } from '../config';
 import { TimeSrv } from 'app/features/dashboard/services/TimeSrv';
+import { DataSourceSrv } from '@grafana/runtime';
 
 export const DEFAULT_RANGE = {
   from: 'now-1h',
@@ -51,13 +57,15 @@ export const lastUsedDatasourceKeyForOrgId = (orgId: number) => `${LAST_USED_DAT
  * @param datasourceSrv Datasource service to query other datasources in case the panel datasource is mixed
  * @param timeSrv Time service to get the current dashboard range from
  */
-export async function getExploreUrl(
-  panel: PanelModel,
-  panelTargets: DataQuery[],
-  panelDatasource: any,
-  datasourceSrv: any,
-  timeSrv: TimeSrv
-) {
+export interface GetExploreUrlArguments {
+  panel: PanelModel;
+  panelTargets: DataQuery[];
+  panelDatasource: DataSourceApi;
+  datasourceSrv: DataSourceSrv;
+  timeSrv: TimeSrv;
+}
+export async function getExploreUrl(args: GetExploreUrlArguments) {
+  const { panel, panelTargets, panelDatasource, datasourceSrv, timeSrv } = args;
   let exploreDatasource = panelDatasource;
   let exploreTargets: DataQuery[] = panelTargets;
   let url: string;
@@ -78,12 +86,18 @@ export async function getExploreUrl(
   if (exploreDatasource) {
     const range = timeSrv.timeRangeForUrl();
     let state: Partial<ExploreUrlState> = { range };
-    if (exploreDatasource.getExploreState) {
-      state = { ...state, ...exploreDatasource.getExploreState(exploreTargets) };
+    if (exploreDatasource.interpolateVariablesInQueries) {
+      state = {
+        ...state,
+        datasource: exploreDatasource.name,
+        context: 'explore',
+        queries: exploreDatasource.interpolateVariablesInQueries(exploreTargets),
+      };
     } else {
       state = {
         ...state,
         datasource: exploreDatasource.name,
+        context: 'explore',
         queries: exploreTargets.map(t => ({ ...t, datasource: exploreDatasource.name })),
       };
     }
@@ -489,7 +503,7 @@ export enum SortOrder {
 }
 
 export const refreshIntervalToSortOrder = (refreshInterval: string) =>
-  isLive(refreshInterval) ? SortOrder.Ascending : SortOrder.Descending;
+  RefreshPicker.isLive(refreshInterval) ? SortOrder.Ascending : SortOrder.Descending;
 
 export const sortLogsResult = (logsResult: LogsModel, sortOrder: SortOrder): LogsModel => {
   const rows = logsResult ? logsResult.rows : [];
