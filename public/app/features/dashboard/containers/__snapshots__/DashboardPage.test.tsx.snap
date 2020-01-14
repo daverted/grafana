@@ -4,7 +4,7 @@ exports[`DashboardPage Dashboard init completed  Should render dashboard grid 1`
 <div
   className=""
 >
-  <Connect(DashNav)
+  <Component
     $injector={Object {}}
     dashboard={
       DashboardModel {
@@ -78,7 +78,7 @@ exports[`DashboardPage Dashboard init completed  Should render dashboard grid 1`
         ],
         "refresh": undefined,
         "revision": undefined,
-        "schemaVersion": 20,
+        "schemaVersion": 21,
         "snapshot": undefined,
         "style": "dark",
         "tags": Array [],
@@ -191,7 +191,7 @@ exports[`DashboardPage Dashboard init completed  Should render dashboard grid 1`
               ],
               "refresh": undefined,
               "revision": undefined,
-              "schemaVersion": 20,
+              "schemaVersion": 21,
               "snapshot": undefined,
               "style": "dark",
               "tags": Array [],
@@ -240,7 +240,7 @@ exports[`DashboardPage When dashboard has editview url state should render setti
 <div
   className="dashboard-page--settings-opening"
 >
-  <Connect(DashNav)
+  <Component
     $injector={Object {}}
     dashboard={
       DashboardModel {
@@ -314,7 +314,7 @@ exports[`DashboardPage When dashboard has editview url state should render setti
         ],
         "refresh": undefined,
         "revision": undefined,
-        "schemaVersion": 20,
+        "schemaVersion": 21,
         "snapshot": undefined,
         "style": "dark",
         "tags": Array [],
@@ -425,7 +425,7 @@ exports[`DashboardPage When dashboard has editview url state should render setti
             ],
             "refresh": undefined,
             "revision": undefined,
-            "schemaVersion": 20,
+            "schemaVersion": 21,
             "snapshot": undefined,
             "style": "dark",
             "tags": Array [],
@@ -520,7 +520,7 @@ exports[`DashboardPage When dashboard has editview url state should render setti
               ],
               "refresh": undefined,
               "revision": undefined,
-              "schemaVersion": 20,
+              "schemaVersion": 21,
               "snapshot": undefined,
               "style": "dark",
               "tags": Array [],

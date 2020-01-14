@@ -16,8 +16,12 @@ import { getShiftedTimeRange, getZoomedTimeRange } from 'app/core/utils/timePick
 
 export interface Props {
   exploreId: ExploreId;
+  hideText?: boolean;
   range: TimeRange;
   timeZone: TimeZone;
+  splitted: boolean;
+  syncedTimes: boolean;
+  onChangeTimeSync: () => void;
   onChangeTime: (range: RawTimeRange) => void;
 }
 
@@ -67,18 +71,18 @@ export class ExploreTimeControls extends Component<Props> {
   };
 
   render() {
-    const { range, timeZone } = this.props;
+    const { range, timeZone, hideText } = this.props;
+    const timePickerCommonProps = {
+      value: range,
+      onChange: this.onChangeTimePicker,
+      timeZone,
+      onMoveBackward: this.onMoveBack,
+      onMoveForward: this.onMoveForward,
+      onZoom: this.onZoom,
+      selectOptions: this.setActiveTimeOption(defaultSelectOptions, range.raw),
+      hideText,
+    };
 
-    return (
-      <TimePicker
-        value={range}
-        onChange={this.onChangeTimePicker}
-        timeZone={timeZone}
-        onMoveBackward={this.onMoveBack}
-        onMoveForward={this.onMoveForward}
-        onZoom={this.onZoom}
-        selectOptions={this.setActiveTimeOption(defaultSelectOptions, range.raw)}
-      />
-    );
+    return <TimePicker {...timePickerCommonProps} />;
   }
 }

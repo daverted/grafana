@@ -10,14 +10,21 @@ import {
   refreshIntervalToSortOrder,
 } from 'app/core/utils/explore';
 import { ExploreItemState, ExploreState, ExploreId, ExploreUpdateState, ExploreMode } from 'app/types/explore';
-import { LoadingState, toLegacyResponseData, DefaultTimeRange } from '@grafana/data';
-import { DataQuery, DataSourceApi, PanelData, DataQueryRequest } from '@grafana/ui';
+import {
+  LoadingState,
+  toLegacyResponseData,
+  DefaultTimeRange,
+  DataQuery,
+  DataSourceApi,
+  PanelData,
+  DataQueryRequest,
+  PanelEvents,
+  TimeZone,
+} from '@grafana/data';
+import { RefreshPicker } from '@grafana/ui';
 import {
   HigherOrderAction,
   ActionTypes,
-  testDataSourcePendingAction,
-  testDataSourceSuccessAction,
-  testDataSourceFailureAction,
   splitCloseAction,
   SplitCloseActionPayload,
   loadExploreDatasources,
@@ -59,7 +66,6 @@ import { reducerFactory, ActionOf } from 'app/core/redux';
 import { updateLocation } from 'app/core/actions/location';
 import { LocationUpdate } from '@grafana/runtime';
 import TableModel from 'app/core/table_model';
-import { isLive } from '@grafana/ui/src/components/RefreshPicker/RefreshPicker';
 import { ResultProcessor } from '../utils/ResultProcessor';
 
 export const DEFAULT_RANGE = {
@@ -83,7 +89,6 @@ export const makeExploreItemState = (): ExploreItemState => ({
   containerWidth: 0,
   datasourceInstance: null,
   requestedDatasourceName: null,
-  datasourceError: null,
   datasourceLoading: null,
   datasourceMissing: false,
   exploreDatasources: [],
@@ -130,6 +135,7 @@ export const createEmptyQueryResponse = (): PanelData => ({
 export const initialExploreItemState = makeExploreItemState();
 export const initialExploreState: ExploreState = {
   split: null,
+  syncedTimes: false,
   left: initialExploreItemState,
   right: initialExploreItemState,
 };
@@ -191,11 +197,11 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
     filter: changeRefreshIntervalAction,
     mapper: (state, action): ExploreItemState => {
       const { refreshInterval } = action.payload;
-      const live = isLive(refreshInterval);
+      const live = RefreshPicker.isLive(refreshInterval);
       const sortOrder = refreshIntervalToSortOrder(refreshInterval);
       const logsResult = sortLogsResult(state.logsResult, sortOrder);
 
-      if (isLive(state.refreshInterval) && !live) {
+      if (RefreshPicker.isLive(state.refreshInterval) && !live) {
         stopQueryState(state.querySubscription);
       }
 
@@ -204,7 +210,7 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
         refreshInterval,
         queryResponse: {
           ...state.queryResponse,
-          state: live ? LoadingState.Streaming : LoadingState.NotStarted,
+          state: live ? LoadingState.Streaming : LoadingState.Done,
         },
         isLive: live,
         isPaused: live ? false : state.isPaused,
@@ -476,37 +482,6 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
     },
   })
   .addMapper({
-    filter: testDataSourcePendingAction,
-    mapper: (state): ExploreItemState => {
-      return {
-        ...state,
-        datasourceError: null,
-      };
-    },
-  })
-  .addMapper({
-    filter: testDataSourceSuccessAction,
-    mapper: (state): ExploreItemState => {
-      return {
-        ...state,
-        datasourceError: null,
-      };
-    },
-  })
-  .addMapper({
-    filter: testDataSourceFailureAction,
-    mapper: (state, action): ExploreItemState => {
-      return {
-        ...state,
-        datasourceError: action.payload.error,
-        graphResult: undefined,
-        tableResult: undefined,
-        logsResult: undefined,
-        update: makeInitialUpdateState(),
-      };
-    },
-  })
-  .addMapper({
     filter: loadExploreDatasources,
     mapper: (state, action): ExploreItemState => {
       return {
@@ -600,7 +575,7 @@ export const processQueryResponse = (
     }
 
     // For Angular editors
-    state.eventBridge.emit('data-error', error);
+    state.eventBridge.emit(PanelEvents.dataError, error);
 
     return {
       ...state,
@@ -615,7 +590,7 @@ export const processQueryResponse = (
   }
 
   const latency = request.endTime ? request.endTime - request.startTime : 0;
-  const processor = new ResultProcessor(state, series, request.intervalMs);
+  const processor = new ResultProcessor(state, series, request.intervalMs, request.timezone as TimeZone);
   const graphResult = processor.getGraphResult();
   const tableResult = processor.getTableResult();
   const logsResult = processor.getLogsResult();
@@ -624,7 +599,7 @@ export const processQueryResponse = (
   if (state.datasourceInstance.components.QueryCtrl) {
     const legacy = series.map(v => toLegacyResponseData(v));
 
-    state.eventBridge.emit('data-received', legacy);
+    state.eventBridge.emit(PanelEvents.dataReceived, legacy);
   }
 
   return {
@@ -727,6 +702,9 @@ export const exploreReducer = (state = initialExploreState, action: HigherOrderA
 
     case ActionTypes.SplitOpen: {
       return { ...state, split: true, right: { ...action.payload.itemState } };
+    }
+    case ActionTypes.SyncTimes: {
+      return { ...state, syncedTimes: action.payload.syncedTimes };
     }
 
     case ActionTypes.ResetExplore: {

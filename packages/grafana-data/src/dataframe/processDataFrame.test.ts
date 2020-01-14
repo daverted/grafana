@@ -59,6 +59,15 @@ describe('toDataFrame', () => {
     expect(again).toBe(input);
   });
 
+  it('throws when table rows is not array', () => {
+    expect(() =>
+      toDataFrame({
+        columns: [],
+        rows: {},
+      })
+    ).toThrowError('Expected table rows to be array, got object.');
+  });
+
   it('migrate from 6.3 style rows', () => {
     const oldDataFrame = {
       fields: [{ name: 'A' }, { name: 'B' }, { name: 'C' }],
@@ -81,6 +90,7 @@ describe('toDataFrame', () => {
   it('Guess Colum Types from strings', () => {
     expect(guessFieldTypeFromValue('1')).toBe(FieldType.number);
     expect(guessFieldTypeFromValue('1.234')).toBe(FieldType.number);
+    expect(guessFieldTypeFromValue('NaN')).toBe(FieldType.number);
     expect(guessFieldTypeFromValue('3.125e7')).toBe(FieldType.number);
     expect(guessFieldTypeFromValue('True')).toBe(FieldType.boolean);
     expect(guessFieldTypeFromValue('FALSE')).toBe(FieldType.boolean);
@@ -95,6 +105,7 @@ describe('toDataFrame', () => {
         { name: 'B (strings)', values: [null, 'Hello'] },
         { name: 'C (nulls)', values: [null, null] },
         { name: 'Time', values: ['2000', 1967] },
+        { name: 'D (number strings)', values: ['NaN', null, 1] },
       ],
     });
     const norm = guessFieldTypes(series);
@@ -102,6 +113,35 @@ describe('toDataFrame', () => {
     expect(norm.fields[1].type).toBe(FieldType.string);
     expect(norm.fields[2].type).toBe(FieldType.other);
     expect(norm.fields[3].type).toBe(FieldType.time); // based on name
+    expect(norm.fields[4].type).toBe(FieldType.number);
+  });
+
+  it('converts JSON document data to series', () => {
+    const input1 = {
+      datapoints: [
+        {
+          _id: 'W5rvjW0BKe0cA-E1aHvr',
+          _type: '_doc',
+          _index: 'logs-2019.10.02',
+          '@message': 'Deployed website',
+          '@timestamp': [1570044340458],
+          tags: ['deploy', 'website-01'],
+          description: 'Torkel deployed website',
+          coordinates: { latitude: 12, longitude: 121, level: { depth: 3, coolnes: 'very' } },
+          'unescaped-content': 'breaking <br /> the <br /> row',
+        },
+      ],
+      filterable: true,
+      target: 'docs',
+      total: 206,
+      type: 'docs',
+    };
+    const dataFrame = toDataFrame(input1);
+    expect(dataFrame.fields[0].name).toBe(input1.target);
+
+    const v0 = dataFrame.fields[0].values;
+    expect(v0.length).toEqual(1);
+    expect(v0.get(0)).toEqual(input1.datapoints[0]);
   });
 
   it('converts JSON document data to series', () => {

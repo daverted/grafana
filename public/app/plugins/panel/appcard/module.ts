@@ -9,6 +9,7 @@ import { AppCardRenderer } from './renderer';
 import { isTableData } from '@grafana/data';
 import { TemplateSrv } from 'app/features/templating/template_srv';
 import { appEvents } from 'app/core/core';
+import { CoreEvents } from 'app/types';
 
 class AppCardPanelCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -252,7 +253,7 @@ class AppCardPanelCtrl extends MetricsPanelCtrl {
     const scope = this.$scope.$new(true);
     scope.tableData = this.renderer.render_values();
     scope.panel = 'table';
-    this.publishAppEvent('show-modal', {
+    this.publishAppEvent(CoreEvents.showModal, {
       templateHtml: '<export-data-modal panel="panel" data="tableData"></export-data-modal>',
       scope,
       modalClass: 'modal--narrow',

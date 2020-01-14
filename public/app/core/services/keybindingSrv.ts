@@ -1,14 +1,17 @@
 import _ from 'lodash';
 
-import coreModule from 'app/core/core_module';
 import appEvents from 'app/core/app_events';
-import { getExploreUrl } from 'app/core/utils/explore';
 import { store } from 'app/store/store';
+import { AppEventEmitter, CoreEvents } from 'app/types';
 
 import Mousetrap from 'mousetrap';
+import { PanelEvents } from '@grafana/data';
 import 'mousetrap-global-bind';
 import { ContextSrv } from './context_srv';
-import { ILocationService, ITimeoutService } from 'angular';
+import { ILocationService, IRootScopeService } from 'angular';
+import { GrafanaRootScope } from 'app/routes/GrafanaCtrl';
+import { getLocationSrv } from '@grafana/runtime';
+import { coreModule } from '../core';
 
 export class KeybindingSrv {
   helpModal: boolean;
@@ -17,11 +20,8 @@ export class KeybindingSrv {
 
   /** @ngInject */
   constructor(
-    private $rootScope: any,
+    private $rootScope: GrafanaRootScope,
     private $location: ILocationService,
-    private $timeout: ITimeoutService,
-    private datasourceSrv: any,
-    private timeSrv: any,
     private contextSrv: ContextSrv
   ) {
     // clear out all shortcuts on route change
@@ -32,9 +32,9 @@ export class KeybindingSrv {
     });
 
     this.setupGlobal();
-    appEvents.on('show-modal', () => (this.modalOpen = true));
-    appEvents.on('timepickerOpen', () => (this.timepickerOpen = true));
-    appEvents.on('timepickerClosed', () => (this.timepickerOpen = false));
+    appEvents.on(CoreEvents.showModal, () => (this.modalOpen = true));
+    appEvents.on(CoreEvents.timepickerOpen, () => (this.timepickerOpen = true));
+    appEvents.on(CoreEvents.timepickerClosed, () => (this.timepickerOpen = false));
   }
 
   setupGlobal() {
@@ -78,7 +78,7 @@ export class KeybindingSrv {
   }
 
   openSearch() {
-    appEvents.emit('show-dash-search');
+    appEvents.emit(CoreEvents.showDashSearch);
   }
 
   openAlerting() {
@@ -94,11 +94,11 @@ export class KeybindingSrv {
   }
 
   showHelpModal() {
-    appEvents.emit('show-modal', { templateHtml: '<help-modal></help-modal>' });
+    appEvents.emit(CoreEvents.showModal, { templateHtml: '<help-modal></help-modal>' });
   }
 
   exit() {
-    appEvents.emit('hide-modal');
+    appEvents.emit(CoreEvents.hideModal);
 
     if (this.modalOpen) {
       this.modalOpen = false;
@@ -106,7 +106,7 @@ export class KeybindingSrv {
     }
 
     if (this.timepickerOpen) {
-      this.$rootScope.appEvent('closeTimepicker');
+      this.$rootScope.appEvent(CoreEvents.closeTimepicker);
       this.timepickerOpen = false;
       return;
     }
@@ -120,12 +120,12 @@ export class KeybindingSrv {
     }
 
     if (search.fullscreen) {
-      appEvents.emit('panel-change-view', { fullscreen: false, edit: false });
+      appEvents.emit(PanelEvents.panelChangeView, { fullscreen: false, edit: false });
       return;
     }
 
     if (search.kiosk) {
-      this.$rootScope.appEvent('toggle-kiosk-mode', { exit: true });
+      this.$rootScope.appEvent(CoreEvents.toggleKioskMode, { exit: true });
     }
   }
 
@@ -164,99 +164,85 @@ export class KeybindingSrv {
     this.$location.search(search);
   }
 
-  setupDashboardBindings(scope: any, dashboard: any) {
-    if (this.contextSrv.isGrafanaAdmin) {
-      this.bind('mod+o', () => {
-        dashboard.graphTooltip = (dashboard.graphTooltip + 1) % 3;
-        appEvents.emit('graph-hover-clear');
-        dashboard.startRefresh();
-      });
+  setupDashboardBindings(scope: IRootScopeService & AppEventEmitter, dashboard: any) {
+    this.bind('mod+o', () => {
+      dashboard.graphTooltip = (dashboard.graphTooltip + 1) % 3;
+      appEvents.emit(CoreEvents.graphHoverClear);
+      dashboard.startRefresh();
+    });
 
-      this.bind('mod+s', () => {
-        scope.appEvent('save-dashboard');
-      });
+    this.bind('mod+s', () => {
+      scope.appEvent(CoreEvents.saveDashboard);
+    });
 
-      this.bind('t z', () => {
-        scope.appEvent('zoom-out', 2);
-      });
+    this.bind('t z', () => {
+      scope.appEvent(CoreEvents.zoomOut, 2);
+    });
 
-      this.bind('t left', () => {
-        scope.appEvent('shift-time', -1);
-      });
+    this.bind('ctrl+z', () => {
+      scope.appEvent(CoreEvents.zoomOut, 2);
+    });
 
-      this.bind('t right', () => {
-        scope.appEvent('shift-time', 1);
-      });
+    this.bind('t left', () => {
+      scope.appEvent(CoreEvents.shiftTime, -1);
+    });
 
-      // edit panel
-      this.bind('e', () => {
-        if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
-          appEvents.emit('panel-change-view', {
-            fullscreen: true,
-            edit: true,
-            panelId: dashboard.meta.focusPanelId,
-            toggle: true,
-          });
-        }
-      });
+    this.bind('t right', () => {
+      scope.appEvent(CoreEvents.shiftTime, 1);
+    });
 
-      // view panel
-      this.bind('v', () => {
-        if (dashboard.meta.focusPanelId) {
-          appEvents.emit('panel-change-view', {
-            fullscreen: true,
-            edit: null,
-            panelId: dashboard.meta.focusPanelId,
-            toggle: true,
-          });
-        }
-      });
-
-      // jump to explore if permissions allow
-      if (this.contextSrv.hasAccessToExplore()) {
-        this.bind('x', async () => {
-          if (dashboard.meta.focusPanelId) {
-            const panel = dashboard.getPanelById(dashboard.meta.focusPanelId);
-            const datasource = await this.datasourceSrv.get(panel.datasource);
-            const url = await getExploreUrl(panel.targets, datasource, this.datasourceSrv, this.timeSrv);
-            if (url) {
-              this.$timeout(() => this.$location.url(url));
-            }
-          }
+    // edit panel
+    this.bind('e', () => {
+      if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
+        appEvents.emit(PanelEvents.panelChangeView, {
+          fullscreen: true,
+          edit: true,
+          panelId: dashboard.meta.focusPanelId,
+          toggle: true,
         });
       }
+    });
 
-      // delete panel
-      this.bind('p r', () => {
-        if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
-          appEvents.emit('remove-panel', dashboard.meta.focusPanelId);
-          dashboard.meta.focusPanelId = 0;
-        }
-      });
+    // view panel
+    this.bind('v', () => {
+      if (dashboard.meta.focusPanelId) {
+        appEvents.emit(PanelEvents.panelChangeView, {
+          fullscreen: true,
+          panelId: dashboard.meta.focusPanelId,
+          toggle: true,
+        });
+      }
+    });
 
-      // duplicate panel
-      this.bind('p d', () => {
-        if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
-          const panelIndex = dashboard.getPanelInfoById(dashboard.meta.focusPanelId).index;
-          dashboard.duplicatePanel(dashboard.panels[panelIndex]);
-        }
-      });
+    // delete panel
+    this.bind('p r', () => {
+      if (dashboard.meta.focusPanelId && dashboard.meta.canEdit) {
+        appEvents.emit(CoreEvents.removePanel, dashboard.meta.focusPanelId);
+        dashboard.meta.focusPanelId = 0;
+      }
+    });
 
-      // share panel
-      this.bind('p s', () => {
-        if (dashboard.meta.focusPanelId) {
-          const shareScope = scope.$new();
-          const panelInfo = dashboard.getPanelInfoById(dashboard.meta.focusPanelId);
-          shareScope.panel = panelInfo.panel;
-          shareScope.dashboard = dashboard;
+    // share panel
+    this.bind('p s', () => {
+      if (dashboard.meta.focusPanelId) {
+        const shareScope: any = scope.$new();
+        const panelInfo = dashboard.getPanelInfoById(dashboard.meta.focusPanelId);
+        shareScope.panel = panelInfo.panel;
+        shareScope.dashboard = dashboard;
 
-          appEvents.emit('show-modal', {
-            src: 'public/app/features/dashboard/components/ShareModal/template.html',
-            scope: shareScope,
-          });
-        }
-      });
-    }
+        appEvents.emit(CoreEvents.showModal, {
+          src: 'public/app/features/dashboard/components/ShareModal/template.html',
+          scope: shareScope,
+        });
+      }
+    });
+
+    // inspect panel
+    this.bind('p i', () => {
+      if (dashboard.meta.focusPanelId) {
+        getLocationSrv().update({ partial: true, query: { inspect: dashboard.meta.focusPanelId } });
+      }
+    });
 
     // toggle panel legend
     this.bind('p l', () => {
@@ -302,11 +288,11 @@ export class KeybindingSrv {
     }
 
     this.bind('d k', () => {
-      appEvents.emit('toggle-kiosk-mode');
+      appEvents.emit(CoreEvents.toggleKioskMode);
     });
 
     this.bind('d v', () => {
-      appEvents.emit('toggle-view-mode');
+      appEvents.emit(CoreEvents.toggleViewMode);
     });
 
     if (this.contextSrv.isGrafanaAdmin) {

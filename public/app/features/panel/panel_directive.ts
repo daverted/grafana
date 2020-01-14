@@ -4,6 +4,8 @@ import $ from 'jquery';
 import Drop from 'tether-drop';
 // @ts-ignore
 import baron from 'baron';
+import { PanelEvents } from '@grafana/data';
+import { getLocationSrv } from '@grafana/runtime';
 
 const bootData = (window as any).grafanaBootData || {
   settings: {},
@@ -73,6 +75,12 @@ module.directive('grafanaPanel', ($rootScope, $document, $timeout) => {
         }
       }
 
+      function infoCornerClicked() {
+        if (ctrl.error) {
+          getLocationSrv().update({ partial: true, query: { inspect: ctrl.panel.id } });
+        }
+      }
+
       // set initial transparency
       if (ctrl.panel.transparent) {
         transparentLastState = true;
@@ -80,7 +88,7 @@ module.directive('grafanaPanel', ($rootScope, $document, $timeout) => {
       }
 
       // update scrollbar after mounting
-      ctrl.events.on('component-did-mount', () => {
+      ctrl.events.on(PanelEvents.componentDidMount, () => {
         if (ctrl.__proto__.constructor.scrollable) {
           const scrollRootClass = 'baron baron__root baron__clipper panel-content--scrollable';
           const scrollerClass = 'baron__scroller';
@@ -109,7 +117,7 @@ module.directive('grafanaPanel', ($rootScope, $document, $timeout) => {
         }
       });
 
-      ctrl.events.on('panel-size-changed', () => {
+      ctrl.events.on(PanelEvents.panelSizeChanged, () => {
         ctrl.calculatePanelHeight(panelContainer[0].offsetHeight);
         $timeout(() => {
           resizeScrollableContent();
@@ -117,7 +125,7 @@ module.directive('grafanaPanel', ($rootScope, $document, $timeout) => {
         });
       });
 
-      ctrl.events.on('view-mode-changed', () => {
+      ctrl.events.on(PanelEvents.viewModeChanged, () => {
         // first wait one pass for dashboard fullscreen view mode to take effect (classses being applied)
         setTimeout(() => {
           // then recalc style
@@ -130,7 +138,7 @@ module.directive('grafanaPanel', ($rootScope, $document, $timeout) => {
         }, 10);
       });
 
-      ctrl.events.on('render', () => {
+      ctrl.events.on(PanelEvents.render, () => {
         // set initial height
         if (!ctrl.height) {
           ctrl.calculatePanelHeight(panelContainer[0].offsetHeight);
@@ -205,6 +213,8 @@ module.directive('grafanaPanel', ($rootScope, $document, $timeout) => {
 
       elem.on('mouseenter', mouseEnter);
       elem.on('mouseleave', mouseLeave);
+
+      cornerInfoElem.on('click', infoCornerClicked);
 
       scope.$on('$destroy', () => {
         elem.off();
