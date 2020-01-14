@@ -23,7 +23,7 @@ import { updateLocation } from 'app/core/actions';
 // Types
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from 'app/core/constants';
 import { DashboardPanel } from '../../dashgrid/DashboardPanel';
-import { DashboardModel } from '../../state';
+import { DashboardModel, PanelModel } from '../../state';
 import { StoreState, CoreEvents } from 'app/types';
 
 // Mixpanel

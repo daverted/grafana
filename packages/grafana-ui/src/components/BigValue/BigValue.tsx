@@ -9,7 +9,6 @@ import { getColorFromHexRgbOrName, GrafanaTheme } from '@grafana/data';
 
 // Types
 import { Themeable } from '../../types';
-import { stylesFactory } from '../../themes/stylesFactory';
 
 export interface BigValueSparkline {
   data: any[][];

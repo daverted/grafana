@@ -43,14 +43,6 @@ const getStyles = memoizeOne(() => {
   };
 });
 
-const getStyles = memoizeOne(() => {
-  return {
-    liveTailButtons: css`
-      margin-left: 10px;
-    `,
-  };
-});
-
 interface OwnProps {
   exploreId: ExploreId;
   onChangeTime: (range: RawTimeRange, changedByScanner?: boolean) => void;

@@ -21,9 +21,6 @@ import {
 import { Emitter } from 'app/core/core';
 import TableModel from 'app/core/table_model';
 
-import { Value } from 'slate';
-
-import { Editor } from '@grafana/slate-react';
 export enum ExploreMode {
   Metrics = 'Metrics',
   Logs = 'Logs',

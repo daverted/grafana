@@ -1,10 +1,6 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames';
 import { SelectableValue } from '@grafana/data';
-import { css } from 'emotion';
-import { Tooltip } from '../Tooltip/Tooltip';
-import { ButtonSelect } from '../Select/ButtonSelect';
-import memoizeOne from 'memoize-one';
 import { GrafanaTheme } from '@grafana/data';
 import { withTheme } from '../../themes';
 
@@ -59,7 +55,6 @@ export class RefreshPickerBase extends PureComponent<Props> {
     const options = this.intervalsToOptions(intervals);
     const currentValue = value || '';
     const selectedValue = options.find(item => item.value === currentValue) || RefreshPicker.offOption;
-    const styles = getStyles(theme);
 
     const cssClasses = classNames({
       'refresh-picker': true,

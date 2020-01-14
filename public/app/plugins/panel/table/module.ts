@@ -10,6 +10,7 @@ import { isTableData } from '@grafana/data';
 import { TemplateSrv } from 'app/features/templating/template_srv';
 import { PanelEvents } from '@grafana/data';
 import { CoreEvents } from 'app/types';
+import { appEvents } from 'app/core/core';
 
 class TablePanelCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -526,7 +527,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         'new-label="model.newLabel">' +
         '</manage-labels-modal>';
 
-      ctrl.publishAppEvent('show-modal', {
+      ctrl.publishAppEvent(CoreEvents.showModal, {
         templateHtml: template,
         modalClass: 'modal--narrow',
         model: {

@@ -119,6 +119,7 @@ export interface GrafanaTheme extends GrafanaThemeCommons {
     pageHeader: string;
   };
   colors: {
+    teal: string;
     black: string;
     white: string;
     dark1: string;
