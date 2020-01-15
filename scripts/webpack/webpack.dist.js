@@ -12,8 +12,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = (env = {}) =>
   merge(common, {
-    devtool: '',
     mode: 'none',
+    devtool: 'source-map',
 
     entry: {
       app: './public/app/index.ts',
