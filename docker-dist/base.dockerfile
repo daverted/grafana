@@ -20,7 +20,7 @@ RUN git config --global user.name "Dave Snyder"
 WORKDIR /usr/local
 
 # install go
-RUN curl -sL https://dl.google.com/go/go1.12.9.linux-amd64.tar.gz | tar xvzf -
+RUN curl -sL https://dl.google.com/go/go1.13.6.linux-amd64.tar.gz | tar xvzf -
 ENV PATH="${PATH}:/usr/local/go/bin"
 
 # install nodejs
@@ -30,5 +30,11 @@ RUN npm install -g yarn
 
 WORKDIR /opt
 
-# go get throws a warning that's safe to ignore. exit 0 to allow docker to continue
+# install grafana
 RUN go get github.com/grafana/grafana; exit 0
+
+# switch to grafana directory
+WORKDIR /opt/src/github.com/grafana/grafana
+
+# use v6.5.x
+RUN git checkout v6.5.x

@@ -13,15 +13,6 @@ docker build --no-cache -t grafana-fork:VERSION .
 ```
 
 ----
-## Sandbox build
-
-To build the sandbox branch, use the `sandbox.dockerfile`:
-
-```sh
-docker build --no-cache -f sandbox.dockerfile -t grafana-fork:VERSION .
-```
-
-----
 
 The .tar.gz bundle is inside the container. To retrieve it, open a new shell and run the container you just built.
 
