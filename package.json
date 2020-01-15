@@ -149,6 +149,7 @@
   },
   "scripts": {
     "dev": "webpack --progress --colors --config scripts/webpack/webpack.dev.js",
+    "dist": "webpack --progress --colors --config scripts/webpack/webpack.dist.js",
     "start": "grafana-toolkit core:start --watchTheme",
     "start:hot": "grafana-toolkit core:start --hot --watchTheme",
     "start:ignoreTheme": "grafana-toolkit core:start --hot",
