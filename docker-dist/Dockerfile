@@ -14,7 +14,6 @@ SHELL [ "/usr/bin/scl", "enable", "devtoolset-7" ]
 RUN yarn cache clean; yarn install --pure-lockfile
 
 # yarn build is no longer building the frontend after upgrading to 6.5.2, use this instead:
-RUN yarn start
 RUN yarn run themes:generate; yarn run dev
 
 # grunt build has been commented out to prevent undoing the previous step during this build step
